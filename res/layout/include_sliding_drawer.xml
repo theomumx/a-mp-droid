@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+<SlidingDrawer
+       android:id="@+id/drawer"
+       android:layout_width="fill_parent"
+       android:layout_height="fill_parent"
+
+       android:handle="@+id/handle"
+       android:content="@+id/content">
+
+    <LinearLayout android:id="@id/handle"
+	android:layout_width="fill_parent" android:layout_height="30dip"
+	android:background="@drawable/slidingdrawer">
+        <ImageView android:id="@+id/slidingbutton" android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/slidingdrawer_button" android:layout_gravity="center" android:layout_marginLeft="10dip"/>
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" android:id="@+id/TextViewSliderText" android:text="[Artist] - [Not Fair]" android:layout_marginLeft="20dip" android:textColor="#FFFFFF" android:textStyle="bold" android:clickable="false" android:editable="false"></TextView> 
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@id/content"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" android:orientation="vertical"
+        android:background="#FFFFFF"
+        >
+
+    </LinearLayout>
+  </SlidingDrawer>
+</merge>
+

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hello">Hello World, WelcomeScreenActivity!</string>
+    <string name="app_name">MPRemoteV2</string>
+<string name="movie_actors">Actors:</string>
+<string name="app_desc">Control MP from your Android phone</string>
+</resources>
