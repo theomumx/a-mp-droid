@@ -67,7 +67,7 @@ public class Tv4HomeApi implements ITvControlApi {
    private final String WCF_NAMESPACE = "http://tv4home.codeplex.com";
    private final String WCF_PREFIX = "http://";
    private final String WCF_SUFFIX = "/TV4Home.Server.CoreService/TVEInteractionService";
-   private final String WCF_METHOD_PREFIX = "ITVEInteraction";
+   private final String WCF_METHOD_PREFIX = "http://tv4home.codeplex.com/ITVEInteraction/";
 
    // Method constants
 

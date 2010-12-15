@@ -1,7 +1,7 @@
 package com.mediaportal.remote.data;
 
 public class SupportedFunctions {
-   private boolean SupportsVideo;
+   private boolean SupportsVideos;
    private boolean SupportsMusic;
    private boolean SupportsPictures;
    private boolean SupportsTvSeries;
@@ -12,31 +12,32 @@ public class SupportedFunctions {
    private RemoteFunction PicturesFunction;
    private RemoteFunction TvSeriesFunction;
    private RemoteFunction MoviesFunction;
-   public boolean isSupportsVideo() {
-      return SupportsVideo;
+   
+   public boolean supportsVideo() {
+      return SupportsVideos;
    }
    public void setSupportsVideo(boolean supportsVideo) {
-      SupportsVideo = supportsVideo;
+      SupportsVideos = supportsVideo;
    }
-   public boolean isSupportsMusic() {
+   public boolean supportsMusic() {
       return SupportsMusic;
    }
    public void setSupportsMusic(boolean supportsMusic) {
       SupportsMusic = supportsMusic;
    }
-   public boolean isSupportsPictures() {
+   public boolean supportsPictures() {
       return SupportsPictures;
    }
    public void setSupportsPictures(boolean supportsPictures) {
       SupportsPictures = supportsPictures;
    }
-   public boolean isSupportsTvSeries() {
+   public boolean supportsTvSeries() {
       return SupportsTvSeries;
    }
    public void setSupportsTvSeries(boolean supportsTvSeries) {
       SupportsTvSeries = supportsTvSeries;
    }
-   public boolean isSupportsMovies() {
+   public boolean supportsMovies() {
       return SupportsMovies;
    }
    public void setSupportsMovies(boolean supportsMovies) {
