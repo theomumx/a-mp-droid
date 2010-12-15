@@ -29,7 +29,7 @@ public class WelcomeScreenActivity extends Activity {
 			
          RemoteClient client = new RemoteClient(0);
          
-         GmaWebserviceApi api = new GmaWebserviceApi("10.1.0.166", 4321);
+         GmaWebserviceApi api = new GmaWebserviceApi("10.1.0.247", 4322);
          client.setRemoteAccessApi(api);
          
          Tv4HomeApi tvApi = new Tv4HomeApi("10.1.0.166", 4321);

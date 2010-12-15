@@ -5,11 +5,13 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import org.ksoap2.serialization.SoapObject;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 
 import com.mediaportal.remote.api.IRemoteAccessApi;
 import com.mediaportal.remote.api.gmawebservice.soap.WcfAccessHandler;
@@ -22,6 +24,8 @@ import com.mediaportal.remote.data.SeriesEpisode;
 import com.mediaportal.remote.data.SeriesFull;
 import com.mediaportal.remote.data.SeriesSeason;
 import com.mediaportal.remote.data.SupportedFunctions;
+import com.mediaportal.remote.data.TvChannel;
+import com.mediaportal.remote.data.TvChannelGroup;
 
 public class GmaWebserviceApi implements IRemoteAccessApi {
    private GmaWebserviceMovieApi m_moviesAPI;
@@ -32,10 +36,12 @@ public class GmaWebserviceApi implements IRemoteAccessApi {
    private int m_port;
    private WcfAccessHandler m_wcfService;
 
-   private final String WCF_NAMESPACE = "http://tempuri.org/";
+   private final String WCF_NAMESPACE = "http://tempuri.org";
    private final String WCF_PREFIX = "http://";
-   private final String WCF_SUFFIX = "/basic";
+   private final String WCF_SUFFIX = "/";
    private final String WCF_METHOD_PREFIX = "IMediaAccessService";
+   
+   private final String GET_SUPPORTED_FUNCTIONS = "MP_GetSupportedFunctions";
 
    // Method constants
 
@@ -51,14 +57,21 @@ public class GmaWebserviceApi implements IRemoteAccessApi {
    }
 
    public SupportedFunctions getSupportedFunctions() {
-      SoapObject result = (SoapObject) m_wcfService
-            .MakeSoapCall("MP_GetSupportedFunctions");
+      String methodName = GET_SUPPORTED_FUNCTIONS;
+      SoapObject result = (SoapObject) m_wcfService.MakeSoapCall(methodName);
 
-      SupportedFunctions functions = (SupportedFunctions) Ksoap2ResultParser
-            .createObject((SoapObject) result.getProperty(0),
-                  SupportedFunctions.class);
-      ;
+      if (result != null) {
+         SupportedFunctions groups = (SupportedFunctions) Ksoap2ResultParser.createObject(result,
+               SupportedFunctions.class);
 
+         if (groups != null) {
+            return groups;
+         } else {
+            Log.d("Soap", "Error parsing result from soap method " + methodName);
+         }
+      } else {
+         Log.d("Soap", "Error calling soap method " + methodName);
+      }
       return null;
    }
 
