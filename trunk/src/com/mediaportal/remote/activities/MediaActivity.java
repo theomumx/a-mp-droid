@@ -3,6 +3,8 @@ package com.mediaportal.remote.activities;
 import com.mediaportal.remote.R;
 import com.mediaportal.remote.activities.media.TabMoviesActivity;
 import com.mediaportal.remote.activities.media.TabSeriesActivity;
+import com.mediaportal.remote.api.RemoteHandler;
+import com.mediaportal.remote.data.SupportedFunctions;
 
 import android.app.TabActivity;
 import android.content.Intent;
@@ -16,6 +18,9 @@ public class MediaActivity extends TabActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mediaactivity);
+        
+        RemoteHandler service = RemoteHandler.getCurrentRemoteInstance();
+        SupportedFunctions functions = service.getSupportedFunctions();
         
         TabHost tabHost = getTabHost();
 
