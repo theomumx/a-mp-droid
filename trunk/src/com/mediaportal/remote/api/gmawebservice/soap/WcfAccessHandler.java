@@ -36,7 +36,7 @@ public class WcfAccessHandler {
 				}
 			}
 
-			trans.call(m_namespace + "/" + m_methodPrefix + "/" + _method, env);
+			trans.call(m_methodPrefix + _method, env);
 			return env.getResponse();
 
 		} catch (IOException e) {

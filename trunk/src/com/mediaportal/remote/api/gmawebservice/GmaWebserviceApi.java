@@ -36,10 +36,10 @@ public class GmaWebserviceApi implements IRemoteAccessApi {
    private int m_port;
    private WcfAccessHandler m_wcfService;
 
-   private final String WCF_NAMESPACE = "http://tempuri.org";
+   private final String WCF_NAMESPACE = "http://tempuri.org/";
    private final String WCF_PREFIX = "http://";
-   private final String WCF_SUFFIX = "/";
-   private final String WCF_METHOD_PREFIX = "IMediaAccessService";
+   private final String WCF_SUFFIX = "/basic";
+   private final String WCF_METHOD_PREFIX = "http://tempuri.org/IMediaAccessService/";
    
    private final String GET_SUPPORTED_FUNCTIONS = "MP_GetSupportedFunctions";
 

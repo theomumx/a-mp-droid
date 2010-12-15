@@ -10,37 +10,47 @@ import android.app.TabActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TabHost;
+import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TabHost.TabSpec;
 
 public class MediaActivity extends TabActivity {
-    /** Called when the activity is first created. */
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.mediaactivity);
-        
-        RemoteHandler service = RemoteHandler.getCurrentRemoteInstance();
-        SupportedFunctions functions = service.getSupportedFunctions();
-        
-        TabHost tabHost = getTabHost();
+   /** Called when the activity is first created. */
+   @Override
+   public void onCreate(Bundle savedInstanceState) {
+      super.onCreate(savedInstanceState);
+      setContentView(R.layout.mediaactivity);
 
-        /** tid1 is firstTabSpec Id. Its used to access outside. */
-        TabSpec sharesTabSpec = tabHost.newTabSpec("tid0");
-        TabSpec videosTabSpec = tabHost.newTabSpec("tid1");
-        TabSpec seriesTabSpec = tabHost.newTabSpec("tid2");
-        TabSpec moviesTabSpec = tabHost.newTabSpec("tid3");
-        
-        /** TabSpec setIndicator() is used to set name for the tab. */
-        /** TabSpec setContent() is used to set content for a particular tab. */
-        sharesTabSpec.setIndicator("Shares").setContent(new Intent(this,TabMoviesActivity.class));
-        videosTabSpec.setIndicator("Videos").setContent(new Intent(this,TabMoviesActivity.class));
-        seriesTabSpec.setIndicator("Series").setContent(new Intent(this,TabSeriesActivity.class));
-        moviesTabSpec.setIndicator("Movies").setContent(new Intent(this,TabMoviesActivity.class));
+      RemoteHandler service = RemoteHandler.getCurrentRemoteInstance();
+      SupportedFunctions functions = service.getSupportedFunctions();
 
-        /** Add tabSpec to the TabHost to display. */
-        tabHost.addTab(sharesTabSpec);
-        tabHost.addTab(videosTabSpec);
-        tabHost.addTab(seriesTabSpec);
-        tabHost.addTab(moviesTabSpec);
-    }
+      TabHost tabHost = getTabHost();
+
+      if (functions.supportsVideo()) {
+         /** tid1 is firstTabSpec Id. Its used to access outside. */
+         TabSpec sharesTabSpec = tabHost.newTabSpec("tid0");
+         sharesTabSpec.setIndicator("Shares");
+         sharesTabSpec.setContent(new Intent(this, TabMoviesActivity.class));
+         tabHost.addTab(sharesTabSpec);
+         
+         TabSpec videosTabSpec = tabHost.newTabSpec("tid1");
+         videosTabSpec.setIndicator("Videos");
+         videosTabSpec.setContent(new Intent(this, TabMoviesActivity.class));
+         tabHost.addTab(videosTabSpec);
+      }
+      
+      
+      if(functions.supportsTvSeries()){
+         TabSpec seriesTabSpec = tabHost.newTabSpec("tid2");
+         seriesTabSpec.setIndicator("Series");
+         seriesTabSpec.setContent(new Intent(this, TabSeriesActivity.class));
+         tabHost.addTab(seriesTabSpec);
+      }
+      
+      if(functions.supportsMovies()){
+         TabSpec moviesTabSpec = tabHost.newTabSpec("tid3");
+         moviesTabSpec.setIndicator("Movies");
+         moviesTabSpec.setContent(new Intent(this, TabMoviesActivity.class));
+         tabHost.addTab(moviesTabSpec);
+      }
+   }
 }
