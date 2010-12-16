@@ -3,6 +3,8 @@ package com.mediaportal.remote.activities;
 import com.mediaportal.remote.R;
 import com.mediaportal.remote.activities.media.TabMoviesActivity;
 import com.mediaportal.remote.activities.media.TabSeriesActivity;
+import com.mediaportal.remote.activities.media.TabSharesActivity;
+import com.mediaportal.remote.activities.media.TabVideosActivity;
 import com.mediaportal.remote.api.RemoteHandler;
 import com.mediaportal.remote.data.SupportedFunctions;
 
@@ -29,12 +31,12 @@ public class MediaActivity extends TabActivity {
          /** tid1 is firstTabSpec Id. Its used to access outside. */
          TabSpec sharesTabSpec = tabHost.newTabSpec("tid0");
          sharesTabSpec.setIndicator("Shares");
-         sharesTabSpec.setContent(new Intent(this, TabMoviesActivity.class));
+         sharesTabSpec.setContent(new Intent(this, TabSharesActivity.class));
          tabHost.addTab(sharesTabSpec);
          
          TabSpec videosTabSpec = tabHost.newTabSpec("tid1");
          videosTabSpec.setIndicator("Videos");
-         videosTabSpec.setContent(new Intent(this, TabMoviesActivity.class));
+         videosTabSpec.setContent(new Intent(this, TabVideosActivity.class));
          tabHost.addTab(videosTabSpec);
       }
       
