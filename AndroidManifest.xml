@@ -26,5 +26,6 @@
 		<activity android:name="com.mediaportal.remote.activities.media.TabVideosActivity"></activity>
 		<activity android:name="com.mediaportal.remote.activities.MusicActivity"></activity>
 		<activity android:name="com.mediaportal.remote.activities.TvServerActivity"></activity>
+		<activity android:name="com.mediaportal.remote.activities.RemoteControlActivity"></activity>
 	</application>
 </manifest> 
