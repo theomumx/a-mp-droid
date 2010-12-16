@@ -24,6 +24,8 @@ public class HomeActivity extends Activity {
             Vibrate(50);
             Toast toast = Toast.makeText(v.getContext(), "Remote not implemented yet", Toast.LENGTH_SHORT);
             toast.show();
+            Intent myIntent = new Intent(v.getContext(), RemoteControlActivity.class);
+            startActivity(myIntent);
          }
       });
 
@@ -39,7 +41,6 @@ public class HomeActivity extends Activity {
       final ImageButton buttonTv = (ImageButton) findViewById(R.id.ImageButtonTv);
       buttonTv.setOnClickListener(new View.OnClickListener() {
          public void onClick(View v) {
-            Vibrate(50);
             Vibrate(50);
             Intent myIntent = new Intent(v.getContext(), TvServerActivity.class);
             startActivity(myIntent);
