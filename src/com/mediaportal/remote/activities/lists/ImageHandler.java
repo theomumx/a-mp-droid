@@ -17,6 +17,7 @@ import android.graphics.BitmapFactory;
 import android.widget.ImageView;
 
 import com.mediaportal.remote.R;
+import com.mediaportal.remote.api.RemoteHandler;
 
 
 public class ImageHandler {
@@ -94,16 +95,9 @@ public class ImageHandler {
 
 			// from web
 			try {
-				URL myFileUrl= new URL("http://bagga-laptop:4321/json/FS_GetImage/?path=" + URLEncoder.encode(url,"UTF-8"));
-				HttpURLConnection conn= (HttpURLConnection)myFileUrl.openConnection();
-	               conn.setDoInput(true);
-	               conn.connect();
-	               int length = conn.getContentLength();
-	               InputStream is = conn.getInputStream();
-	               
-	               Bitmap bmImg = BitmapFactory.decodeStream(is);
-	               
-	               return bmImg;
+			   RemoteHandler service = RemoteHandler.getCurrentRemoteInstance();
+			   Bitmap bmImg = service.getImage(url);
+			   return bmImg;
 			} catch (Exception ex) {
 				ex.printStackTrace();
 				return null;

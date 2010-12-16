@@ -1,7 +1,10 @@
 package com.mediaportal.remote.api.gmawebservice;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -40,8 +43,11 @@ public class GmaWebserviceApi implements IRemoteAccessApi {
    private final String WCF_PREFIX = "http://";
    private final String WCF_SUFFIX = "/basic";
    private final String WCF_METHOD_PREFIX = "http://tempuri.org/IMediaAccessService/";
-   
+
    private final String GET_SUPPORTED_FUNCTIONS = "MP_GetSupportedFunctions";
+
+   private final String JSON_PREFIX = "http://";
+   private final String JSON_SUFFIX = "/json";
 
    // Method constants
 
@@ -49,8 +55,8 @@ public class GmaWebserviceApi implements IRemoteAccessApi {
       m_server = _server;
       m_port = _port;
 
-      m_wcfService = new WcfAccessHandler(WCF_PREFIX + m_server + ":" + m_port
-            + WCF_SUFFIX, WCF_NAMESPACE, WCF_METHOD_PREFIX);
+      m_wcfService = new WcfAccessHandler(WCF_PREFIX + m_server + ":" + m_port + WCF_SUFFIX,
+            WCF_NAMESPACE, WCF_METHOD_PREFIX);
       m_moviesAPI = new GmaWebserviceMovieApi(m_wcfService);
       m_seriesAPI = new GmaWebserviceSeriesApi(m_wcfService);
       m_musicAPI = new GmaWebserviceMusicApi(m_wcfService);
@@ -126,32 +132,34 @@ public class GmaWebserviceApi implements IRemoteAccessApi {
    }
 
    @Override
-   public ArrayList<SeriesEpisode> getAllEpisodesForSeason(int _seriesId,
-         int _seasonNumber) {
+   public ArrayList<SeriesEpisode> getAllEpisodesForSeason(int _seriesId, int _seasonNumber) {
       return m_seriesAPI.getAllEpisodesForSeason(_seriesId, _seasonNumber);
    }
 
    @Override
-   public Bitmap getBitmap(String _id) {
-      // from web
+   public Bitmap getBitmap(String _url) {
+      URL myFileUrl = null;
+      Bitmap bmImg = null;
       try {
-         URL myFileUrl = new URL(
-               "http://bagga-laptop:4321/json/FS_GetImage/?path="
-                     + URLEncoder.encode(_id, "UTF-8"));
-         HttpURLConnection conn = (HttpURLConnection) myFileUrl
-               .openConnection();
+         myFileUrl = new URL(JSON_PREFIX + m_server + ":" + m_port + JSON_SUFFIX
+               + "/FS_GetImage/?path=" + URLEncoder.encode(_url, "UTF-8"));
+         HttpURLConnection conn = (HttpURLConnection) myFileUrl.openConnection();
          conn.setDoInput(true);
          conn.connect();
-         int length = conn.getContentLength();
          InputStream is = conn.getInputStream();
 
-         Bitmap bmImg = BitmapFactory.decodeStream(is);
-
-         return bmImg;
-      } catch (Exception ex) {
-         ex.printStackTrace();
-         return null;
+         bmImg = BitmapFactory.decodeStream(is);
+      } catch (MalformedURLException e) {
+         e.printStackTrace();
+      } catch (UnsupportedEncodingException e) {
+         e.printStackTrace();
+      } catch (IOException e) {
+         // TODO Auto-generated catch block
+         e.printStackTrace();
       }
+
+
+      return bmImg;
    }
 
    @Override

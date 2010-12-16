@@ -169,4 +169,7 @@ public class RemoteHandler {
       return functions;
    }
 
+   public Bitmap getImage(String _url) {
+      return client.getRemoteAccessApi().getBitmap(_url);
+   }
 }

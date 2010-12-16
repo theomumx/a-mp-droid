@@ -32,7 +32,7 @@ public class WelcomeScreenActivity extends Activity {
          GmaWebserviceApi api = new GmaWebserviceApi("bagga-laptop", 4322);
          client.setRemoteAccessApi(api);
          
-         Tv4HomeApi tvApi = new Tv4HomeApi("10.1.0.166", 4321);
+         Tv4HomeApi tvApi = new Tv4HomeApi("10.1.0.167", 4321);
          client.setTvControlApi(tvApi);
          
          RemoteHandler.setupRemoteHandler(client);
