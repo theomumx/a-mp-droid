@@ -1,5 +1,16 @@
 package com.mediaportal.remote.api;
 
-public interface IClientControlApi {
+import com.mediaportal.remote.data.commands.RemoteKey;
 
+public interface IClientControlApi {
+   boolean connect();
+   void disconnect();
+   boolean isConnected();
+   
+   void addApiListener(IClientControlListener _listener);
+   
+   void sendKeyCommand(RemoteKey _key);
+   void setVolume(int level);
+   int getVolume();
+   
 }
