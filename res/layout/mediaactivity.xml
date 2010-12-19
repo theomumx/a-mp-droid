@@ -21,7 +21,7 @@
             android:id="@android:id/tabcontent"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:padding="5dp" />
+            android:layout_marginBottom="30dip"/>
     </LinearLayout>
     <include layout="@layout/include_sliding_drawer"/>
 	</TabHost>
