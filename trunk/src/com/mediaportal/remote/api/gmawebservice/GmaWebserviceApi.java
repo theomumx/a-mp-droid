@@ -8,7 +8,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import org.ksoap2.serialization.SoapObject;
 
@@ -27,8 +26,6 @@ import com.mediaportal.remote.data.SeriesEpisode;
 import com.mediaportal.remote.data.SeriesFull;
 import com.mediaportal.remote.data.SeriesSeason;
 import com.mediaportal.remote.data.SupportedFunctions;
-import com.mediaportal.remote.data.TvChannel;
-import com.mediaportal.remote.data.TvChannelGroup;
 
 public class GmaWebserviceApi implements IRemoteAccessApi {
    private GmaWebserviceMovieApi m_moviesAPI;
@@ -154,10 +151,32 @@ public class GmaWebserviceApi implements IRemoteAccessApi {
       } catch (UnsupportedEncodingException e) {
          e.printStackTrace();
       } catch (IOException e) {
-         // TODO Auto-generated catch block
          e.printStackTrace();
       }
 
+      return bmImg;
+   }
+   
+   @Override
+   public Bitmap getBitmap(String _url, int _maxWidth, int _maxHeight) {
+      URL myFileUrl = null;
+      Bitmap bmImg = null;
+      try {
+         myFileUrl = new URL(JSON_PREFIX + m_server + ":" + m_port + JSON_SUFFIX
+               + "/FS_GetImage/?path=" + URLEncoder.encode(_url, "UTF-8"));
+         HttpURLConnection conn = (HttpURLConnection) myFileUrl.openConnection();
+         conn.setDoInput(true);
+         conn.connect();
+         InputStream is = conn.getInputStream();
+
+         bmImg = BitmapFactory.decodeStream(is);
+      } catch (MalformedURLException e) {
+         e.printStackTrace();
+      } catch (UnsupportedEncodingException e) {
+         e.printStackTrace();
+      } catch (IOException e) {
+         e.printStackTrace();
+      }
 
       return bmImg;
    }

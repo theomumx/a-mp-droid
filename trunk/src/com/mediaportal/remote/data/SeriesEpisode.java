@@ -5,140 +5,174 @@ import java.util.Date;
 import com.mediaportal.remote.activities.lists.ILoadingAdapter;
 
 public class SeriesEpisode implements ILoadingAdapter {
-	private int id;
-	private String name;
-	private int seasonNumber;
-	private int episodeNumber;
-	private int watched;
-	private Date firstAired;
-	private String bannerUrl;
-	private String bannerThumbUrl;
-	private float rating;
-	private float myRating;
-	private boolean hasLocalFile;
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public int getSeasonNumber() {
-		return seasonNumber;
-	}
-
-	public void setSeasonNumber(int seasonNumber) {
-		this.seasonNumber = seasonNumber;
-	}
-
-	public int getEpisodeNumber() {
-		return episodeNumber;
-	}
-
-	public void setEpisodeNumber(int episodeNumber) {
-		this.episodeNumber = episodeNumber;
-	}
-
-	public int getWatched() {
-		return watched;
-	}
-
-	public void setWatched(int watched) {
-		this.watched = watched;
-	}
-
-	public Date getFirstAired() {
-		return firstAired;
-	}
-
-	public void setFirstAired(Date firstAired) {
-		this.firstAired = firstAired;
-	}
-
-	public String getBannerUrl() {
-		return bannerUrl;
-	}
-
-	public void setBannerUrl(String bannerUrl) {
-		this.bannerUrl = bannerUrl;
-	}
-
-	public String getBannerThumbUrl() {
-		return bannerThumbUrl;
-	}
-
-	public void setBannerThumbUrl(String bannerThumbUrl) {
-		this.bannerThumbUrl = bannerThumbUrl;
-	}
-
-	public float getRating() {
-		return rating;
-	}
-
-	public void setRating(float rating) {
-		this.rating = rating;
-	}
-
-	public float getMyRating() {
-		return myRating;
-	}
-
-	public void setMyRating(float myRating) {
-		this.myRating = myRating;
-	}
-
-	public boolean isHasLocalFile() {
-		return hasLocalFile;
-	}
-
-	public void setHasLocalFile(boolean hasLocalFile) {
-		this.hasLocalFile = hasLocalFile;
-	}
-
+	private int Id;
+	private String Name;
+	private int SeasonNumber;
+	private int EpisodeNumber;
+	private int Watched;
+	private Date FirstAired;
+	private String BannerUrl;
+	private float Rating;
+	private int RatingCount;
+	private boolean HasLocalFile;
+	
 	public SeriesEpisode() {
 
 	}
 
 	@Override
 	public String toString() {
-		if (name != null) {
-			return name;
+		if (getName() != null) {
+			return getName();
 		} else
 			return super.toString();
 	}
 
 	@Override
 	public String getImage() {
-		return bannerUrl;
+		return getBannerUrl();
 	}
 
 	@Override
 	public String getSubText() {
-		return seasonNumber + "x" + episodeNumber;
+		return getSeasonNumber() + "x" + getEpisodeNumber();
 	}
 
 	@Override
 	public String getText() {
-		return name;
+		return getName();
 	}
 	
 	@Override
 	public String getTitle() {
-		return name;
+		return getName();
 	}
 
 	@Override
 	public int getTextColor() {
 		return 0;
 	}
+
+
+
+   public int getId() {
+      return Id;
+   }
+
+
+
+   public void setId(int id) {
+      Id = id;
+   }
+
+
+
+   public String getName() {
+      return Name;
+   }
+
+
+
+   public void setName(String name) {
+      Name = name;
+   }
+
+
+
+   public int getSeasonNumber() {
+      return SeasonNumber;
+   }
+
+
+
+   public void setSeasonNumber(int seasonNumber) {
+      SeasonNumber = seasonNumber;
+   }
+
+
+
+   public int getEpisodeNumber() {
+      return EpisodeNumber;
+   }
+
+
+
+   public void setEpisodeNumber(int episodeNumber) {
+      EpisodeNumber = episodeNumber;
+   }
+
+
+
+   public int getWatched() {
+      return Watched;
+   }
+
+
+
+   public void setWatched(int watched) {
+      Watched = watched;
+   }
+
+
+
+   public Date getFirstAired() {
+      return FirstAired;
+   }
+
+
+
+   public void setFirstAired(Date firstAired) {
+      FirstAired = firstAired;
+   }
+
+
+
+   public String getBannerUrl() {
+      return BannerUrl;
+   }
+
+
+
+   public void setBannerUrl(String bannerUrl) {
+      BannerUrl = bannerUrl;
+   }
+
+
+
+   public float getRating() {
+      return Rating;
+   }
+
+
+
+   public void setRating(float rating) {
+      Rating = rating;
+   }
+
+
+
+   public int getRatingCount() {
+      return RatingCount;
+   }
+
+
+
+   public void setRatingCount(int ratingCount) {
+      RatingCount = ratingCount;
+   }
+
+
+
+   public boolean isHasLocalFile() {
+      return HasLocalFile;
+   }
+
+
+
+   public void setHasLocalFile(boolean hasLocalFile) {
+      HasLocalFile = hasLocalFile;
+   }
+	
+	
+	
 }
