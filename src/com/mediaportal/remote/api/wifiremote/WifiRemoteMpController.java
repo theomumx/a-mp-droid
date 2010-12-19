@@ -1,28 +1,19 @@
 package com.mediaportal.remote.api.wifiremote;
 
-import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.lang.reflect.Type;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.json.JSONObject;
-
 import android.os.AsyncTask;
 
 import com.google.myjson.Gson;
 import com.google.myjson.GsonBuilder;
-import com.google.myjson.reflect.TypeToken;
 import com.mediaportal.remote.api.IClientControlApi;
 import com.mediaportal.remote.api.IClientControlListener;
-import com.mediaportal.remote.api.mpclient.MPClientServerMessage;
 import com.mediaportal.remote.data.commands.RemoteKey;
 
 public class WifiRemoteMpController implements IClientControlApi {
@@ -138,10 +129,8 @@ public class WifiRemoteMpController implements IClientControlApi {
          return true;
 
       } catch (UnknownHostException e) {
-         // TODO Auto-generated catch block
          e.printStackTrace();
       } catch (IOException e) {
-         // TODO Auto-generated catch block
          e.printStackTrace();
       }
       return false;
@@ -168,15 +157,6 @@ public class WifiRemoteMpController implements IClientControlApi {
    @Override
    public void addApiListener(IClientControlListener _listener) {
       listeners.add(_listener);
-      /*
-       * try { //response = input.readLine(); JSONObject j = new
-       * JSONObject(response); Type objType = new
-       * TypeToken<MPClientServerMessage>() { }.getType(); MPClientServerMessage
-       * club = null; club = gson.fromJson(j.toString(), objType); } catch
-       * (IOException e) { // TODO Auto-generated catch block
-       * e.printStackTrace(); }
-       */
-
    }
 
    @Override

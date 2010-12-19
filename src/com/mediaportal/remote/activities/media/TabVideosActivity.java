@@ -176,7 +176,8 @@ public class TabVideosActivity extends Activity {
 
       coverFlow.setSpacing(-60);
       coverFlow.setSelection(4, true);
-      coverFlow.setAnimationDuration(500);
+      coverFlow.setAnimationDuration(100);
+      ///coverFlow.setAnimat
 
       setContentView(coverFlow);
 

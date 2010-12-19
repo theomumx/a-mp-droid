@@ -1,125 +1,95 @@
 package com.mediaportal.remote.data;
 
-import java.util.ArrayList;
-
 import com.mediaportal.remote.activities.lists.ILoadingAdapter;
 
 public class SeriesSeason implements ILoadingAdapter{
-	private String id;
-	private int seriesId;
-	private int seasonNumber;
-	private int episodesCount;
-	private int episodesUnwatchedCount;
-	private String seasonBanner;
-	private String seasonBannerThumb;
-	private ArrayList<String> alternateSeasonBanners;
-	private ArrayList<String> alternateSeasonBannerThumbs;
-
+	private String Id;
+	private int SeriesId;
+	private int SeasonNumber;
+	private int EpisodesCount;
+	private int EpisodesUnwatchedCount;
+	private String SeasonBanner;
+	private String[] AlternateSeasonBanners;
+	
 	public String getId() {
-		return id;
-	}
+      return Id;
+   }
 
-	public void setId(String id) {
-		this.id = id;
-	}
+   public void setId(String id) {
+      Id = id;
+   }
 
-	public int getSeriesId() {
-		return seriesId;
-	}
+   public int getSeriesId() {
+      return SeriesId;
+   }
 
-	public void setSeriesId(int seriesId) {
-		this.seriesId = seriesId;
-	}
+   public void setSeriesId(int seriesId) {
+      SeriesId = seriesId;
+   }
 
-	public int getSeasonNumber() {
-		return seasonNumber;
-	}
+   public int getSeasonNumber() {
+      return SeasonNumber;
+   }
 
-	public void setSeasonNumber(int seasonNumber) {
-		this.seasonNumber = seasonNumber;
-	}
+   public void setSeasonNumber(int seasonNumber) {
+      SeasonNumber = seasonNumber;
+   }
 
-	public int getEpisodesCount() {
-		return episodesCount;
-	}
+   public int getEpisodesCount() {
+      return EpisodesCount;
+   }
 
-	public void setEpisodesCount(int episodesCount) {
-		this.episodesCount = episodesCount;
-	}
+   public void setEpisodesCount(int episodesCount) {
+      EpisodesCount = episodesCount;
+   }
 
-	public int getEpisodesUnwatchedCount() {
-		return episodesUnwatchedCount;
-	}
+   public int getEpisodesUnwatchedCount() {
+      return EpisodesUnwatchedCount;
+   }
 
-	public void setEpisodesUnwatchedCount(int episodesUnwatchedCount) {
-		this.episodesUnwatchedCount = episodesUnwatchedCount;
-	}
+   public void setEpisodesUnwatchedCount(int episodesUnwatchedCount) {
+      EpisodesUnwatchedCount = episodesUnwatchedCount;
+   }
 
-	public String getSeasonBanner() {
-		return seasonBanner;
-	}
+   public String getSeasonBanner() {
+      return SeasonBanner;
+   }
 
-	public void setSeasonBanner(String seasonBanner) {
-		this.seasonBanner = seasonBanner;
-	}
+   public void setSeasonBanner(String seasonBanner) {
+      SeasonBanner = seasonBanner;
+   }
 
-	public String getSeasonBannerThumb() {
-		return seasonBannerThumb;
-	}
+   public String[] getAlternateSeasonBanners() {
+      return AlternateSeasonBanners;
+   }
 
-	public void setSeasonBannerThumb(String seasonBannerThumb) {
-		this.seasonBannerThumb = seasonBannerThumb;
-	}
+   public void setAlternateSeasonBanners(String[] alternateSeasonBanners) {
+      AlternateSeasonBanners = alternateSeasonBanners;
+   }
 
-	public ArrayList<String> getAlternateSeasonBanners() {
-		return alternateSeasonBanners;
-	}
-
-	public void setAlternateSeasonBanners(
-			ArrayList<String> alternateSeasonBanners) {
-		this.alternateSeasonBanners = alternateSeasonBanners;
-	}
-
-	public ArrayList<String> getAlternateSeasonBannerThumbs() {
-		return alternateSeasonBannerThumbs;
-	}
-
-	public void setAlternateSeasonBannerThumbs(
-			ArrayList<String> alternateSeasonBannerThumbs) {
-		this.alternateSeasonBannerThumbs = alternateSeasonBannerThumbs;
-	}
-
-
-
-	@Override
+   @Override
 	public String getImage() {
-		// TODO Auto-generated method stub
-		return seasonBannerThumb;
-		//return (seasonBannerThumb != null ? seasonBannerThumb : seasonBanner);
+		return getSeasonBanner();
 	}
 
 	@Override
 	public String getSubText() {
-		// TODO Auto-generated method stub
-		return episodesUnwatchedCount + "/" + episodesCount;
+		return getEpisodesUnwatchedCount() + "/" + getEpisodesCount();
 	}
 
 	@Override
 	public String getText() {
-		// TODO Auto-generated method stub
-		return "Season " + seasonNumber;
+		return "Season " + getSeasonNumber();
 	}
 
 	@Override
 	public int getTextColor() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
 	public String getTitle() {
-		// TODO Auto-generated method stub
-		return null;
+		return "";
 	}
 
 }

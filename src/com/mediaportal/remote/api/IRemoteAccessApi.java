@@ -21,6 +21,7 @@ public interface IRemoteAccessApi {
 	ArrayList<Movie> getMovies(int _start, int _end);
 	MovieFull getMovieDetails(int _movieId);
 	Bitmap getBitmap(String _id);
+	Bitmap getBitmap(String _url, int _maxWidth, int _maxHeight);
 	ArrayList<Series> getAllSeries();
 	ArrayList<Series> getSeries(int _start, int _end);
 	SeriesFull getFullSeries(int _seriesId);
@@ -31,4 +32,5 @@ public interface IRemoteAccessApi {
 	SupportedFunctions getSupportedFunctions();
 	ArrayList<MusicAlbum> getAllAlbums();
 	List<MusicAlbum> getAlbums(int _start, int _end);
+   
 }

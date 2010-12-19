@@ -5,14 +5,14 @@ import android.graphics.Color;
 import com.mediaportal.remote.activities.lists.ILoadingAdapter;
 
 public class Movie implements ILoadingAdapter {
-	private int id;
-	private String name;
-	private String tagline;
-	private String filename;
-	private String genreString;
-	private int year;
-	private String parentalRating;
-	private String coverThumbPath;
+	private int Id;
+	private String Title;
+	private String TagLine;
+	private String Filename;
+	private String Genre;
+	private int Year;
+	private String ParentalRating;
+	private String CoverThumbPath;
 	
 	public Movie()
 	{
@@ -21,91 +21,91 @@ public class Movie implements ILoadingAdapter {
 	
 	@Override 
 	public String toString() {
-		if(name != null)
+		if(Title != null)
 		{
-			return name;
+			return Title;
 		}
 		else return super.toString();
     }
 	
 	public String getTagline() {
-		return tagline;
+		return TagLine;
 	}
 
 	public void setTagline(String tagline) {
-		this.tagline = tagline;
+		this.TagLine = tagline;
 	}
 
 	public String getFilename() {
-		return filename;
+		return Filename;
 	}
 
 	public void setFilename(String filename) {
-		this.filename = filename;
+		this.Filename = filename;
 	}
 
 	public String getGenreString() {
-		return genreString;
+		return Genre;
 	}
 
 	public void setGenreString(String genreString) {
-		this.genreString = genreString;
+		this.Genre = genreString;
 	}
 
 	public int getYear() {
-		return year;
+		return Year;
 	}
 
 	public void setYear(int year) {
-		this.year = year;
+		this.Year = year;
 	}
 
 	public String getParentalRating() {
-		return parentalRating;
+		return ParentalRating;
 	}
 
 	public void setParentalRating(String parentalRating) {
-		this.parentalRating = parentalRating;
+		this.ParentalRating = parentalRating;
 	}
 
 	public String getCoverThumbPath() {
-		return coverThumbPath;
+		return CoverThumbPath;
 	}
 
 	public void setCoverThumbPath(String coverThumbPath) {
-		this.coverThumbPath = coverThumbPath;
+		this.CoverThumbPath = coverThumbPath;
 	}
 
 
 	public int getId() {
-		return id;
+		return Id;
 	}
 
 	public void setId(int id) {
-		this.id = id;
+		this.Id = id;
 	}
 
 	public String getName() {
-		return name;
+		return Title;
 	}
 
 	public void setName(String name) {
-		this.name = name;
+		this.Title = name;
 	}
 
 	@Override
 	public String getImage() {
-		return this.coverThumbPath;
+		return this.CoverThumbPath;
 	}
 
 	@Override
 	public String getSubText() {
-		return this.tagline;
+		return this.TagLine;
 	}
 
 	@Override
 	public String getText() {
-		return Integer.toString(this.year);
+		return Integer.toString(this.Year);
 	}
 
 	@Override
@@ -115,6 +115,6 @@ public class Movie implements ILoadingAdapter {
 
 	@Override
 	public String getTitle() {
-		return this.name;
+		return this.Title;
 	}
 }
