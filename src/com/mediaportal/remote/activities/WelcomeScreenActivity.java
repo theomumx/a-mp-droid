@@ -1,19 +1,17 @@
 package com.mediaportal.remote.activities;
 
-import com.mediaportal.remote.R;
-import com.mediaportal.remote.api.RemoteHandler;
-import com.mediaportal.remote.api.gmawebservice.GmaWebserviceApi;
-import com.mediaportal.remote.api.tv4home.Tv4HomeApi;
-import com.mediaportal.remote.data.RemoteClient;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.LinearLayout;
+
+import com.mediaportal.remote.R;
+import com.mediaportal.remote.api.RemoteHandler;
+import com.mediaportal.remote.api.gmawebservice.GmaWebserviceApi;
+import com.mediaportal.remote.api.tv4home.Tv4HomeApi;
+import com.mediaportal.remote.api.wifiremote.WifiRemoteMpController;
+import com.mediaportal.remote.data.RemoteClient;
 
 public class WelcomeScreenActivity extends Activity {
 	private class StartupTask extends AsyncTask<String, String, Boolean> {
@@ -35,13 +33,15 @@ public class WelcomeScreenActivity extends Activity {
          Tv4HomeApi tvApi = new Tv4HomeApi("10.1.0.167", 4321);
          client.setTvControlApi(tvApi);
          
+         WifiRemoteMpController clientApi = new WifiRemoteMpController("10.1.0.247", 8017);
+         client.setClientControlApi(clientApi);
+         
          RemoteHandler.setupRemoteHandler(client);
          RemoteHandler.setCurrentRemoteInstance(client.getClientId());
          
          try {
-            Thread.sleep(2000);
+            Thread.sleep(0);//for testing, show welcomescreen longer than necessary
          } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
          }
          return true;
@@ -68,15 +68,6 @@ public class WelcomeScreenActivity extends Activity {
 		setContentView(R.layout.welcomescreen);
 		
 		StartupTask task = new StartupTask(this);
-		task.execute(null);
-		
-		LinearLayout background = (LinearLayout) findViewById(R.id.LinearLayoutLoadingBackground);
-		background.setOnClickListener(new OnClickListener() {
-         @Override
-         public void onClick(View v) {
-            StartupTask task = new StartupTask(v.getContext());
-            task.execute(null);
-         }
-      });
+		task.execute();
 	}
 }

@@ -18,6 +18,7 @@ import com.mediaportal.remote.data.TvCard;
 import com.mediaportal.remote.data.TvCardDetails;
 import com.mediaportal.remote.data.TvChannel;
 import com.mediaportal.remote.data.TvChannelGroup;
+import com.mediaportal.remote.data.commands.RemoteKey;
 
 public class RemoteHandler {
    private RemoteClient client;
@@ -171,5 +172,33 @@ public class RemoteHandler {
 
    public Bitmap getImage(String _url) {
       return client.getRemoteAccessApi().getBitmap(_url);
+   }
+   
+   public void addClientControlListener(IClientControlListener _listener){
+      client.getClientControlApi().addApiListener(_listener);
+   }
+   
+   public boolean connectClientControl(){
+      return client.getClientControlApi().connect();      
+   }
+   
+   public void disconnectClientControl(){
+      client.getClientControlApi().disconnect();
+   }
+   
+   public boolean isClientControlConnected(){
+      return client.getClientControlApi().isConnected();
+   }
+   
+   public void sendRemoteButton(RemoteKey _button){
+      client.getClientControlApi().sendKeyCommand(_button);
+   }
+
+   public void sendClientVolume(int _level) {
+      client.getClientControlApi().setVolume(_level);      
+   }
+   
+   public int getClientVolume(){
+      return client.getClientControlApi().getVolume();
    }
 }

@@ -1,4 +1,4 @@
-package com.mediaportal.remote.api.mpclient;
+package com.mediaportal.remote.api;
 
 import com.mediaportal.remote.data.commands.RemoteKey;
 
@@ -10,4 +10,7 @@ public class RemoteCommands {
    public static RemoteKey backButton = new RemoteKey(4, "Back", "back", "");
    public static RemoteKey okButton = new RemoteKey(4, "OK", "ok", "");
    public static RemoteKey infoButton = new RemoteKey(5, "Info", "info", "");
+   public static RemoteKey pauseButton = new RemoteKey(5, "Pause", "pause", "");
+   public static RemoteKey prevButton = new RemoteKey(5, "Prev", "rewind", "");
+   public static RemoteKey nextButton = new RemoteKey(5, "Next", "forward", "");
 }

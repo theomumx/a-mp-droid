@@ -17,15 +17,17 @@
 			</intent-filter>
 		</activity>
 
-		<activity android:name="com.mediaportal.remote.activities.HomeActivity"></activity>
-		<activity android:name="com.mediaportal.remote.activities.MediaActivity"></activity>
-		<activity android:name="com.mediaportal.remote.activities.media.TabMoviesActivity"></activity>
-		<activity android:name="com.mediaportal.remote.activities.media.TabMovieDetailsActivity"></activity>
-		<activity android:name="com.mediaportal.remote.activities.media.TabSeriesActivity"></activity>
-		<activity android:name="com.mediaportal.remote.activities.media.TabSharesActivity"></activity>
-		<activity android:name="com.mediaportal.remote.activities.media.TabVideosActivity"></activity>
-		<activity android:name="com.mediaportal.remote.activities.MusicActivity"></activity>
-		<activity android:name="com.mediaportal.remote.activities.TvServerActivity"></activity>
-		<activity android:name="com.mediaportal.remote.activities.RemoteControlActivity"></activity>
+		<activity android:name="com.mediaportal.remote.activities.HomeActivity" android:screenOrientation="portrait"></activity>
+		<activity android:name="com.mediaportal.remote.activities.MediaActivity" android:screenOrientation="portrait"></activity>
+		<activity android:name="com.mediaportal.remote.activities.media.TabMoviesActivity" android:screenOrientation="portrait"></activity>
+		<activity android:name="com.mediaportal.remote.activities.media.TabMovieDetailsActivity" android:screenOrientation="portrait"></activity>
+		<activity android:name="com.mediaportal.remote.activities.media.TabSeriesActivity" android:screenOrientation="portrait"></activity>
+		<activity android:name="com.mediaportal.remote.activities.media.TabSharesActivity" android:screenOrientation="portrait"></activity>
+		<activity android:name="com.mediaportal.remote.activities.media.TabVideosActivity" android:screenOrientation="portrait"></activity>
+		<activity android:name="com.mediaportal.remote.activities.MusicActivity" android:screenOrientation="portrait"></activity>
+		<activity android:name="com.mediaportal.remote.activities.PicturesActivity" android:screenOrientation="portrait"></activity>
+		<activity android:name="com.mediaportal.remote.activities.TvServerActivity" android:screenOrientation="portrait"></activity>
+		<activity android:name="com.mediaportal.remote.activities.RemoteControlActivity" android:screenOrientation="portrait"></activity>
+		<activity android:name="com.mediaportal.remote.activities.StatusBarActivity" android:screenOrientation="portrait"></activity>
 	</application>
 </manifest> 

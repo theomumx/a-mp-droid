@@ -8,6 +8,7 @@ import com.google.myjson.Gson;
 import com.google.myjson.GsonBuilder;
 import com.google.myjson.reflect.TypeToken;
 import com.mediaportal.remote.api.IClientControlApi;
+import com.mediaportal.remote.api.IClientControlListener;
 import com.mediaportal.remote.api.rest.RestClient;
 import com.mediaportal.remote.api.rest.RestClient.RequestMethod;
 import com.mediaportal.remote.data.commands.RemoteKey;
@@ -49,5 +50,47 @@ public class MPClientController implements IClientControlApi {
          e.printStackTrace();
          return null;
       }
+   }
+
+   @Override
+   public void addApiListener(IClientControlListener _listener) {
+      
+      
+   }
+
+   @Override
+   public boolean connect() {
+      // TODO Auto-generated method stub
+      return false;
+   }
+
+   @Override
+   public void disconnect() {
+      // TODO Auto-generated method stub
+      
+   }
+
+   @Override
+   public void sendKeyCommand(RemoteKey key) {
+      // TODO Auto-generated method stub
+      
+   }
+
+   @Override
+   public boolean isConnected() {
+      // TODO Auto-generated method stub
+      return false;
+   }
+
+   @Override
+   public int getVolume() {
+      // TODO Auto-generated method stub
+      return 0;
+   }
+
+   @Override
+   public void setVolume(int level) {
+      // TODO Auto-generated method stub
+      
    }
 }
