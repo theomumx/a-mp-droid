@@ -2,9 +2,9 @@ package com.mediaportal.remote.data;
 
 import android.graphics.Color;
 
-import com.mediaportal.remote.activities.lists.ILoadingAdapter;
+import com.mediaportal.remote.activities.lists.ILoadingAdapterItem;
 
-public class Movie implements ILoadingAdapter {
+public class Movie {
 	private int Id;
 	private String Title;
 	private String TagLine;
@@ -91,30 +91,5 @@ public class Movie implements ILoadingAdapter {
 
 	public void setName(String name) {
 		this.Title = name;
-	}
-
-	@Override
-	public String getImage() {
-		return this.CoverThumbPath;
-	}
-
-	@Override
-	public String getSubText() {
-		return this.TagLine;
-	}
-
-	@Override
-	public String getText() {
-		return Integer.toString(this.Year);
-	}
-
-	@Override
-	public int getTextColor() {
-		return Color.WHITE;
-	}
-
-	@Override
-	public String getTitle() {
-		return this.Title;
 	}
 }

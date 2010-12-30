@@ -1,8 +1,8 @@
 package com.mediaportal.remote.data;
 
-import com.mediaportal.remote.activities.lists.ILoadingAdapter;
+import com.mediaportal.remote.activities.lists.ILoadingAdapterItem;
 
-public class Series implements ILoadingAdapter {
+public class Series{
 	private int Id;
 	private String PrettyName;
 	private int EpisodeCount;
@@ -81,29 +81,4 @@ public class Series implements ILoadingAdapter {
    public void setGenres(String[] genres) {
       Genres = genres;
    }
-   
-   
-   @Override
-	public String getImage() {
-		return getCurrentPosterUrl();
-	}
-	@Override
-	public String getSubText() {
-		return getGenreString();
-	}
-	@Override
-	public String getText() {
-		return getPrettyName();
-	}
-	@Override
-	public int getTextColor() {
-		return 0;
-	}
-	@Override
-	public String getTitle() {
-		return getPrettyName();
-	}
-
-
-	
 }

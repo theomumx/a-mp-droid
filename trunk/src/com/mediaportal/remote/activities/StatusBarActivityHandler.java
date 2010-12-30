@@ -13,13 +13,13 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 
 import com.mediaportal.remote.R;
 import com.mediaportal.remote.api.RemoteCommands;
-import com.mediaportal.remote.api.RemoteHandler;
+import com.mediaportal.remote.api.DataHandler;
 import com.mediaportal.remote.data.commands.RemoteKey;
 import com.mediaportal.remote.utils.Util;
 
 public class StatusBarActivityHandler {
    Activity parent;
-   RemoteHandler remote;
+   DataHandler remote;
    TextView statusText;
    ImageButton pauseButton;
    ImageButton prevButton;
@@ -28,8 +28,10 @@ public class StatusBarActivityHandler {
    ImageButton homeButton;
    SeekBar seekBar;
    SlidingDrawer slider;
+   
+   private static String statusString;
 
-   public StatusBarActivityHandler(Activity _parent, RemoteHandler _remote) {
+   public StatusBarActivityHandler(Activity _parent, DataHandler _remote) {
       parent = _parent;
       remote = _remote;
 
@@ -178,7 +180,21 @@ public class StatusBarActivityHandler {
 
    protected void setStatusText(String _text) {
       if (statusText != null) {
-         statusText.setText(_text);
+         StatusBarActivityHandler.statusString = _text;
+      }
+      statusText.setText(StatusBarActivityHandler.statusString);
+   }
+
+   public void setupRemoteStatus() {
+      if (statusText != null) {
+         //TODO: use async-task for this, also handle nowplaying here
+         if (remote.isClientControlConnected() || remote.connectClientControl()) {
+            //statusText.setText("Remote connected...");
+         } else {
+            Util.showToast(parent, "Remote not connected");
+            StatusBarActivityHandler.statusString = "Remote not connected...";
+         }
+         statusText.setText(StatusBarActivityHandler.statusString);
       }
    }
 }

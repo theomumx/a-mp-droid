@@ -2,28 +2,22 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_height="fill_parent" android:layout_width="fill_parent"
 	android:orientation="vertical">
-<TabHost
-    android:id="@android:id/tabhost"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:layout_marginBottom="60dip"
-    android:background="@drawable/background">
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:padding="5dp">
-        <TabWidget
-            android:id="@android:id/tabs"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content" />
-        <FrameLayout
-            android:id="@android:id/tabcontent"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_marginBottom="30dip"/>
-    </LinearLayout>
-    <include layout="@layout/include_sliding_drawer"/>
+	<com.mediaportal.remote.activities.actionbar.ActionBar
+		android:id="@+id/actionbar" style="@style/ActionBar" />
+	<TabHost android:id="@android:id/tabhost" android:layout_width="fill_parent"
+		android:layout_height="fill_parent" android:layout_marginBottom="60dip"
+		 android:paddingTop="5dip">
+		<LinearLayout android:orientation="vertical"
+			android:layout_width="fill_parent" android:layout_height="fill_parent"
+			>
+			<TabWidget android:id="@android:id/tabs"
+				android:layout_width="fill_parent" android:layout_height="40dip" 
+				android:layout_marginRight="5dip" android:layout_marginLeft="5dip"/>
+			<FrameLayout android:id="@android:id/tabcontent"
+				android:layout_width="fill_parent" android:layout_height="fill_parent"
+				android:layout_marginBottom="30dip" android:background="@drawable/background"/>
+		</LinearLayout>
+		<include layout="@layout/include_sliding_drawer" />
 	</TabHost>
-<include layout="@layout/include_bottom_bar"/>
+	<include layout="@layout/include_bottom_bar" />
 </LinearLayout>

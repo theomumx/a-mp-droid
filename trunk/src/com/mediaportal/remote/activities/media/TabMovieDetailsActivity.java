@@ -7,7 +7,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mediaportal.remote.R;
-import com.mediaportal.remote.api.RemoteHandler;
+import com.mediaportal.remote.api.DataHandler;
 import com.mediaportal.remote.data.MovieFull;
 
 public class TabMovieDetailsActivity extends Activity {
@@ -20,7 +20,7 @@ public class TabMovieDetailsActivity extends Activity {
 		if (extras != null) {
 			int movieId = extras.getInt("movie_id");
 
-			RemoteHandler service = RemoteHandler.getCurrentRemoteInstance();
+			DataHandler service = DataHandler.getCurrentRemoteInstance();
 			MovieFull movie = service.getMovieDetails(movieId);
 
 			if (movie != null) {

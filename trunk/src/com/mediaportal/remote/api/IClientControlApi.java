@@ -7,6 +7,9 @@ public interface IClientControlApi {
    void disconnect();
    boolean isConnected();
    
+   void setTimeOut(int _timeout);
+   int getTimeOut();
+   
    void addApiListener(IClientControlListener _listener);
    
    void sendKeyCommand(RemoteKey _key);

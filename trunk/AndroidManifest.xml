@@ -10,18 +10,22 @@
 		android:debuggable="true" android:allowClearUserData="true"
 		>
 		<activity android:name="com.mediaportal.remote.activities.WelcomeScreenActivity"
-			android:label="@string/app_name" android:noHistory="true">
+			android:label="@string/app_name" android:noHistory="true"
+			android:theme="@android:style/Theme.NoTitleBar">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
 
-		<activity android:name="com.mediaportal.remote.activities.HomeActivity" android:screenOrientation="portrait"></activity>
-		<activity android:name="com.mediaportal.remote.activities.MediaActivity" android:screenOrientation="portrait"></activity>
+		<activity android:name="com.mediaportal.remote.activities.HomeActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar"></activity>
+		<activity android:name="com.mediaportal.remote.activities.MediaActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar"></activity>
 		<activity android:name="com.mediaportal.remote.activities.media.TabMoviesActivity" android:screenOrientation="portrait"></activity>
 		<activity android:name="com.mediaportal.remote.activities.media.TabMovieDetailsActivity" android:screenOrientation="portrait"></activity>
 		<activity android:name="com.mediaportal.remote.activities.media.TabSeriesActivity" android:screenOrientation="portrait"></activity>
+		<activity android:name="com.mediaportal.remote.activities.media.TabSeriesActivityGroup" android:screenOrientation="portrait"></activity>
+		<activity android:name="com.mediaportal.remote.activities.media.TabSeriesDetailsActivity" android:screenOrientation="portrait"></activity>
+		<activity android:name="com.mediaportal.remote.activities.media.TabEpisodesActivity" android:screenOrientation="portrait"></activity>
 		<activity android:name="com.mediaportal.remote.activities.media.TabSharesActivity" android:screenOrientation="portrait"></activity>
 		<activity android:name="com.mediaportal.remote.activities.media.TabVideosActivity" android:screenOrientation="portrait"></activity>
 		<activity android:name="com.mediaportal.remote.activities.MusicActivity" android:screenOrientation="portrait"></activity>

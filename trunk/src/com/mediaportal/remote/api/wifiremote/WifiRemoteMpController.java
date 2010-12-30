@@ -3,7 +3,9 @@ package com.mediaportal.remote.api.wifiremote;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.SocketAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
@@ -109,12 +111,16 @@ public class WifiRemoteMpController implements IClientControlApi {
     */
    public boolean connect() {
       try {
-         socket = new Socket(server, port);
+         socket = new Socket();
+         SocketAddress socketAddress = new InetSocketAddress(server, port);
+
+         socket.connect(socketAddress, 2000);
 
          // outgoing stream redirect to socket
          outstream = new DataOutputStream(socket.getOutputStream());
          instream = new DataInputStream(socket.getInputStream());
 
+         
          tcpreader = new TcpListenerTask(listeners);
          tcpreader.execute(instream);
 
@@ -203,6 +209,18 @@ public class WifiRemoteMpController implements IClientControlApi {
       String msgString = gson.toJson(new WifiRemoteMessage("volume", level));
 
       writeLine(msgString);
+   }
+
+   @Override
+   public int getTimeOut() {
+      // TODO Auto-generated method stub
+      return 0;
+   }
+
+   @Override
+   public void setTimeOut(int timeout) {
+      // TODO Auto-generated method stub
+      
    }
 
 }

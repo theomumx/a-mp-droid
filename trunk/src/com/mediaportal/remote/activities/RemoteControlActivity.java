@@ -2,10 +2,12 @@ package com.mediaportal.remote.activities;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.PixelFormat;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
 import android.view.View.OnTouchListener;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -13,25 +15,25 @@ import android.widget.Toast;
 import com.mediaportal.remote.R;
 import com.mediaportal.remote.api.IClientControlListener;
 import com.mediaportal.remote.api.RemoteCommands;
-import com.mediaportal.remote.api.RemoteHandler;
+import com.mediaportal.remote.api.DataHandler;
 import com.mediaportal.remote.data.commands.RemoteKey;
 import com.mediaportal.remote.utils.Util;
 
 public class RemoteControlActivity extends Activity implements IClientControlListener {
    protected class SendKeyTask extends AsyncTask<RemoteKey, String, String> {
-      private RemoteHandler controller;
+      private DataHandler controller;
       private boolean repeat;
       private Context context;
       protected SendKeyTask(Context _parent){
          context = _parent;
       }
 
-      private SendKeyTask(Context _parent, RemoteHandler _controller) {
+      private SendKeyTask(Context _parent, DataHandler _controller) {
          this(_parent);
          controller = _controller;
       }
 
-      private SendKeyTask(Context _parent, RemoteHandler _controller, boolean _repeat) {
+      private SendKeyTask(Context _parent, DataHandler _controller, boolean _repeat) {
          this(_parent, _controller);
          controller = _controller;
          repeat = _repeat;
@@ -65,8 +67,7 @@ public class RemoteControlActivity extends Activity implements IClientControlLis
       @Override
       protected void onPostExecute(String result) {
          if(result != null){
-            Toast toast = Toast.makeText(context, result, Toast.LENGTH_SHORT);
-            toast.show();
+            Util.showToast(context, result);
          }
       }
 
@@ -86,14 +87,11 @@ public class RemoteControlActivity extends Activity implements IClientControlLis
       super.onCreate(savedInstanceState);
       setContentView(R.layout.remotecontrolactivity);
 
-      final RemoteHandler remoteController = RemoteHandler.getCurrentRemoteInstance();
+      final DataHandler remoteController = DataHandler.getCurrentRemoteInstance();
       remoteController.addClientControlListener(this);
 
       statusBarHandler = new StatusBarActivityHandler(this, remoteController);
-
-      if (!remoteController.isClientControlConnected() && !remoteController.connectClientControl()) {
-         Util.showToast(this, "Remote not connected");
-      }
+      statusBarHandler.setupRemoteStatus();
 
       final ImageButton backButton = (ImageButton) findViewById(R.id.ImageButtonBack);
       backButton.setOnTouchListener(new OnTouchListener() {
@@ -217,5 +215,12 @@ public class RemoteControlActivity extends Activity implements IClientControlLis
    @Override
    public void stateChanged(String _state) {
       statusBarHandler.setStatusText(_state);
+   }
+   
+   @Override
+   public void onAttachedToWindow() {
+      super.onAttachedToWindow();
+      Window window = getWindow();
+      window.setFormat(PixelFormat.RGBA_8888);
    }
 }

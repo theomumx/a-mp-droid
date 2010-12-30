@@ -12,7 +12,8 @@ import android.widget.AdapterView.OnItemClickListener;
 
 import com.mediaportal.remote.R;
 import com.mediaportal.remote.activities.lists.LazyLoadingAdapter;
-import com.mediaportal.remote.api.RemoteHandler;
+import com.mediaportal.remote.activities.lists.views.MoviePosterViewAdapter;
+import com.mediaportal.remote.api.DataHandler;
 import com.mediaportal.remote.data.Movie;
 
 public class TabMoviesActivity extends Activity {
@@ -25,14 +26,14 @@ public class TabMoviesActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.tabmoviesactivity);
 
-		RemoteHandler service = RemoteHandler.getCurrentRemoteInstance();
+		DataHandler service = DataHandler.getCurrentRemoteInstance();
 		List<Movie> movies = service.getAllMovies();
 
-		adapter = new LazyLoadingAdapter(this);
+		adapter = new LazyLoadingAdapter(this, R.layout.listitem_thumb);
 
 		if (movies != null) {
 			for (Movie m : movies) {
-				adapter.AddItem(m);
+				adapter.AddItem(new MoviePosterViewAdapter(m));
 			}
 		}
 
