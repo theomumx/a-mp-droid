@@ -1,12 +1,14 @@
 package com.mediaportal.remote.api.gmawebservice.soap;
 
 import java.io.IOException;
+import java.util.TimerTask;
 
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.PropertyInfo;
 import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
+import org.ksoap2.transport.HttpsTransportSE;
 import org.xmlpull.v1.XmlPullParserException;
 
 

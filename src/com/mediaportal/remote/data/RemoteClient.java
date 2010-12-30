@@ -6,16 +6,23 @@ import com.mediaportal.remote.api.ITvControlApi;
 
 public class RemoteClient {
    private int clientId;
+   private String clientName;
    private IRemoteAccessApi remoteAccessApi;
    private ITvControlApi tvControlApi;
    private IClientControlApi clientControlApi;
-   
-   public RemoteClient(int _clientId){
+
+   public RemoteClient(int _clientId) {
       clientId = _clientId;
    }
    
-   public RemoteClient(int _clientId, IRemoteAccessApi _remoteAccessApi, ITvControlApi _tvControlApi, IClientControlApi _clientControlApi){
+   public RemoteClient(int _clientId, String _clientName) {
       this(_clientId);
+      clientName = _clientName;
+   }
+
+   public RemoteClient(int _clientId, String _clientName, IRemoteAccessApi _remoteAccessApi,
+         ITvControlApi _tvControlApi, IClientControlApi _clientControlApi) {
+      this(_clientId, _clientName);
       remoteAccessApi = _remoteAccessApi;
       tvControlApi = _tvControlApi;
       clientControlApi = _clientControlApi;
@@ -27,6 +34,15 @@ public class RemoteClient {
 
    public void setClientId(int clientId) {
       this.clientId = clientId;
+   }
+
+   @Override
+   public String toString() {
+      if (clientName != null) {
+         return clientName;
+      } else {
+         return "Client" + clientId;
+      }
    }
 
    public IRemoteAccessApi getRemoteAccessApi() {
@@ -52,6 +68,13 @@ public class RemoteClient {
    public void setClientControlApi(IClientControlApi clientControlApi) {
       this.clientControlApi = clientControlApi;
    }
-   
-   
+
+   public void setClientName(String clientName) {
+      this.clientName = clientName;
+   }
+
+   public String getClientName() {
+      return clientName;
+   }
+
 }

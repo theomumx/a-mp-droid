@@ -93,4 +93,16 @@ public class MPClientController implements IClientControlApi {
       // TODO Auto-generated method stub
       
    }
+
+   @Override
+   public int getTimeOut() {
+      // TODO Auto-generated method stub
+      return 0;
+   }
+
+   @Override
+   public void setTimeOut(int timeout) {
+      // TODO Auto-generated method stub
+      
+   }
 }

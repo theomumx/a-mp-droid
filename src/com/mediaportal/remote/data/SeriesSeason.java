@@ -1,8 +1,8 @@
 package com.mediaportal.remote.data;
 
-import com.mediaportal.remote.activities.lists.ILoadingAdapter;
+import com.mediaportal.remote.activities.lists.ILoadingAdapterItem;
 
-public class SeriesSeason implements ILoadingAdapter{
+public class SeriesSeason{
 	private String Id;
 	private int SeriesId;
 	private int SeasonNumber;
@@ -66,30 +66,4 @@ public class SeriesSeason implements ILoadingAdapter{
    public void setAlternateSeasonBanners(String[] alternateSeasonBanners) {
       AlternateSeasonBanners = alternateSeasonBanners;
    }
-
-   @Override
-	public String getImage() {
-		return getSeasonBanner();
-	}
-
-	@Override
-	public String getSubText() {
-		return getEpisodesUnwatchedCount() + "/" + getEpisodesCount();
-	}
-
-	@Override
-	public String getText() {
-		return "Season " + getSeasonNumber();
-	}
-
-	@Override
-	public int getTextColor() {
-		return 0;
-	}
-
-	@Override
-	public String getTitle() {
-		return "";
-	}
-
 }

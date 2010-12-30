@@ -2,9 +2,9 @@ package com.mediaportal.remote.data;
 
 import java.util.Date;
 
-import com.mediaportal.remote.activities.lists.ILoadingAdapter;
+import com.mediaportal.remote.activities.lists.ILoadingAdapterItem;
 
-public class SeriesEpisode implements ILoadingAdapter {
+public class SeriesEpisode {
 	private int Id;
 	private String Name;
 	private int SeasonNumber;
@@ -27,33 +27,6 @@ public class SeriesEpisode implements ILoadingAdapter {
 		} else
 			return super.toString();
 	}
-
-	@Override
-	public String getImage() {
-		return getBannerUrl();
-	}
-
-	@Override
-	public String getSubText() {
-		return getSeasonNumber() + "x" + getEpisodeNumber();
-	}
-
-	@Override
-	public String getText() {
-		return getName();
-	}
-	
-	@Override
-	public String getTitle() {
-		return getName();
-	}
-
-	@Override
-	public int getTextColor() {
-		return 0;
-	}
-
-
 
    public int getId() {
       return Id;

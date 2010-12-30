@@ -14,7 +14,7 @@ import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
 import com.mediaportal.remote.R;
-import com.mediaportal.remote.api.RemoteHandler;
+import com.mediaportal.remote.api.DataHandler;
 import com.mediaportal.remote.api.soap.Ksoap2ResultParser;
 import com.mediaportal.remote.data.TvCard;
 import com.mediaportal.remote.data.TvCardDetails;
@@ -23,7 +23,7 @@ import com.mediaportal.remote.data.TvChannelGroup;
 
 @SuppressWarnings("unchecked")
 public class TvServerActivity extends Activity {
-   private ListView m_listView;
+   private ListView listView;
 
    private ArrayAdapter listItems;
    private ArrayList<Object> breadCrumbList;
@@ -32,11 +32,11 @@ public class TvServerActivity extends Activity {
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
       setContentView(R.layout.tvserveractivity);
-      m_listView = (ListView) findViewById(R.id.ListViewItems);
-      m_listView.setOnItemClickListener(new OnItemClickListener() {
+      listView = (ListView) findViewById(R.id.ListViewItems);
+      listView.setOnItemClickListener(new OnItemClickListener() {
          @Override
          public void onItemClick(AdapterView<?> a, View v, int position, long id) {
-            Object selected = m_listView.getItemAtPosition(position);
+            Object selected = listView.getItemAtPosition(position);
             handleListClick(v, position, selected);
          }
       });
@@ -44,13 +44,13 @@ public class TvServerActivity extends Activity {
       breadCrumbList = new ArrayList<Object>();
 
       listItems = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
-      m_listView.setAdapter(listItems);
+      listView.setAdapter(listItems);
 
       initialSetup();
    }
 
    private void initialSetup() {
-      RemoteHandler service = RemoteHandler.getCurrentRemoteInstance();
+      DataHandler service = DataHandler.getCurrentRemoteInstance();
       if (service.isTvServiceActive()) {
          fillListViewRoot();
       } else {
@@ -120,7 +120,7 @@ public class TvServerActivity extends Activity {
       listItems.clear();
       listItems.add("...");
 
-      RemoteHandler service = RemoteHandler.getCurrentRemoteInstance();
+      DataHandler service = DataHandler.getCurrentRemoteInstance();
       List<TvCard> cards = service.getTvCardsActive();
 
       if (cards == null)
@@ -134,7 +134,7 @@ public class TvServerActivity extends Activity {
       listItems.clear();
       listItems.add("...");
 
-      RemoteHandler service = RemoteHandler.getCurrentRemoteInstance();
+      DataHandler service = DataHandler.getCurrentRemoteInstance();
       List<TvCardDetails> cards = service.getTvCards();
 
       if (cards == null)
@@ -148,7 +148,7 @@ public class TvServerActivity extends Activity {
       listItems.clear();
       listItems.add("...");
 
-      RemoteHandler service = RemoteHandler.getCurrentRemoteInstance();
+      DataHandler service = DataHandler.getCurrentRemoteInstance();
       ArrayList<TvChannelGroup> groups = service.getTvChannelGroups();
 
       if (groups == null)
@@ -163,7 +163,7 @@ public class TvServerActivity extends Activity {
       listItems.clear();
       listItems.add("...");
 
-      RemoteHandler service = RemoteHandler.getCurrentRemoteInstance();
+      DataHandler service = DataHandler.getCurrentRemoteInstance();
       
       /*int count = service.getTvChannelsCount(2);
       for(int i = 0; i < count-1; i++){

@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="hello">Hello World, WelcomeScreenActivity!</string>
-    <string name="app_name">aMPdroid</string>
-<string name="movie_actors">Actors:</string>
-<string name="app_desc">Control MP from your Android phone</string>
+	<string name="hello">Hello World, WelcomeScreenActivity!</string>
+	<string name="app_name">aMPdroid</string>
+	
+	<string name="app_desc">Control MP from your Android phone</string>
+	<string name="actionbar_activity_not_found">Failed to open intent...</string>
+	<string name="welcome_choose_client">Choose client:</string>
+	<string name="welcome_auto_connect">Connect on startup</string>
+	<string name="welcome_connect">Connect</string>
+	<string name="series_actors">Actors</string>
+	<string name="series_seasons">Seasons</string>
+	<string name="movie_actors">Actors:</string>
 </resources>

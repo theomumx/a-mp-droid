@@ -32,7 +32,6 @@ import com.mediaportal.remote.data.TvUser;
  * @author DieBagger
  */
 public class Tv4HomeApi implements ITvControlApi {
-
    private final String TEST_SERVICE = "TestConnectionToTVService";
    private final String GET_GROUPS = "GetGroups";
    private final String GET_CHANNELS = "GetBaseChannels";

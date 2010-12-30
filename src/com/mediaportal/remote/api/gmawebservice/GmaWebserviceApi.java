@@ -8,6 +8,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import org.ksoap2.serialization.SoapObject;
 
@@ -26,6 +27,7 @@ import com.mediaportal.remote.data.SeriesEpisode;
 import com.mediaportal.remote.data.SeriesFull;
 import com.mediaportal.remote.data.SeriesSeason;
 import com.mediaportal.remote.data.SupportedFunctions;
+import com.mediaportal.remote.data.VideoShare;
 
 public class GmaWebserviceApi implements IRemoteAccessApi {
    private GmaWebserviceMovieApi m_moviesAPI;
@@ -74,6 +76,25 @@ public class GmaWebserviceApi implements IRemoteAccessApi {
          }
       } else {
          Log.d("Soap", "Error calling soap method " + methodName);
+      }
+      return null;
+   }
+   
+   @Override
+   public ArrayList<VideoShare> getVideoShares(){
+      SoapObject result = (SoapObject) m_wcfService.MakeSoapCall("MP_GetVideoShares");
+
+      if (result != null) {
+         VideoShare[] albums = (VideoShare[]) Ksoap2ResultParser.createObject(result,
+               VideoShare[].class);
+
+         if (albums != null) {
+            return new ArrayList<VideoShare>(Arrays.asList(albums));
+         } else {
+            Log.d("Soap", "Error parsing result from soap method " + "MP_GetVideoShares");
+         }
+      } else {
+         Log.d("Soap", "Error calling soap method " + "MP_GetVideoShares");
       }
       return null;
    }
@@ -163,7 +184,8 @@ public class GmaWebserviceApi implements IRemoteAccessApi {
       Bitmap bmImg = null;
       try {
          myFileUrl = new URL(JSON_PREFIX + m_server + ":" + m_port + JSON_SUFFIX
-               + "/FS_GetImage/?path=" + URLEncoder.encode(_url, "UTF-8"));
+               + "/FS_GetImageResized/?path=" + URLEncoder.encode(_url, "UTF-8") 
+               + "&maxWidth=" + _maxWidth + "&maxHeight=" + _maxHeight);
          HttpURLConnection conn = (HttpURLConnection) myFileUrl.openConnection();
          conn.setDoInput(true);
          conn.connect();
@@ -179,6 +201,21 @@ public class GmaWebserviceApi implements IRemoteAccessApi {
       }
 
       return bmImg;
+   }
+   
+   @Override
+   public URL getDownloadUri(String _filePath){
+      URL fileUrl = null;
+      try {
+         fileUrl = new URL(JSON_PREFIX + m_server + ":" + m_port + JSON_SUFFIX
+                  + "/FS_GetMediaItem/?path=" + URLEncoder.encode(_filePath, "UTF-8"));
+      } catch (MalformedURLException e) {
+         e.printStackTrace();
+      } catch (UnsupportedEncodingException e) {
+         e.printStackTrace();
+      }
+      return fileUrl;
+      
    }
 
    @Override
