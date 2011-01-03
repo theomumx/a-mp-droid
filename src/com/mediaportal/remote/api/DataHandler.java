@@ -6,6 +6,7 @@ import java.util.List;
 
 import android.graphics.Bitmap;
 
+import com.mediaportal.remote.data.EpisodeDetails;
 import com.mediaportal.remote.data.Movie;
 import com.mediaportal.remote.data.MovieFull;
 import com.mediaportal.remote.data.MusicAlbum;
@@ -28,6 +29,7 @@ public class DataHandler {
    private static List<DataHandler> clientList = new ArrayList<DataHandler>();
    private static int currentClient = 0;
    private static DataHandler dataHandler;
+   private IMediaAccessDatabase mediaDatabase; 
 
    private DataHandler(RemoteClient _client) {
       client = _client;
@@ -47,7 +49,7 @@ public class DataHandler {
          functions.setTvEnabled(false);
       }
       
-      IRemoteAccessApi mediaApi = _client.getRemoteAccessApi();
+      IMediaAccessApi mediaApi = _client.getRemoteAccessApi();
       if (mediaApi != null) {
          functions.setMediaEnabled(true);
          functions.setMediaAvailable(true);//todo: test function for media access
@@ -55,7 +57,7 @@ public class DataHandler {
          functions.setMediaEnabled(false);
       }
       
-      IRemoteAccessApi remoteApi = _client.getRemoteAccessApi();
+      IMediaAccessApi remoteApi = _client.getRemoteAccessApi();
       if (remoteApi != null) {
          functions.setRemoteEnabled(true);
          functions.setRemoteAvailable(true);//todo: test function for remote access
@@ -88,78 +90,85 @@ public class DataHandler {
    }
 
    public List<Movie> getAllMovies() {
-      IRemoteAccessApi remoteAccess = client.getRemoteAccessApi();
+      IMediaAccessApi remoteAccess = client.getRemoteAccessApi();
       return remoteAccess.getAllMovies();
    }
 
    public MovieFull getMovieDetails(int _movieId) {
-      IRemoteAccessApi remoteAccess = client.getRemoteAccessApi();
+      IMediaAccessApi remoteAccess = client.getRemoteAccessApi();
       return remoteAccess.getMovieDetails(_movieId);
    }
 
    public Bitmap getBitmap(String _id) {
-      IRemoteAccessApi remoteAccess = client.getRemoteAccessApi();
+      IMediaAccessApi remoteAccess = client.getRemoteAccessApi();
       return remoteAccess.getBitmap(_id);
    }
 
    public ArrayList<Series> getAllSeries() {
-      IRemoteAccessApi remoteAccess = client.getRemoteAccessApi();
+      //mediaDatabase.getAllSeries();
+      IMediaAccessApi remoteAccess = client.getRemoteAccessApi();
       return remoteAccess.getAllSeries();
    }
 
    public ArrayList<Series> getSeries(int _start, int _end) {
-      IRemoteAccessApi remoteAccess = client.getRemoteAccessApi();
+      IMediaAccessApi remoteAccess = client.getRemoteAccessApi();
       return remoteAccess.getSeries(_start, _end);
    }
 
    public SeriesFull getFullSeries(int _seriesId) {
-      IRemoteAccessApi remoteAccess = client.getRemoteAccessApi();
+      IMediaAccessApi remoteAccess = client.getRemoteAccessApi();
       return remoteAccess.getFullSeries(_seriesId);
    }
 
    public int getSeriesCount() {
-      IRemoteAccessApi remoteAccess = client.getRemoteAccessApi();
+      IMediaAccessApi remoteAccess = client.getRemoteAccessApi();
       return remoteAccess.getSeriesCount();
    }
 
    public ArrayList<SeriesSeason> getAllSeasons(int _seriesId) {
-      IRemoteAccessApi remoteAccess = client.getRemoteAccessApi();
+      IMediaAccessApi remoteAccess = client.getRemoteAccessApi();
       return remoteAccess.getAllSeasons(_seriesId);
    }
 
    public ArrayList<SeriesEpisode> getAllEpisodes(int _seriesId) {
-      IRemoteAccessApi remoteAccess = client.getRemoteAccessApi();
+      IMediaAccessApi remoteAccess = client.getRemoteAccessApi();
       return remoteAccess.getAllEpisodes(_seriesId);
    }
 
    public ArrayList<SeriesEpisode> getAllEpisodesForSeason(int _seriesId, int _seasonNumber) {
-      IRemoteAccessApi remoteAccess = client.getRemoteAccessApi();
+      IMediaAccessApi remoteAccess = client.getRemoteAccessApi();
       return remoteAccess.getAllEpisodesForSeason(_seriesId, _seasonNumber);
+   }
+   
+
+   public EpisodeDetails getEpisode(int _id) {
+      IMediaAccessApi remoteAccess = client.getRemoteAccessApi();
+      return remoteAccess.getEpisode(_id);
    }
 
    public ArrayList<MusicAlbum> getAllAlbums() {
-      IRemoteAccessApi remoteAccess = client.getRemoteAccessApi();
+      IMediaAccessApi remoteAccess = client.getRemoteAccessApi();
       return remoteAccess.getAllAlbums();
    }
 
    public SupportedFunctions getSupportedFunctions() {
-      IRemoteAccessApi remoteAccess = client.getRemoteAccessApi();
+      IMediaAccessApi remoteAccess = client.getRemoteAccessApi();
       return remoteAccess.getSupportedFunctions();
    }
 
    public List<MusicAlbum> getAlbums(int _start, int _end) {
-      IRemoteAccessApi remoteAccess = client.getRemoteAccessApi();
+      IMediaAccessApi remoteAccess = client.getRemoteAccessApi();
       return remoteAccess.getAlbums(_start, _end);
    }
    
    public Bitmap getImage(String _url) {
-      IRemoteAccessApi remoteAccess = client.getRemoteAccessApi();
+      IMediaAccessApi remoteAccess = client.getRemoteAccessApi();
       return remoteAccess.getBitmap(_url);
    }
    
 
    public Bitmap getImage(String _url, int _maxWidth, int _maxHeight) {
-      IRemoteAccessApi remoteAccess = client.getRemoteAccessApi();
+      IMediaAccessApi remoteAccess = client.getRemoteAccessApi();
       return remoteAccess.getBitmap(_url, _maxWidth, _maxHeight);
    }
    
@@ -239,6 +248,9 @@ public class DataHandler {
    public URL getDownloadUri(String _filePath){
       return client.getRemoteAccessApi().getDownloadUri(_filePath);
    }
+
+
+
 
 
 

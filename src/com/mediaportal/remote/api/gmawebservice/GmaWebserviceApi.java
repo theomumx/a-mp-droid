@@ -16,9 +16,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
 
-import com.mediaportal.remote.api.IRemoteAccessApi;
+import com.mediaportal.remote.api.IMediaAccessApi;
 import com.mediaportal.remote.api.gmawebservice.soap.WcfAccessHandler;
 import com.mediaportal.remote.api.soap.Ksoap2ResultParser;
+import com.mediaportal.remote.data.EpisodeDetails;
 import com.mediaportal.remote.data.Movie;
 import com.mediaportal.remote.data.MovieFull;
 import com.mediaportal.remote.data.MusicAlbum;
@@ -29,7 +30,7 @@ import com.mediaportal.remote.data.SeriesSeason;
 import com.mediaportal.remote.data.SupportedFunctions;
 import com.mediaportal.remote.data.VideoShare;
 
-public class GmaWebserviceApi implements IRemoteAccessApi {
+public class GmaWebserviceApi implements IMediaAccessApi {
    private GmaWebserviceMovieApi m_moviesAPI;
    private GmaWebserviceSeriesApi m_seriesAPI;
    private GmaWebserviceMusicApi m_musicAPI;
@@ -153,6 +154,11 @@ public class GmaWebserviceApi implements IRemoteAccessApi {
    public ArrayList<SeriesEpisode> getAllEpisodesForSeason(int _seriesId, int _seasonNumber) {
       return m_seriesAPI.getAllEpisodesForSeason(_seriesId, _seasonNumber);
    }
+   
+   @Override
+   public EpisodeDetails getEpisode(int _episodeId) {
+      return m_seriesAPI.getFullEpisode(_episodeId);
+   }
 
    @Override
    public Bitmap getBitmap(String _url) {
@@ -227,5 +233,7 @@ public class GmaWebserviceApi implements IRemoteAccessApi {
    public ArrayList<MusicAlbum> getAlbums(int _start, int _end) {
       return m_musicAPI.getAlbums(_start, _end);
    }
+
+
 
 }

@@ -11,6 +11,7 @@ import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 
 import com.mediaportal.remote.R;
@@ -68,13 +69,13 @@ public class WelcomeScreenActivity extends Activity {
 		//Client for diebagger -> until setting screen ready
       final RemoteClient client = new RemoteClient(0, "Bagga Server");
       
-      GmaWebserviceApi api = new GmaWebserviceApi("10.1.0.247", 4322);
+      GmaWebserviceApi api = new GmaWebserviceApi("10.0.0.27", 4322);
       client.setRemoteAccessApi(api);
       
       Tv4HomeApi tvApi = new Tv4HomeApi("10.1.0.166", 4321);
       client.setTvControlApi(tvApi);
       
-      WifiRemoteMpController clientApi = new WifiRemoteMpController("10.1.0.247", 8017);
+      WifiRemoteMpController clientApi = new WifiRemoteMpController("10.0.0.27", 8017);
       client.setClientControlApi(clientApi);
 		
       
@@ -88,12 +89,16 @@ public class WelcomeScreenActivity extends Activity {
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		spinner.setAdapter(adapter);
 		
-		Button connectButton = (Button)findViewById(R.id.ButtonConnect);
+		final ProgressBar progress = (ProgressBar)findViewById(R.id.ProgressBarWelcomeScreen);
+		final Button connectButton = (Button)findViewById(R.id.ButtonConnect);
 		connectButton.setOnClickListener(new OnClickListener() {
          @Override
          public void onClick(View v) {
             StartupTask task = new StartupTask(v.getContext());
-            task.execute(client);            
+            task.execute(client);  
+            progress.setVisibility(View.VISIBLE);
+            progress.setIndeterminate(true);
+            connectButton.setEnabled(false);
          }
       });
 		

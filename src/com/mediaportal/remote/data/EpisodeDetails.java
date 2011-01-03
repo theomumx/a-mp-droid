@@ -2,7 +2,7 @@ package com.mediaportal.remote.data;
 
 import java.util.Date;
 
-public class EpisodeDetails {
+public class EpisodeDetails extends SeriesEpisode {
 
    // Div Info
    private String Summary; // Summary

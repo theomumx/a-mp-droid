@@ -11,6 +11,7 @@ import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
 
 import com.mediaportal.remote.R;
+import com.mediaportal.remote.activities.lists.ILoadingAdapterItem;
 import com.mediaportal.remote.activities.lists.LazyLoadingAdapter;
 import com.mediaportal.remote.activities.lists.views.MoviePosterViewAdapter;
 import com.mediaportal.remote.api.DataHandler;
@@ -44,16 +45,8 @@ public class TabMoviesActivity extends Activity {
 			@Override
 			public void onItemClick(AdapterView<?> a, View v, int position,
 					long id) {
-				/*
-				 * AlertDialog.Builder adb=new
-				 * AlertDialog.Builder(MoviesActivity.this);
-				 * adb.setTitle("LVSelectedItemExample");
-				 * adb.setMessage("Selected Item is = "
-				 * +m_listView.getItemAtPosition(position));
-				 * adb.setPositiveButton("Ok", null); adb.show();
-				 */
-				Movie selectedMovie = (Movie) m_listView
-						.getItemAtPosition(position);
+				Movie selectedMovie = (Movie) ((ILoadingAdapterItem) m_listView
+						.getItemAtPosition(position)).getItem();
 
 				Intent myIntent = new Intent(v.getContext(),
 						TabMovieDetailsActivity.class);
