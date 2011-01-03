@@ -10,42 +10,41 @@ import android.view.View;
 import android.view.Window;
 import android.view.View.OnTouchListener;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
 import com.mediaportal.remote.R;
+import com.mediaportal.remote.api.DataHandler;
 import com.mediaportal.remote.api.IClientControlListener;
 import com.mediaportal.remote.api.RemoteCommands;
-import com.mediaportal.remote.api.DataHandler;
 import com.mediaportal.remote.data.commands.RemoteKey;
 import com.mediaportal.remote.utils.Util;
 
 public class RemoteControlActivity extends Activity implements IClientControlListener {
    protected class SendKeyTask extends AsyncTask<RemoteKey, String, String> {
-      private DataHandler controller;
-      private boolean repeat;
-      private Context context;
+      private DataHandler mController;
+      private boolean mRepeat;
+      private Context mContext;
       protected SendKeyTask(Context _parent){
-         context = _parent;
+         mContext = _parent;
       }
 
       private SendKeyTask(Context _parent, DataHandler _controller) {
          this(_parent);
-         controller = _controller;
+         mController = _controller;
       }
 
       private SendKeyTask(Context _parent, DataHandler _controller, boolean _repeat) {
          this(_parent, _controller);
-         controller = _controller;
-         repeat = _repeat;
+         mController = _controller;
+         mRepeat = _repeat;
       }
 
       @Override
-      protected String doInBackground(RemoteKey... arg0) {
-         if (controller.isClientControlConnected()) {
-            controller.sendRemoteButton((RemoteKey) arg0[0]);
+      protected String doInBackground(RemoteKey... _keys) {
+         if (mController.isClientControlConnected()) {
+            mController.sendRemoteButton((RemoteKey) _keys[0]);
 
             int repCount = 200;
-            while (repeat) {
+            while (mRepeat) {
 
                try {
                   Thread.sleep(repCount);
@@ -54,8 +53,8 @@ public class RemoteControlActivity extends Activity implements IClientControlLis
                } catch (InterruptedException e) {
                   e.printStackTrace();
                }
-               if (repeat)
-                  controller.sendRemoteButton((RemoteKey) arg0[0]);
+               if (mRepeat)
+                  mController.sendRemoteButton((RemoteKey) _keys[0]);
             }
             return null;
          }
@@ -65,45 +64,45 @@ public class RemoteControlActivity extends Activity implements IClientControlLis
       }
       
       @Override
-      protected void onPostExecute(String result) {
-         if(result != null){
-            Util.showToast(context, result);
+      protected void onPostExecute(String _result) {
+         if(_result != null){
+            Util.showToast(mContext, _result);
          }
       }
 
-      public void setRepeat(boolean repeat) {
-         this.repeat = repeat;
+      public void setRepeat(boolean _repeat) {
+         this.mRepeat = _repeat;
       }
 
       public boolean getRepeat() {
-         return repeat;
+         return mRepeat;
       }
    }
 
-   private StatusBarActivityHandler statusBarHandler;
+   private StatusBarActivityHandler mStatusBarHandler;
 
    @Override
-   public void onCreate(Bundle savedInstanceState) {
-      super.onCreate(savedInstanceState);
+   public void onCreate(Bundle _savedInstanceState) {
+      super.onCreate(_savedInstanceState);
       setContentView(R.layout.remotecontrolactivity);
 
       final DataHandler remoteController = DataHandler.getCurrentRemoteInstance();
       remoteController.addClientControlListener(this);
 
-      statusBarHandler = new StatusBarActivityHandler(this, remoteController);
-      statusBarHandler.setupRemoteStatus();
+      mStatusBarHandler = new StatusBarActivityHandler(this, remoteController);
+      mStatusBarHandler.setupRemoteStatus();
 
       final ImageButton backButton = (ImageButton) findViewById(R.id.ImageButtonBack);
       backButton.setOnTouchListener(new OnTouchListener() {
          @Override
-         public boolean onTouch(View v, MotionEvent event) {
-            if (event.getAction() == MotionEvent.ACTION_DOWN) {
-               Util.Vibrate(v.getContext(), 30);
-               new SendKeyTask(v.getContext(), remoteController).execute(RemoteCommands.backButton);
+         public boolean onTouch(View _view, MotionEvent _event) {
+            if (_event.getAction() == MotionEvent.ACTION_DOWN) {
+               Util.Vibrate(_view.getContext(), 30);
+               new SendKeyTask(_view.getContext(), remoteController).execute(RemoteCommands.backButton);
                backButton.setImageResource(R.drawable.remote_back_sel);
                return true;
             }
-            if (event.getAction() == MotionEvent.ACTION_UP) {
+            if (_event.getAction() == MotionEvent.ACTION_UP) {
                backButton.setImageResource(R.drawable.remote_back);
                return true;
             }
@@ -114,14 +113,14 @@ public class RemoteControlActivity extends Activity implements IClientControlLis
       final ImageButton infoButton = (ImageButton) findViewById(R.id.ImageButtonInfo);
       infoButton.setOnTouchListener(new OnTouchListener() {
          @Override
-         public boolean onTouch(View v, MotionEvent event) {
-            if (event.getAction() == MotionEvent.ACTION_DOWN) {
-               Util.Vibrate(v.getContext(), 30);
-               new SendKeyTask(v.getContext(), remoteController).execute(RemoteCommands.infoButton);
+         public boolean onTouch(View _view, MotionEvent _event) {
+            if (_event.getAction() == MotionEvent.ACTION_DOWN) {
+               Util.Vibrate(_view.getContext(), 30);
+               new SendKeyTask(_view.getContext(), remoteController).execute(RemoteCommands.infoButton);
                infoButton.setImageResource(R.drawable.remote_info_sel);
                return true;
             }
-            if (event.getAction() == MotionEvent.ACTION_UP) {
+            if (_event.getAction() == MotionEvent.ACTION_UP) {
                infoButton.setImageResource(R.drawable.remote_info);
                return true;
             }
@@ -135,40 +134,40 @@ public class RemoteControlActivity extends Activity implements IClientControlLis
          SendKeyTask task = null;
 
          @Override
-         public boolean onTouch(View v, MotionEvent event) {
-            if (event.getAction() == MotionEvent.ACTION_DOWN) {
-               Util.Vibrate(v.getContext(), 30);
-               float x = event.getX();
-               float y = event.getY();
+         public boolean onTouch(View _view, MotionEvent _event) {
+            if (_event.getAction() == MotionEvent.ACTION_DOWN) {
+               Util.Vibrate(_view.getContext(), 30);
+               float x = _event.getX();
+               float y = _event.getY();
                int index = getTouchPart(x, y);
                switch (index) {
                case 0:
                   remote.setImageResource(R.drawable.remote_left);
-                  new SendKeyTask(v.getContext(), remoteController).execute(RemoteCommands.leftButton);
+                  new SendKeyTask(_view.getContext(), remoteController).execute(RemoteCommands.leftButton);
                   break;
                case 1:
                   remote.setImageResource(R.drawable.remote_right);
 
-                  new SendKeyTask(v.getContext(), remoteController).execute(RemoteCommands.rightButton);
+                  new SendKeyTask(_view.getContext(), remoteController).execute(RemoteCommands.rightButton);
                   break;
                case 2:
                   remote.setImageResource(R.drawable.remote_up);
-                  task = (SendKeyTask) new SendKeyTask(v.getContext(), remoteController, true)
+                  task = (SendKeyTask) new SendKeyTask(_view.getContext(), remoteController, true)
                         .execute(RemoteCommands.upButton);
                   break;
                case 3:
                   remote.setImageResource(R.drawable.remote_down);
-                  task = (SendKeyTask) new SendKeyTask(v.getContext(), remoteController, true)
+                  task = (SendKeyTask) new SendKeyTask(_view.getContext(), remoteController, true)
                         .execute(RemoteCommands.downButton);
                   break;
                case 4:
                   remote.setImageResource(R.drawable.remote_enter);
-                  new SendKeyTask(v.getContext(), remoteController).execute(RemoteCommands.okButton);
+                  new SendKeyTask(_view.getContext(), remoteController).execute(RemoteCommands.okButton);
                   break;
                }
 
             }
-            if (event.getAction() == MotionEvent.ACTION_UP) {
+            if (_event.getAction() == MotionEvent.ACTION_UP) {
                if (task != null)
                   task.setRepeat(false);
                remote.setImageResource(R.drawable.remote_default);
@@ -176,27 +175,27 @@ public class RemoteControlActivity extends Activity implements IClientControlLis
             return false;
          }
 
-         private int getTouchPart(float x, float y) {
+         private int getTouchPart(float _x, float _y) {
             int width = remote.getWidth();
             int height = remote.getHeight();
 
-            if (x < width / 3 && y > height / 6 && y < height - height / 6) {
+            if (_x < width / 3 && _y > height / 6 && _y < height - height / 6) {
                return 0;
             }
 
-            if (x > width * 0.66 && y > height / 6 && y < height - height / 6) {
+            if (_x > width * 0.66 && _y > height / 6 && _y < height - height / 6) {
                return 1;
             }
 
-            if (y < height / 3 && x > width / 6 && x < width - width / 6) {
+            if (_y < height / 3 && _x > width / 6 && _x < width - width / 6) {
                return 2;
             }
 
-            if (y > height * 0.66 && x > width / 6 && x < width - width / 6) {
+            if (_y > height * 0.66 && _x > width / 6 && _x < width - width / 6) {
                return 3;
             }
 
-            if (x > width / 3 && x < width * 0.66 && y > height / 3 && y < height * 0.66) {
+            if (_x > width / 3 && _x < width * 0.66 && _y > height / 3 && _y < height * 0.66) {
                return 4;// middle
             }
             return -99;
@@ -214,7 +213,7 @@ public class RemoteControlActivity extends Activity implements IClientControlLis
 
    @Override
    public void stateChanged(String _state) {
-      statusBarHandler.setStatusText(_state);
+      mStatusBarHandler.setStatusText(_state);
    }
    
    @Override

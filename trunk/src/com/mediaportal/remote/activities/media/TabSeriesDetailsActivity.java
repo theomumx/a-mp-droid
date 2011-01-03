@@ -1,6 +1,5 @@
 package com.mediaportal.remote.activities.media;
 
-import java.security.spec.MGF1ParameterSpec;
 import java.util.ArrayList;
 
 import android.app.Activity;
@@ -17,13 +16,10 @@ import android.widget.Button;
 import android.widget.Gallery;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.mediaportal.remote.R;
-import com.mediaportal.remote.activities.lists.ImageHandler;
-import com.mediaportal.remote.activities.lists.LazyLoadingAdapter;
 import com.mediaportal.remote.activities.lists.LazyLoadingGalleryAdapter;
 import com.mediaportal.remote.activities.lists.views.PosterGalleryViewAdapter;
 import com.mediaportal.remote.api.DataHandler;
@@ -31,7 +27,7 @@ import com.mediaportal.remote.data.SeriesFull;
 import com.mediaportal.remote.data.SeriesSeason;
 
 public class TabSeriesDetailsActivity extends Activity {
-   private LazyLoadingGalleryAdapter adapter;
+   private LazyLoadingGalleryAdapter mAdapter;
    private LinearLayout mSeasonLayout;
    private ImageView mSeriesPoster;
    private TextView mSeriesName;
@@ -39,8 +35,8 @@ public class TabSeriesDetailsActivity extends Activity {
    private Gallery mPosterGallery;
 
    @Override
-   public void onCreate(Bundle savedInstanceState) {
-      super.onCreate(savedInstanceState);
+   public void onCreate(Bundle _savedInstanceState) {
+      super.onCreate(_savedInstanceState);
       setContentView(R.layout.tabseriesdetailsactivity);
       mSeasonLayout = (LinearLayout) findViewById(R.id.LinearLayoutSeasons);
       mSeriesPoster = (ImageView) findViewById(R.id.ImageViewSeriesPoster);
@@ -66,12 +62,12 @@ public class TabSeriesDetailsActivity extends Activity {
 
          mSeriesName.setText(fullSeries.getPrettyName());
 
-         adapter = new LazyLoadingGalleryAdapter(this, service);
+         mAdapter = new LazyLoadingGalleryAdapter(this, service);
          
          String[] posterUrls = fullSeries.getPosterUrls();
          if (posterUrls != null) {
             for (int i = 0; i < posterUrls.length; i++) {
-               adapter.AddItem(new PosterGalleryViewAdapter(posterUrls[i]));
+               mAdapter.AddItem(new PosterGalleryViewAdapter(posterUrls[i]));
             }
          }
 /*
@@ -90,7 +86,7 @@ public class TabSeriesDetailsActivity extends Activity {
          }
 */
          // mPosterGallery.setSpacing(-10);
-         mPosterGallery.setAdapter(adapter);
+         mPosterGallery.setAdapter(mAdapter);
 
          mSeriesOverview.setText(fullSeries.getSummary());
 
@@ -133,8 +129,8 @@ public class TabSeriesDetailsActivity extends Activity {
             view.setOnFocusChangeListener(new OnFocusChangeListener() {
 
                @Override
-               public void onFocusChange(View v, boolean hasFocus) {
-                  if (hasFocus) {
+               public void onFocusChange(View _view, boolean _hasFocus) {
+                  if (_hasFocus) {
 
                   } else {
 
@@ -145,20 +141,20 @@ public class TabSeriesDetailsActivity extends Activity {
             view.setOnClickListener(new OnClickListener() {
 
                @Override
-               public void onClick(View v) {
-                  Intent myIntent = new Intent(v.getContext(), TabEpisodesActivity.class);
-                  SeriesSeason s = (SeriesSeason) v.getTag();
+               public void onClick(View _view) {
+                  Intent myIntent = new Intent(_view.getContext(), TabEpisodesActivity.class);
+                  SeriesSeason s = (SeriesSeason) _view.getTag();
                   myIntent.putExtra("series_id", s.getSeriesId());
                   myIntent.putExtra("season_number", s.getSeasonNumber());
 
                   myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
                   // Create the view using FirstGroup's LocalActivityManager
-                  View view = TabSeriesActivityGroup.group.getLocalActivityManager().startActivity(
+                  View view = TabSeriesActivityGroup.getGroup().getLocalActivityManager().startActivity(
                         "season_episodes", myIntent).getDecorView();
 
                   // Again, replace the view
-                  TabSeriesActivityGroup.group.replaceView(view);
+                  TabSeriesActivityGroup.getGroup().replaceView(view);
                }
             });
 

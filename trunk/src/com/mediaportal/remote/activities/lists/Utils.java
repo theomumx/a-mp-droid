@@ -55,4 +55,10 @@ public class Utils {
       int sepPos = _path.lastIndexOf(_pathSeperator);
       return _path.substring(sepPos + 1);
    }
+   
+   public static String getFileNameWithoutExtension(String _path, String _pathSeperator, String _extensionSeperator ){
+      int dot = _path.lastIndexOf(_extensionSeperator);
+      int sep = _path.lastIndexOf(_pathSeperator);
+      return _path.substring(sep + 1, dot);
+   }
 }

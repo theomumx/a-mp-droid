@@ -7,22 +7,22 @@ import com.mediaportal.remote.activities.lists.Utils;
 import com.mediaportal.remote.data.Series;
 
 public class SeriesPosterViewAdapter implements ILoadingAdapterItem {
-   private Series series;
+   private Series mSeries;
 
    public SeriesPosterViewAdapter(Series _series) {
       super();
-      this.series = _series;
+      this.mSeries = _series;
    }
 
    @Override
    public String getImage() {
-      return series.getCurrentPosterUrl();
+      return mSeries.getCurrentPosterUrl();
    }
    
    @Override
    public String getImageCacheName() {
-      String fileName = Utils.getFileNameWithExtension(series.getCurrentPosterUrl(), "\\");
-      return "Series" + File.separator + series.getId() + File.separator + fileName;
+      String fileName = Utils.getFileNameWithExtension(mSeries.getCurrentPosterUrl(), "\\");
+      return "Series" + File.separator + mSeries.getId() + File.separator + fileName;
    }
 
    @Override
@@ -42,18 +42,16 @@ public class SeriesPosterViewAdapter implements ILoadingAdapterItem {
 
    @Override
    public String getTitle() {
-      return series.getPrettyName();
+      return mSeries.getPrettyName();
    }
 
    @Override
    public int getSubTextColor() {
-      // TODO Auto-generated method stub
       return 0;
    }
 
    @Override
    public int getTitleColor() {
-      // TODO Auto-generated method stub
       return 0;
    }
 
@@ -69,7 +67,7 @@ public class SeriesPosterViewAdapter implements ILoadingAdapterItem {
    
    @Override
    public Object getItem() {
-      return series;
+      return mSeries;
    }
 
 

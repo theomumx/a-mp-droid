@@ -11,9 +11,9 @@ import android.view.View.OnClickListener;
  *
  */
 public class ActionItem {
-	private Drawable icon;
-	private String title;
-	private OnClickListener listener;
+	private Drawable mIcon;
+	private String mTitle;
+	private OnClickListener mListener;
 	
 	/**
 	 * Constructor
@@ -23,19 +23,19 @@ public class ActionItem {
 	/**
 	 * Constructor
 	 * 
-	 * @param icon {@link Drawable} action icon
+	 * @param _icon {@link Drawable} action icon
 	 */
-	public ActionItem(Drawable icon) {
-		this.icon = icon;
+	public ActionItem(Drawable _icon) {
+		this.mIcon = _icon;
 	}
 	
 	/**
 	 * Set action title
 	 * 
-	 * @param title action title
+	 * @param _title action title
 	 */
-	public void setTitle(String title) {
-		this.title = title;
+	public void setTitle(String _title) {
+		this.mTitle = _title;
 	}
 	
 	/**
@@ -44,16 +44,16 @@ public class ActionItem {
 	 * @return action title
 	 */
 	public String getTitle() {
-		return this.title;
+		return this.mTitle;
 	}
 	
 	/**
 	 * Set action icon
 	 * 
-	 * @param icon {@link Drawable} action icon
+	 * @param _icon {@link Drawable} action icon
 	 */
-	public void setIcon(Drawable icon) {
-		this.icon = icon;
+	public void setIcon(Drawable _icon) {
+		this.mIcon = _icon;
 	}
 	
 	/**
@@ -61,16 +61,16 @@ public class ActionItem {
 	 * @return  {@link Drawable} action icon
 	 */
 	public Drawable getIcon() {
-		return this.icon;
+		return this.mIcon;
 	}
 	
 	/**
 	 * Set on click listener
 	 * 
-	 * @param listener on click listener {@link View.OnClickListener}
+	 * @param _listener on click listener {@link View.OnClickListener}
 	 */
-	public void setOnClickListener(OnClickListener listener) {
-		this.listener = listener;
+	public void setOnClickListener(OnClickListener _listener) {
+		this.mListener = _listener;
 	}
 	
 	/**
@@ -79,6 +79,6 @@ public class ActionItem {
 	 * @return on click listener {@link View.OnClickListener}
 	 */
 	public OnClickListener getListener() {
-		return this.listener;
+		return this.mListener;
 	}
 }

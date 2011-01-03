@@ -1,30 +1,15 @@
 package com.mediaportal.remote.activities;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLConnection;
-
 import android.app.Activity;
-import android.content.Intent;
-import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 
 import com.mediaportal.remote.R;
-import com.mediaportal.remote.activities.quickactions.ActionItem;
-import com.mediaportal.remote.api.DataHandler;
 
 public class MusicActivity extends Activity {
    /** Called when the activity is first created. */
    @Override
-   public void onCreate(Bundle savedInstanceState) {
-      super.onCreate(savedInstanceState);
+   public void onCreate(Bundle _savedInstanceState) {
+      super.onCreate(_savedInstanceState);
       setContentView(R.layout.musicactivity);
 
       /*RemoteHandler service = RemoteHandler.getCurrentRemoteInstance();

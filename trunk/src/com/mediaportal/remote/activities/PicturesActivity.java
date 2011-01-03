@@ -12,21 +12,20 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.mediaportal.remote.R;
-import com.mediaportal.remote.api.DataHandler;
 import com.mediaportal.remote.api.ItemDownloaderService;
 
 public class PicturesActivity extends Activity {
-   private ItemDownloaderReceiver receiver;
+   private ItemDownloaderReceiver mReceiver;
    
    /** Called when the activity is first created. */
    @Override
-   public void onCreate(Bundle savedInstanceState) {
-      super.onCreate(savedInstanceState);
+   public void onCreate(Bundle _savedInstanceState) {
+      super.onCreate(_savedInstanceState);
       setContentView(R.layout.picturesactivity);
       
       IntentFilter filter = new IntentFilter(ItemDownloaderService.ITEM_DOWNLOAD_PROGRESSED);
-      receiver = new ItemDownloaderReceiver();
-      registerReceiver(receiver, filter);
+      mReceiver = new ItemDownloaderReceiver();
+      registerReceiver(mReceiver, filter);
       
       
       Intent service = new Intent(this, ItemDownloaderService.class);

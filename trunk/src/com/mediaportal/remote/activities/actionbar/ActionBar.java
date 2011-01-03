@@ -46,8 +46,8 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
    private ImageButton mHomeBtn;
    private RelativeLayout mHomeLayout;
 
-   public ActionBar(Context context, AttributeSet attrs) {
-      super(context, attrs);
+   public ActionBar(Context _context, AttributeSet _attrs) {
+      super(_context, _attrs);
 
       /*
        * for (int i = 0; i < attrs.getAttributeCount(); i++) { Log.d(TAG,
@@ -57,7 +57,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
        * setTitle(attrs.getAttributeValue(i)); } }
        */
 
-      mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+      mInflater = (LayoutInflater) _context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
       mBarView = (RelativeLayout) mInflater.inflate(R.layout.actionbar, null);
       addView(mBarView);
@@ -83,27 +83,27 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
     * This is ment to be used instead of the setHomeAction and does not draw a
     * divider to the left of the provided logo.
     * 
-    * @param resId
+    * @param _resId
     *           The drawable resource id
     */
-   public void setHomeLogo(int resId) {
+   public void setHomeLogo(int _resId) {
       // TODO: Add possibility to add an IntentAction as well.
-      mLogoView.setImageResource(resId);
+      mLogoView.setImageResource(_resId);
       mLogoView.setVisibility(View.VISIBLE);
       mHomeLayout.setVisibility(View.GONE);
    }
 
-   public void setTitle(CharSequence title) {
-      mTitleView.setText(title);
+   public void setTitle(CharSequence _title) {
+      mTitleView.setText(_title);
    }
 
-   public void setTitle(int resid) {
-      mTitleView.setText(resid);
+   public void setTitle(int _resid) {
+      mTitleView.setText(_resid);
    }
 
    @Override
-   public void onClick(View view) {
-      final Object tag = view.getTag();
+   public void onClick(View _view) {
+      final Object tag = _view.getTag();
       if (tag instanceof Action) {
          final Action action = (Action) tag;
          action.performAction();
@@ -113,50 +113,50 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
    /**
     * Adds a list of {@link Action}s.
     * 
-    * @param actionList
+    * @param _actionList
     */
-   public void addActions(ActionList actionList) {
-      int actions = actionList.size();
+   public void addActions(ActionList _actionList) {
+      int actions = _actionList.size();
       for (int i = 0; i < actions; i++) {
-         addAction(actionList.get(i));
+         addAction(_actionList.get(i));
       }
    }
 
    /**
     * Adds a new {@link Action}.
     * 
-    * @param action
+    * @param _action
     *           the action to add
     */
-   public void addAction(Action action) {
+   public void addAction(Action _action) {
       final int index = mActionsView.getChildCount();
-      addAction(action, index);
+      addAction(_action, index);
    }
 
    /**
     * Adds a new {@link Action} at the specified index.
     * 
-    * @param action
+    * @param _action
     *           the action to add
     */
-   public void addAction(Action action, int index) {
-      mActionsView.addView(inflateAction(action), index);
+   public void addAction(Action _action, int _index) {
+      mActionsView.addView(inflateAction(_action), _index);
    }
 
    /**
     * Inflates a {@link View} with the given {@link Action}.
     * 
-    * @param action
+    * @param _action
     *           the action to inflate
     * @return a view
     */
-   private View inflateAction(Action action) {
+   private View inflateAction(Action _action) {
       View view = mInflater.inflate(R.layout.actionbar_item, mActionsView, false);
 
       ImageButton labelView = (ImageButton) view.findViewById(R.id.actionbar_item);
-      labelView.setImageResource(action.getDrawable());
+      labelView.setImageResource(_action.getDrawable());
 
-      view.setTag(action);
+      view.setTag(_action);
       view.setOnClickListener(this);
       return view;
    }
@@ -165,6 +165,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
     * A {@link LinkedList} that holds a list of {@link Action}s.
     */
    public static class ActionList extends LinkedList<Action> {
+      private static final long serialVersionUID = -2733421682894137420L;
    }
 
    /**
@@ -180,8 +181,8 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
    public static abstract class AbstractAction implements Action {
       final private int mDrawable;
 
-      public AbstractAction(int drawable) {
-         mDrawable = drawable;
+      public AbstractAction(int _drawable) {
+         mDrawable = _drawable;
       }
 
       @Override
@@ -194,10 +195,10 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
       private Context mContext;
       private Intent mIntent;
 
-      public IntentAction(Context context, Intent intent, int drawable) {
-         super(drawable);
-         mContext = context;
-         mIntent = intent;
+      public IntentAction(Context _context, Intent _intent, int _drawable) {
+         super(_drawable);
+         mContext = _context;
+         mIntent = _intent;
       }
 
       @Override

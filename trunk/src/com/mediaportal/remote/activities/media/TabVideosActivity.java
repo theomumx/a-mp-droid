@@ -1,6 +1,5 @@
 package com.mediaportal.remote.activities.media;
 
-import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,22 +24,17 @@ import android.widget.ImageView;
 import com.mediaportal.remote.R;
 import com.mediaportal.remote.activities.lists.CoverFlow;
 import com.mediaportal.remote.api.DataHandler;
-import com.mediaportal.remote.data.Movie;
 import com.mediaportal.remote.data.Series;
 
 public class TabVideosActivity extends Activity {
    public class ImageAdapter extends BaseAdapter {
       int mGalleryItemBackground;
       private Context mContext;
-
-      private FileInputStream fis;
-
-      private List<Bitmap> moviePosters = new ArrayList<Bitmap>();
-
+      private List<Bitmap> mMoviePosters = new ArrayList<Bitmap>();
       private ImageView[] mImages;
 
-      public ImageAdapter(Context c) {
-         mContext = c;
+      public ImageAdapter(Context _context) {
+         mContext = _context;
          DataHandler service = DataHandler.getCurrentRemoteInstance();
          List<Series> series = service.getAllSeries();
 
@@ -48,10 +42,10 @@ public class TabVideosActivity extends Activity {
             Bitmap bmImg = service.getImage(s.getCurrentPosterUrl(), 150, 300);
 
             if (bmImg != null) {
-               moviePosters.add(bmImg);
+               mMoviePosters.add(bmImg);
             }
             else{
-               moviePosters.add(BitmapFactory.decodeResource(getResources(), R.drawable.mplogo));
+               mMoviePosters.add(BitmapFactory.decodeResource(getResources(), R.drawable.mplogo));
             }
          }
 
@@ -63,7 +57,7 @@ public class TabVideosActivity extends Activity {
          final int reflectionGap = 4;
 
          int index = 0;
-         for (Bitmap originalImage : moviePosters) {
+         for (Bitmap originalImage : mMoviePosters) {
             // Bitmap originalImage =
             // BitmapFactory.decodeResource(getResources(), imageId);
             if (originalImage != null) {
@@ -120,18 +114,18 @@ public class TabVideosActivity extends Activity {
       }
 
       public int getCount() {
-         return moviePosters.size();
+         return mMoviePosters.size();
       }
 
-      public Object getItem(int position) {
-         return position;
+      public Object getItem(int _position) {
+         return _position;
       }
 
-      public long getItemId(int position) {
-         return position;
+      public long getItemId(int _position) {
+         return _position;
       }
 
-      public View getView(int position, View convertView, ViewGroup parent) {
+      public View getView(int _position, View _convertView, ViewGroup _parent) {
 
          /*
           * // Use this code if you want to load from resources ImageView i =
@@ -146,24 +140,24 @@ public class TabVideosActivity extends Activity {
           * drawable.setAntiAlias(true); return i;
           */
 
-         return mImages[position];
+         return mImages[_position];
       }
 
       /**
        * Returns the size (0.0f to 1.0f) of the views depending on the 'offset'
        * to the center.
        */
-      public float getScale(boolean focused, int offset) {
+      public float getScale(boolean _focused, int _offset) {
          /* Formula: 1 / (2 ^ offset) */
-         return Math.max(0, 1.0f / (float) Math.pow(2, Math.abs(offset)));
+         return Math.max(0, 1.0f / (float) Math.pow(2, Math.abs(_offset)));
       }
 
    }
 
    /** Called when the activity is first created. */
    @Override
-   public void onCreate(Bundle savedInstanceState) {
-      super.onCreate(savedInstanceState);
+   public void onCreate(Bundle _savedInstanceState) {
+      super.onCreate(_savedInstanceState);
       // setContentView(R.layout.tabvideosactivity);
 
       // Gallery3D gall3d = new Gallery3D(this);

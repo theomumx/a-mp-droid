@@ -18,34 +18,34 @@ import com.mediaportal.remote.api.DataHandler;
 import com.mediaportal.remote.data.Movie;
 
 public class TabMoviesActivity extends Activity {
-	private ListView m_listView;
-	private LazyLoadingAdapter adapter;
+	private ListView mListView;
+	private LazyLoadingAdapter mAdapter;
 
 	/** Called when the activity is first created. */
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+	public void onCreate(Bundle _savedInstanceState) {
+		super.onCreate(_savedInstanceState);
 		setContentView(R.layout.tabmoviesactivity);
 
 		DataHandler service = DataHandler.getCurrentRemoteInstance();
 		List<Movie> movies = service.getAllMovies();
 
-		adapter = new LazyLoadingAdapter(this, R.layout.listitem_thumb);
+		mAdapter = new LazyLoadingAdapter(this, R.layout.listitem_thumb);
 
 		if (movies != null) {
 			for (Movie m : movies) {
-				adapter.AddItem(new MoviePosterViewAdapter(m));
+				mAdapter.AddItem(new MoviePosterViewAdapter(m));
 			}
 		}
 
-		m_listView = (ListView) findViewById(R.id.ListViewVideos);
-		m_listView.setAdapter(adapter);
+		mListView = (ListView) findViewById(R.id.ListViewVideos);
+		mListView.setAdapter(mAdapter);
 
-		m_listView.setOnItemClickListener(new OnItemClickListener() {
+		mListView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> a, View v, int position,
 					long id) {
-				Movie selectedMovie = (Movie) ((ILoadingAdapterItem) m_listView
+				Movie selectedMovie = (Movie) ((ILoadingAdapterItem) mListView
 						.getItemAtPosition(position)).getItem();
 
 				Intent myIntent = new Intent(v.getContext(),

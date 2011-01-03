@@ -12,8 +12,8 @@ import com.mediaportal.remote.data.MovieFull;
 
 public class TabMovieDetailsActivity extends Activity {
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+	public void onCreate(Bundle _savedInstanceState) {
+		super.onCreate(_savedInstanceState);
 		setContentView(R.layout.tabmoviedetailsactivity);
 
 		Bundle extras = getIntent().getExtras();

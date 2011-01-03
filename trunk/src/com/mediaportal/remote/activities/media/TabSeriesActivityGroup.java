@@ -12,17 +12,21 @@ public class TabSeriesActivityGroup extends ActivityGroup {
 
    // Keep this in a static variable to make it accessible for all the nesten
    // activities, lets them manipulate the view
-   public static TabSeriesActivityGroup group;
+   private static TabSeriesActivityGroup mGroup;
+   
+   public static TabSeriesActivityGroup getGroup(){
+      return mGroup;
+   }
 
    // Need to keep track of the history if you want the back-button to work
    // properly, don't use this if your activities requires a lot of memory.
-   private ArrayList<View> history;
+   private ArrayList<View> mHistory;
 
    @Override
-   protected void onCreate(Bundle savedInstanceState) {
-      super.onCreate(savedInstanceState);
-      this.history = new ArrayList<View>();
-      group = this;
+   protected void onCreate(Bundle _savedInstanceState) {
+      super.onCreate(_savedInstanceState);
+      this.mHistory = new ArrayList<View>();
+      mGroup = this;
 
       // Start the root activity withing the group and get its view
       View view = getLocalActivityManager().startActivity("CitiesActivity",
@@ -34,17 +38,17 @@ public class TabSeriesActivityGroup extends ActivityGroup {
 
    }
 
-   public void replaceView(View v) {
+   public void replaceView(View _view) {
       // Adds the old one to history
-      history.add(v);
+      mHistory.add(_view);
       // Changes this Groups View to the new View.
-      setContentView(v);
+      setContentView(_view);
    }
 
    public void back() {
-      if (history.size() > 0) {
-         history.remove(history.size() - 1);
-         setContentView(history.get(history.size() - 1));
+      if (mHistory.size() > 0) {
+         mHistory.remove(mHistory.size() - 1);
+         setContentView(mHistory.get(mHistory.size() - 1));
       } else {
          finish();
       }
@@ -52,17 +56,17 @@ public class TabSeriesActivityGroup extends ActivityGroup {
 
    @Override
    public void onBackPressed() {
-      TabSeriesActivityGroup.group.back();
+      TabSeriesActivityGroup.mGroup.back();
       return;
    }
 
    @Override
-   public boolean onKeyDown(int keyCode, KeyEvent event) {
-      if (keyCode == KeyEvent.KEYCODE_BACK) {
-         TabSeriesActivityGroup.group.back();
+   public boolean onKeyDown(int _keyCode, KeyEvent _event) {
+      if (_keyCode == KeyEvent.KEYCODE_BACK) {
+         TabSeriesActivityGroup.mGroup.back();
          return true;
       }
-      return super.onKeyDown(keyCode, event);
+      return super.onKeyDown(_keyCode, _event);
    }
 
 }

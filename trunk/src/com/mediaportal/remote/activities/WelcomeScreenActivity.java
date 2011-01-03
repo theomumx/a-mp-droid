@@ -47,12 +47,12 @@ public class WelcomeScreenActivity extends Activity {
 		}
 
 		@Override
-		protected void onProgressUpdate(String... result) {
+		protected void onProgressUpdate(String... _result) {
 
 		}
 
 		@Override
-		protected void onPostExecute(Boolean result) {
+		protected void onPostExecute(Boolean _result) {
 
 			Intent myIntent = new Intent(mContext,
 					HomeActivity.class);
@@ -62,8 +62,8 @@ public class WelcomeScreenActivity extends Activity {
 
 	/** Called when the activity is first created. */
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+	public void onCreate(Bundle _savedInstanceState) {
+		super.onCreate(_savedInstanceState);
 		setContentView(R.layout.welcomescreen);
 		
 		//Client for diebagger -> until setting screen ready
@@ -93,8 +93,8 @@ public class WelcomeScreenActivity extends Activity {
 		final Button connectButton = (Button)findViewById(R.id.ButtonConnect);
 		connectButton.setOnClickListener(new OnClickListener() {
          @Override
-         public void onClick(View v) {
-            StartupTask task = new StartupTask(v.getContext());
+         public void onClick(View _view) {
+            StartupTask task = new StartupTask(_view.getContext());
             task.execute(client);  
             progress.setVisibility(View.VISIBLE);
             progress.setIndeterminate(true);
