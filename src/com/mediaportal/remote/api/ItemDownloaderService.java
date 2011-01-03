@@ -42,7 +42,7 @@ public class ItemDownloaderService extends Service {
       private String mName;
       private String mUrl;
 
-      public int getmId() {
+      public int getId() {
          return mId;
       }
 
@@ -75,8 +75,13 @@ public class ItemDownloaderService extends Service {
 
    private class DownloaderTask extends AsyncTask<String, Integer, Boolean> {
       private Notification mNotification;
-      NotificationManager mNotificationManager;
-      DownloadJob mCurrentJob;
+      private NotificationManager mNotificationManager;
+      private DownloadJob mCurrentJob;
+      private int mNumberOfJobs;
+
+      private DownloaderTask() {
+         mNumberOfJobs = 0;
+      }
 
       @Override
       protected Boolean doInBackground(String... params) {
@@ -84,6 +89,7 @@ public class ItemDownloaderService extends Service {
             DownloadJob topmostTask = null;
             synchronized (mDownloadJobs) {
                topmostTask = mDownloadJobs.get(0);
+               mDownloadJobs.remove(0);
             }
 
             if (downloadFile(topmostTask)) {
@@ -92,10 +98,6 @@ public class ItemDownloaderService extends Service {
             } else {
                // TODO: download failed -> retry?
             }
-
-            synchronized (mDownloadJobs) {
-               mDownloadJobs.remove(0);
-            }
          }
 
          return true;
@@ -103,6 +105,7 @@ public class ItemDownloaderService extends Service {
 
       private boolean downloadFile(DownloadJob _job) {
          try {
+            mNumberOfJobs++;
             mCurrentJob = _job;
             URL myFileUrl = new URL(_job.getUrl());
             String myFileName = _job.getName();
@@ -122,9 +125,9 @@ public class ItemDownloaderService extends Service {
 
             createNotificationText(0);
 
-            NotificationManager notificationManager = (NotificationManager) getApplicationContext()
-                  .getSystemService(getApplicationContext().NOTIFICATION_SERVICE);
-            notificationManager.notify(NOTIFICATION_ID, mNotification);
+            mNotificationManager = (NotificationManager) getApplicationContext().getSystemService(
+                  getApplicationContext().NOTIFICATION_SERVICE);
+            mNotificationManager.notify(NOTIFICATION_ID, mNotification);
 
             HttpURLConnection conn = (HttpURLConnection) myFileUrl.openConnection();
             conn.setDoInput(true);
@@ -159,20 +162,26 @@ public class ItemDownloaderService extends Service {
             }
             out.close();
             inputStream.close();
+
+            return true;
          } catch (MalformedURLException e) {
             e.printStackTrace();
          } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
          } catch (IOException e) {
             e.printStackTrace();
+         } catch (Exception e) {
+            e.printStackTrace();
          }
 
-         return true;
+         return false;
       }
 
       private void createNotificationText(int _progress) {
-         String text = "Donwload " + mCurrentJob.getName()
-               + (mDownloadJobs.size() > 0 ? " (" + mDownloadJobs.size() + " left)" : "");
+         int totalDownloads = mNumberOfJobs + mDownloadJobs.size();
+         String text = "Donwload "
+               + mCurrentJob.getName()
+               + (mDownloadJobs.size() > 0 ? " (" + mNumberOfJobs + "/" + totalDownloads + ")" : "");
          mNotification.contentView.setTextViewText(R.id.status_text, text);
          mNotification.contentView.setProgressBar(R.id.status_progress, 100, _progress, false);
 
@@ -181,9 +190,15 @@ public class ItemDownloaderService extends Service {
       @Override
       protected void onPostExecute(Boolean result) {
          stopSelf();
-         NotificationManager notificationManager = (NotificationManager) getApplicationContext()
-               .getSystemService(getApplicationContext().NOTIFICATION_SERVICE);
-         notificationManager.cancel(NOTIFICATION_ID);
+         mNotificationManager.cancel(NOTIFICATION_ID);
+
+         Notification notification = new Notification(R.drawable.mp_logo_2, "Notify", System
+               .currentTimeMillis());
+         notification.setLatestEventInfo(getApplicationContext(), "aMPdroid", "Downloads finished",
+               PendingIntent.getActivity(getApplicationContext(), 0, mIntent,
+                     PendingIntent.FLAG_CANCEL_CURRENT));
+         mNotificationManager.notify(49, notification);
+
          super.onPostExecute(result);
       }
 

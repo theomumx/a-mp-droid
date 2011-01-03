@@ -69,13 +69,13 @@ public class WelcomeScreenActivity extends Activity {
 		//Client for diebagger -> until setting screen ready
       final RemoteClient client = new RemoteClient(0, "Bagga Server");
       
-      GmaWebserviceApi api = new GmaWebserviceApi("10.0.0.27", 4322);
+      GmaWebserviceApi api = new GmaWebserviceApi("10.1.0.247", 4322);
       client.setRemoteAccessApi(api);
       
       Tv4HomeApi tvApi = new Tv4HomeApi("10.1.0.166", 4321);
       client.setTvControlApi(tvApi);
       
-      WifiRemoteMpController clientApi = new WifiRemoteMpController("10.0.0.27", 8017);
+      WifiRemoteMpController clientApi = new WifiRemoteMpController("10.1.0.247", 8017);
       client.setClientControlApi(clientApi);
 		
       
