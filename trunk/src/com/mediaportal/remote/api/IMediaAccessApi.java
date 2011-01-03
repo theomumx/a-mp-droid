@@ -6,6 +6,7 @@ import java.util.List;
 
 import android.graphics.Bitmap;
 
+import com.mediaportal.remote.data.EpisodeDetails;
 import com.mediaportal.remote.data.Movie;
 import com.mediaportal.remote.data.MovieFull;
 import com.mediaportal.remote.data.MusicAlbum;
@@ -17,7 +18,7 @@ import com.mediaportal.remote.data.SupportedFunctions;
 import com.mediaportal.remote.data.VideoShare;
 
 
-public interface IRemoteAccessApi {  
+public interface IMediaAccessApi {  
 	ArrayList<Movie> getAllMovies();
 	int getMovieCount();
 	ArrayList<Movie> getMovies(int _start, int _end);
@@ -36,5 +37,6 @@ public interface IRemoteAccessApi {
 	List<MusicAlbum> getAlbums(int _start, int _end);
    URL getDownloadUri(String _filePath);
    ArrayList<VideoShare> getVideoShares();
+   EpisodeDetails getEpisode(int id);
    
 }

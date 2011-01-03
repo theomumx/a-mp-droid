@@ -1,8 +1,11 @@
 package com.mediaportal.remote.activities.lists.views;
 
 
+import java.io.File;
+
 import com.mediaportal.remote.R;
 import com.mediaportal.remote.activities.lists.ILoadingAdapterItem;
+import com.mediaportal.remote.activities.lists.Utils;
 import com.mediaportal.remote.data.Movie;
 
 public class MoviePosterViewAdapter implements ILoadingAdapterItem {
@@ -10,6 +13,12 @@ public class MoviePosterViewAdapter implements ILoadingAdapterItem {
    private Movie movie;
    public MoviePosterViewAdapter(Movie _movie){
       movie = _movie;
+   }
+   
+   @Override
+   public String getImageCacheName() {
+      String fileName = Utils.getFileNameWithExtension(movie.getCoverThumbPath(), "\\");
+      return "Movies" + File.separator + movie.getId() + File.separator + fileName;
    }
    
    
@@ -39,7 +48,7 @@ public class MoviePosterViewAdapter implements ILoadingAdapterItem {
    @Override
    public String getTitle() {
       // TODO Auto-generated method stub
-      return null;
+      return movie.getName();
    }
 
 
@@ -73,5 +82,8 @@ public class MoviePosterViewAdapter implements ILoadingAdapterItem {
    public Object getItem() {
       return movie;
    }
+
+
+
 
 }

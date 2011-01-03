@@ -1,13 +1,12 @@
 package com.mediaportal.remote.activities.lists;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Stack;
 
 import android.app.Activity;
@@ -26,9 +25,11 @@ public class ImageHandler {
    public static int ImagePrefferedHeight = 300;// height of loaded image ->
    // default = 400
 
+   public static int MEMORY_CACHE_SIZE = 20;
+
    // the simplest in-memory cache implementation. This should be replaced with
    // something like SoftReference or BitmapOptions.inPurgeable(since 1.6)
-   private HashMap<String, Bitmap> cache = new HashMap<String, Bitmap>();
+   private LinkedHashMap<String, Bitmap> memoryCache = new CacheHashMap(MEMORY_CACHE_SIZE);
 
    private File cacheDir;
    private Context mContext;
@@ -42,7 +43,7 @@ public class ImageHandler {
       // Find the dir to save cached images
       if (android.os.Environment.getExternalStorageState().equals(
             android.os.Environment.MEDIA_MOUNTED))
-         cacheDir = new File(android.os.Environment.getExternalStorageDirectory(), "LazyList");
+         cacheDir = new File(android.os.Environment.getExternalStorageDirectory(), "aMPdroid");
       else
          cacheDir = context.getCacheDir();
       if (!cacheDir.exists())
@@ -51,25 +52,26 @@ public class ImageHandler {
 
    final int stub_id = R.drawable.mp_logo_2;
 
-   public void DisplayImage(String url, Activity activity, ImageView imageView) {
+   public void DisplayImage(String url, String cache, Activity activity, ImageView imageView) {
       Bitmap bitmap = null;
-      if (cache.containsKey(url)) {
-         bitmap = cache.get(url);
+      //TODO: memory cache will always be empty -> at some point reintroduce memory caching
+      if (memoryCache.containsKey(url)) {
+         bitmap = memoryCache.get(url);
          imageView.setImageBitmap(bitmap);
       } else {
-         queuePhoto(url, activity, imageView);
+         queuePhoto(url, cache, activity, imageView);
       }
-      
-      if(bitmap == null){
-         imageView.setImageResource(R.drawable.mp_logo_2);         
+
+      if (bitmap == null) {
+         imageView.setImageResource(stub_id);
       }
    }
 
-   private void queuePhoto(String url, Activity activity, ImageView imageView) {
+   private void queuePhoto(String url, String cache, Activity activity, ImageView imageView) {
       // This ImageView may be used for other images before. So there may be
       // some old tasks in the queue. We need to discard them.
       photosQueue.Clean(imageView);
-      PhotoToLoad p = new PhotoToLoad(url, imageView);
+      PhotoToLoad p = new PhotoToLoad(url, cache, imageView);
       synchronized (photosQueue.photosToLoad) {
          photosQueue.photosToLoad.push(p);
          photosQueue.photosToLoad.notifyAll();
@@ -84,56 +86,64 @@ public class ImageHandler {
       return String.valueOf(url.hashCode());
    }
 
-   public Bitmap getBitmap(String url, boolean thumb) {
+   public Bitmap getBitmap(String url, String cache, boolean thumb) {
       if (url != null && !url.equals("")) {
-         // I identify images by hashcode. Not a perfect solution, good for
-         // the demo.
-         String filename = getHashOfFileName(url);
-         // File f = new File(filename);
+
+         File file = new File(cacheDir + File.separator + cache);
 
          // from SD cache
-         Bitmap b = decodeFile(filename, thumb);
+         Bitmap b = decodeFile(file, thumb);
+
          if (b != null)
             return b;
 
          // from web
          try {
             DataHandler service = DataHandler.getCurrentRemoteInstance();
-            Bitmap bmImg = service.getImage(url, 400, 150);
-            return bmImg;
+            b = service.getImage(url, 400, 150);
          } catch (Exception ex) {
             ex.printStackTrace();
             return null;
          }
 
-         /*
-          * // from web try { Bitmap bitmap = null; URL uri = new
-          * URL(createImageUriWithFittingWidth(url));
-          * 
-          * InputStream is = uri.openStream(); OutputStream os =
-          * mContext.openFileOutput(filename, Context.MODE_PRIVATE);
-          * Utils.CopyStream(is, os); os.close(); bitmap = decodeFile(filename,
-          * thumb);
-          * 
-          * return bitmap; } catch (Exception ex) { ex.printStackTrace(); return
-          * null; }
-          */
+         if (b != null) {
+            // save bitmap to sd card for caching
+            try {
+
+               if (android.os.Environment.getExternalStorageState().equals(
+                     android.os.Environment.MEDIA_MOUNTED)) {
+                  File parentDir = file.getParentFile();
+                  if (!parentDir.exists()) {
+                     parentDir.mkdirs();
+                  }
+
+                  FileOutputStream f = new FileOutputStream(file);
+                  b.compress(Bitmap.CompressFormat.JPEG, 100, f);
+                  f.flush();
+                  f.close();
+               } else {
+                  // todo: write to internal memory here???
+               }
+
+            } catch (FileNotFoundException e) {
+               e.printStackTrace();
+            } catch (IOException e) {
+               e.printStackTrace();
+            }
+         }
+
+         return b;
       }
       return null;
    }
 
-   private String createImageUriWithFittingWidth(String imageUri) {
-      String base = "";
-
-      return base + "?src=" + imageUri + "&w=" + ImageHandler.ImagePrefferedWidth + "&h="
-            + ImageHandler.ImagePrefferedHeight;
-   }
-
    // decodes image and scales it to reduce memory consumption
-   private Bitmap decodeFile(String filename, boolean thumb) {
+   private Bitmap decodeFile(File file, boolean thumb) {
       try {
+         if (!file.exists())
+            return null;
 
-         InputStream is = mContext.openFileInput(filename);
+         InputStream is = new FileInputStream(file);
          if (thumb) {
             // decode image size
             BitmapFactory.Options o = new BitmapFactory.Options();
@@ -156,7 +166,7 @@ public class ImageHandler {
             // decode with inSampleSize
             BitmapFactory.Options o2 = new BitmapFactory.Options();
             o2.inSampleSize = scale;
-            is = mContext.openFileInput(filename);
+            is = mContext.openFileInput(file.toString());
             return BitmapFactory.decodeStream(is, null, o2);
          } else {
             // full size
@@ -173,10 +183,12 @@ public class ImageHandler {
    // Task for the queue
    private class PhotoToLoad {
       public String url;
+      public String cache;
       public ImageView imageView;
 
-      public PhotoToLoad(String u, ImageView i) {
-         url = u;
+      public PhotoToLoad(String _url, String _cache, ImageView i) {
+         url = _url;
+         cache = _cache;
          imageView = i;
       }
    }
@@ -217,8 +229,14 @@ public class ImageHandler {
                   synchronized (photosQueue.photosToLoad) {
                      photoToLoad = photosQueue.photosToLoad.pop();
                   }
-                  Bitmap bmp = getBitmap(photoToLoad.url, true);
-                  cache.put(photoToLoad.url, bmp);
+                  Bitmap bmp = getBitmap(photoToLoad.url, photoToLoad.cache, false);
+                  
+                  //TODO: implement memory caching to further improve performance
+                  memoryCache.put(photoToLoad.url, bmp);
+                  //if (memoryCache.size() > MEMORY_CACHE_SIZE) {
+                   //  // cache.
+                  //}
+
                   if (((String) photoToLoad.imageView.getTag()).equals(photoToLoad.url)) {
                      BitmapDisplayer bd = new BitmapDisplayer(bmp, photoToLoad.imageView);
                      Activity a = (Activity) photoToLoad.imageView.getContext();
@@ -256,13 +274,9 @@ public class ImageHandler {
 
    public void clearCache() {
       // clear memory cache
-      cache.clear();
-
-      // clear SD cache
-      File[] files = cacheDir.listFiles();
-      for (File f : files)
-         f.delete();
+      memoryCache.clear();
    }
+   
 
    public void deleteImage(String url) {
       String filename = getHashOfFileName(url);

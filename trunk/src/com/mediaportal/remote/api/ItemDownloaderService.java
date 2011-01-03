@@ -1,0 +1,245 @@
+package com.mediaportal.remote.api;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+
+import com.mediaportal.remote.R;
+
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.Service;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
+import android.os.Environment;
+import android.os.IBinder;
+import android.util.Log;
+import android.widget.RemoteViews;
+
+public class ItemDownloaderService extends Service {
+   public static final String ITEM_DOWNLOAD_STARTED = "download_started";
+   public static final String ITEM_DOWNLOAD_PROGRESSED = "download_progressed";
+   public static final String ITEM_DOWNLOAD_FINISHED = "download_finished";
+   public static final int NOTIFICATION_ID = 44;
+
+   private Intent mIntent;
+   private ArrayList<DownloadJob> mDownloadJobs;
+   private AsyncTask<String, Integer, Boolean> mDownloader;
+
+   private class DownloadJob {
+      private int mId;
+      private String mName;
+      private String mUrl;
+
+      public int getmId() {
+         return mId;
+      }
+
+      public void setId(int _id) {
+         this.mId = _id;
+      }
+
+      public String getName() {
+         return mName;
+      }
+
+      public void setName(String _name) {
+         this.mName = _name;
+      }
+
+      public String getUrl() {
+         return mUrl;
+      }
+
+      public void setUrl(String _url) {
+         this.mUrl = _url;
+      }
+
+      private DownloadJob(int _id, String _name, String _url) {
+         mId = _id;
+         mName = _name;
+         mUrl = _url;
+      }
+   }
+
+   private class DownloaderTask extends AsyncTask<String, Integer, Boolean> {
+      private Notification mNotification;
+      NotificationManager mNotificationManager;
+      DownloadJob mCurrentJob;
+
+      @Override
+      protected Boolean doInBackground(String... params) {
+         while (mDownloadJobs != null && mDownloadJobs.size() > 0) {
+            DownloadJob topmostTask = null;
+            synchronized (mDownloadJobs) {
+               topmostTask = mDownloadJobs.get(0);
+            }
+
+            if (downloadFile(topmostTask)) {
+               // download succeeded -> next file
+
+            } else {
+               // TODO: download failed -> retry?
+            }
+
+            synchronized (mDownloadJobs) {
+               mDownloadJobs.remove(0);
+            }
+         }
+
+         return true;
+      }
+
+      private boolean downloadFile(DownloadJob _job) {
+         try {
+            mCurrentJob = _job;
+            URL myFileUrl = new URL(_job.getUrl());
+            String myFileName = _job.getName();
+
+            // configure the intent
+            PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0,
+                  mIntent, 0);
+
+            // configure the notification
+            mNotification = new Notification(R.drawable.quickaction_sdcard, "Download", System
+                  .currentTimeMillis());
+            mNotification.flags = mNotification.flags | Notification.FLAG_ONGOING_EVENT;
+            mNotification.contentView = new RemoteViews(getApplicationContext().getPackageName(),
+                  R.layout.download_progress);
+            mNotification.contentIntent = pendingIntent;
+            mNotification.contentView.setImageViewResource(R.id.status_icon, R.drawable.icon);
+
+            createNotificationText(0);
+
+            NotificationManager notificationManager = (NotificationManager) getApplicationContext()
+                  .getSystemService(getApplicationContext().NOTIFICATION_SERVICE);
+            notificationManager.notify(NOTIFICATION_ID, mNotification);
+
+            HttpURLConnection conn = (HttpURLConnection) myFileUrl.openConnection();
+            conn.setDoInput(true);
+            conn.connect();
+            InputStream inputStream = conn.getInputStream();
+
+            File imageFile = null;
+            File tmpDir = new File(Environment.getExternalStorageDirectory() + "/downloads");
+            if (!tmpDir.exists()) {
+               tmpDir = new File(Environment.getExternalStorageDirectory() + "/download");
+               if (tmpDir.mkdirs()) {
+                  Log.d("ItemDownloaderService", "created directory on sd card");
+               }
+            }
+            imageFile = new File(tmpDir.getAbsolutePath() + "//" + myFileName);
+            OutputStream out = new FileOutputStream(imageFile);
+            byte buf[] = new byte[1024];
+            int fileSize = conn.getContentLength();
+            long read = 0;
+            int currentProgress = 0;
+            int len;
+            while ((len = inputStream.read(buf)) > 0) {
+               out.write(buf, 0, len);
+
+               read += len;
+               int progress = (int) (read * 100 / fileSize);
+               if (progress > currentProgress) {
+                  currentProgress = progress;
+
+                  publishProgress(progress);
+               }
+            }
+            out.close();
+            inputStream.close();
+         } catch (MalformedURLException e) {
+            e.printStackTrace();
+         } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+         } catch (IOException e) {
+            e.printStackTrace();
+         }
+
+         return true;
+      }
+
+      private void createNotificationText(int _progress) {
+         String text = "Donwload " + mCurrentJob.getName()
+               + (mDownloadJobs.size() > 0 ? " (" + mDownloadJobs.size() + " left)" : "");
+         mNotification.contentView.setTextViewText(R.id.status_text, text);
+         mNotification.contentView.setProgressBar(R.id.status_progress, 100, _progress, false);
+
+      }
+
+      @Override
+      protected void onPostExecute(Boolean result) {
+         stopSelf();
+         NotificationManager notificationManager = (NotificationManager) getApplicationContext()
+               .getSystemService(getApplicationContext().NOTIFICATION_SERVICE);
+         notificationManager.cancel(NOTIFICATION_ID);
+         super.onPostExecute(result);
+      }
+
+      @Override
+      protected void onProgressUpdate(Integer... values) {
+         int progress = values[0];
+         createNotificationText(progress);
+         // inform the progress bar of updates in progress
+         mNotificationManager.notify(NOTIFICATION_ID, mNotification);
+      }
+
+   }
+
+   @Override
+   public IBinder onBind(Intent intent) {
+      mIntent = intent;
+      return null;
+   }
+
+   @Override
+   public void onCreate() {
+      mDownloadJobs = new ArrayList<DownloadJob>();
+   }
+
+   @Override
+   public int onStartCommand(Intent intent, int flags, int startId) {
+      if ((flags & START_FLAG_RETRY) == 0) {
+
+      } else {
+
+      }
+
+      String url = intent.getStringExtra("url");
+      String fName = intent.getStringExtra("name");
+
+      synchronized (mDownloadJobs) {
+         mDownloadJobs.add(new DownloadJob(0, fName, url));
+      }
+
+      if (mDownloader == null || mDownloader.isCancelled()) {
+         mDownloader = new DownloaderTask().execute();
+      }
+
+      return Service.START_STICKY;
+   }
+
+   private void broadcastProgress(String _url, int _progress) {
+
+   }
+
+   private void broadcastStarted(String _url) {
+
+   }
+
+   private void broadcastFinished(String _url) {
+
+   }
+
+}

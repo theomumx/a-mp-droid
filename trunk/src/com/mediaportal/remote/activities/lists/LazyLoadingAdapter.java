@@ -125,10 +125,11 @@ public class LazyLoadingAdapter extends BaseAdapter {
 
             if (holder.image != null) {
                String image = data.get(position).getImage();
+               String cache = data.get(position).getImageCacheName();
 
                if (image != null && !image.equals("")) {
                   holder.image.setTag(image);
-                  imageLoader.DisplayImage(data.get(position).getImage(), activity, holder.image);
+                  imageLoader.DisplayImage(image, cache, activity, holder.image);
                } else {// todo: defaultimage
                   holder.image.setImageResource(R.drawable.mp_logo_2);
                }

@@ -65,4 +65,10 @@ public class SeriesBannerViewAdapter implements ILoadingAdapterItem {
       return series;
    }
 
+   @Override
+   public String getImageCacheName() {
+      // TODO Auto-generated method stub
+      return null;
+   }
+
 }

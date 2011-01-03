@@ -1,6 +1,9 @@
 package com.mediaportal.remote.activities.lists.views;
 
+import java.io.File;
+
 import com.mediaportal.remote.activities.lists.ILoadingAdapterItem;
+import com.mediaportal.remote.activities.lists.Utils;
 
 public class PosterGalleryViewAdapter implements ILoadingAdapterItem {
 
@@ -11,6 +14,12 @@ public class PosterGalleryViewAdapter implements ILoadingAdapterItem {
    @Override
    public String getImage() {
       return posterUrl;
+   }
+   
+   @Override
+   public String getImageCacheName() {
+      String fileName = Utils.getFileNameWithExtension(posterUrl, "\\");
+      return "MoviePosters" + File.separator + fileName;
    }
 
    @Override
@@ -57,5 +66,6 @@ public class PosterGalleryViewAdapter implements ILoadingAdapterItem {
    public int getXml() {
       return 0;
    }
+
 
 }
