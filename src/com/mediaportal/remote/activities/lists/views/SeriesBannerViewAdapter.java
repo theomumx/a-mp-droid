@@ -4,26 +4,26 @@ import com.mediaportal.remote.activities.lists.ILoadingAdapterItem;
 import com.mediaportal.remote.data.Series;
 
 public class SeriesBannerViewAdapter implements ILoadingAdapterItem {
-   private Series series;
+   private Series mSeries;
 
    public SeriesBannerViewAdapter(Series _series) {
       super();
-      this.series = _series;
+      this.mSeries = _series;
    }
 
    @Override
    public String getImage() {
-      return series.getCurrentBannerUrl();
+      return mSeries.getCurrentBannerUrl();
    }
 
    @Override
    public String getSubText() {
-      return series.getGenreString();
+      return mSeries.getGenreString();
    }
 
    @Override
    public String getText() {
-      return series.getPrettyName();
+      return mSeries.getPrettyName();
    }
 
    @Override
@@ -33,41 +33,36 @@ public class SeriesBannerViewAdapter implements ILoadingAdapterItem {
 
    @Override
    public String getTitle() {
-      return series.getPrettyName();
+      return mSeries.getPrettyName();
    }
 
    @Override
    public int getSubTextColor() {
-      // TODO Auto-generated method stub
       return 0;
    }
 
    @Override
    public int getTitleColor() {
-      // TODO Auto-generated method stub
       return 0;
    }
 
    @Override
    public int getType() {
-      // TODO Auto-generated method stub
       return 0;
    }
 
    @Override
    public int getXml() {
-      // TODO Auto-generated method stub
       return 0;
    }
    
    @Override
    public Object getItem() {
-      return series;
+      return mSeries;
    }
 
    @Override
    public String getImageCacheName() {
-      // TODO Auto-generated method stub
       return null;
    }
 

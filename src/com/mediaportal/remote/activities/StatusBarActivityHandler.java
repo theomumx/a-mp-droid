@@ -18,32 +18,32 @@ import com.mediaportal.remote.data.commands.RemoteKey;
 import com.mediaportal.remote.utils.Util;
 
 public class StatusBarActivityHandler {
-   Activity parent;
-   DataHandler remote;
-   TextView statusText;
-   ImageButton pauseButton;
-   ImageButton prevButton;
-   ImageButton nextButton;
-   ImageButton volumeButton;
-   ImageButton homeButton;
-   SeekBar seekBar;
-   SlidingDrawer slider;
+   Activity mParent;
+   DataHandler mRemote;
+   TextView mStatusText;
+   ImageButton mPauseButton;
+   ImageButton mPrevButton;
+   ImageButton mNextButton;
+   ImageButton mVolumeButton;
+   ImageButton mHomeButton;
+   SeekBar mSeekBar;
+   SlidingDrawer mSlider;
    
    private static String statusString;
 
    public StatusBarActivityHandler(Activity _parent, DataHandler _remote) {
-      parent = _parent;
-      remote = _remote;
+      mParent = _parent;
+      mRemote = _remote;
 
-      slider = (SlidingDrawer) parent.findViewById(R.id.SlidingDrawerStatus);
-      pauseButton = (ImageButton) parent.findViewById(R.id.ImageButtonPause);
-      prevButton = (ImageButton) parent.findViewById(R.id.ImageButtonRewind);
-      nextButton = (ImageButton) parent.findViewById(R.id.ImageButtonNext);
-      homeButton = (ImageButton) parent.findViewById(R.id.ImageButtonHome);
-      volumeButton = (ImageButton) parent.findViewById(R.id.ImageButtonVolume);
+      mSlider = (SlidingDrawer) mParent.findViewById(R.id.SlidingDrawerStatus);
+      mPauseButton = (ImageButton) mParent.findViewById(R.id.ImageButtonPause);
+      mPrevButton = (ImageButton) mParent.findViewById(R.id.ImageButtonRewind);
+      mNextButton = (ImageButton) mParent.findViewById(R.id.ImageButtonNext);
+      mHomeButton = (ImageButton) mParent.findViewById(R.id.ImageButtonHome);
+      mVolumeButton = (ImageButton) mParent.findViewById(R.id.ImageButtonVolume);
 
-      if (pauseButton != null) {
-         pauseButton.setOnClickListener(new OnClickListener() {
+      if (mPauseButton != null) {
+         mPauseButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                sendRemoteKey(RemoteCommands.pauseButton);
@@ -52,53 +52,53 @@ public class StatusBarActivityHandler {
          });
       }
 
-      if (prevButton != null) {
-         prevButton.setOnClickListener(new OnClickListener() {
+      if (mPrevButton != null) {
+         mPrevButton.setOnClickListener(new OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View _view) {
                sendRemoteKey(RemoteCommands.prevButton);
             }
          });
       }
 
-      if (nextButton != null) {
-         nextButton.setOnClickListener(new OnClickListener() {
+      if (mNextButton != null) {
+         mNextButton.setOnClickListener(new OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View _view) {
                sendRemoteKey(RemoteCommands.nextButton);
             }
          });
       }
 
-      if (homeButton != null) {
-         homeButton.setOnTouchListener(new OnTouchListener() {
+      if (mHomeButton != null) {
+         mHomeButton.setOnTouchListener(new OnTouchListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-               if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                  Util.Vibrate(parent, 70);
+            public boolean onTouch(View _view, MotionEvent _event) {
+               if (_event.getAction() == MotionEvent.ACTION_DOWN) {
+                  Util.Vibrate(mParent, 70);
                }
                return false;
             }
          });
-         homeButton.setOnClickListener(new OnClickListener() {
+         mHomeButton.setOnClickListener(new OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View _view) {
 
-               if (!parent.getClass().equals(HomeActivity.class)) {
-                  slider.close();
-                  parent.finish();
+               if (!mParent.getClass().equals(HomeActivity.class)) {
+                  mSlider.close();
+                  mParent.finish();
                } else {
-                  slider.animateClose();
+                  mSlider.animateClose();
                }
             }
          });
       }
 
-      if (volumeButton != null) {
-         volumeButton.setOnClickListener(new OnClickListener() {
+      if (mVolumeButton != null) {
+         mVolumeButton.setOnClickListener(new OnClickListener() {
             @Override
-            public void onClick(View v) {
-               if (seekBar.getVisibility() == View.VISIBLE) {
+            public void onClick(View _view) {
+               if (mSeekBar.getVisibility() == View.VISIBLE) {
                   setControlsVisibility(true);
                } else {
                   setControlsVisibility(false);
@@ -108,31 +108,31 @@ public class StatusBarActivityHandler {
          });
       }
 
-      statusText = (TextView) parent.findViewById(R.id.TextViewSliderSatusText);
-      seekBar = (SeekBar) parent.findViewById(R.id.SeekBarVolume);
+      mStatusText = (TextView) mParent.findViewById(R.id.TextViewSliderSatusText);
+      mSeekBar = (SeekBar) mParent.findViewById(R.id.SeekBarVolume);
 
-      if (seekBar != null) {
-         seekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+      if (mSeekBar != null) {
+         mSeekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 
             @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
+            public void onStopTrackingTouch(SeekBar _seekBar) {
 
             }
 
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-               if (!remote.isClientControlConnected()) {
-                  Util.showToast(parent, "Remote not connected");
+            public void onStartTrackingTouch(SeekBar _seekBar) {
+               if (!mRemote.isClientControlConnected()) {
+                  Util.showToast(mParent, "Remote not connected");
                }
             }
 
             @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-               if (fromUser) {
-                  int seekValue = seekBar.getProgress();// between 0 - 20
-                  Util.Vibrate(parent, seekValue * 2);
-                  if (remote.isClientControlConnected()) {
-                     remote.sendClientVolume((int) seekValue * 5);
+            public void onProgressChanged(SeekBar _seekBar, int _progress, boolean _fromUser) {
+               if (_fromUser) {
+                  int seekValue = _seekBar.getProgress();// between 0 - 20
+                  Util.Vibrate(mParent, seekValue * 2);
+                  if (mRemote.isClientControlConnected()) {
+                     mRemote.sendClientVolume((int) seekValue * 5);
                   }
                }
             }
@@ -141,60 +141,60 @@ public class StatusBarActivityHandler {
    }
 
    private void sendRemoteKey(RemoteKey _button) {
-      Util.Vibrate(parent, 50);
-      if (remote.isClientControlConnected()) {
-         remote.sendRemoteButton(_button);
+      Util.Vibrate(mParent, 50);
+      if (mRemote.isClientControlConnected()) {
+         mRemote.sendRemoteButton(_button);
       } else {
-         Util.showToast(parent, "Remote not connected");
+         Util.showToast(mParent, "Remote not connected");
       }
 
    }
 
    private void setControlsVisibility(boolean _visibility) {
       if (_visibility) {
-         if (prevButton != null)
-            prevButton.setVisibility(View.VISIBLE);
-         if (nextButton != null)
-            nextButton.setVisibility(View.VISIBLE);
-         if (pauseButton != null)
-            pauseButton.setVisibility(View.VISIBLE);
-         if (homeButton != null)
-            homeButton.setVisibility(View.VISIBLE);
+         if (mPrevButton != null)
+            mPrevButton.setVisibility(View.VISIBLE);
+         if (mNextButton != null)
+            mNextButton.setVisibility(View.VISIBLE);
+         if (mPauseButton != null)
+            mPauseButton.setVisibility(View.VISIBLE);
+         if (mHomeButton != null)
+            mHomeButton.setVisibility(View.VISIBLE);
 
-         if (seekBar != null)
-            seekBar.setVisibility(View.INVISIBLE);
+         if (mSeekBar != null)
+            mSeekBar.setVisibility(View.INVISIBLE);
       } else {
-         if (prevButton != null)
-            prevButton.setVisibility(View.INVISIBLE);
-         if (nextButton != null)
-            nextButton.setVisibility(View.INVISIBLE);
-         if (pauseButton != null)
-            pauseButton.setVisibility(View.INVISIBLE);
-         if (homeButton != null)
-            homeButton.setVisibility(View.INVISIBLE);
+         if (mPrevButton != null)
+            mPrevButton.setVisibility(View.INVISIBLE);
+         if (mNextButton != null)
+            mNextButton.setVisibility(View.INVISIBLE);
+         if (mPauseButton != null)
+            mPauseButton.setVisibility(View.INVISIBLE);
+         if (mHomeButton != null)
+            mHomeButton.setVisibility(View.INVISIBLE);
 
-         if (seekBar != null)
-            seekBar.setVisibility(View.VISIBLE);
+         if (mSeekBar != null)
+            mSeekBar.setVisibility(View.VISIBLE);
       }
    }
 
    protected void setStatusText(String _text) {
-      if (statusText != null) {
+      if (mStatusText != null) {
          StatusBarActivityHandler.statusString = _text;
       }
-      statusText.setText(StatusBarActivityHandler.statusString);
+      mStatusText.setText(StatusBarActivityHandler.statusString);
    }
 
    public void setupRemoteStatus() {
-      if (statusText != null) {
+      if (mStatusText != null) {
          //TODO: use async-task for this, also handle nowplaying here
-         if (remote.isClientControlConnected() || remote.connectClientControl()) {
+         if (mRemote.isClientControlConnected() || mRemote.connectClientControl()) {
             //statusText.setText("Remote connected...");
          } else {
-            Util.showToast(parent, "Remote not connected");
+            Util.showToast(mParent, "Remote not connected");
             StatusBarActivityHandler.statusString = "Remote not connected...";
          }
-         statusText.setText(StatusBarActivityHandler.statusString);
+         mStatusText.setText(StatusBarActivityHandler.statusString);
       }
    }
 }

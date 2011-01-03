@@ -7,24 +7,24 @@ import com.mediaportal.remote.activities.lists.Utils;
 
 public class PosterGalleryViewAdapter implements ILoadingAdapterItem {
 
-   private String posterUrl;
+   private String mPosterUrl;
    public PosterGalleryViewAdapter(String _posterUrl){
-      posterUrl = _posterUrl;
+      mPosterUrl = _posterUrl;
    }
    @Override
    public String getImage() {
-      return posterUrl;
+      return mPosterUrl;
    }
    
    @Override
    public String getImageCacheName() {
-      String fileName = Utils.getFileNameWithExtension(posterUrl, "\\");
+      String fileName = Utils.getFileNameWithExtension(mPosterUrl, "\\");
       return "MoviePosters" + File.separator + fileName;
    }
 
    @Override
    public Object getItem() {
-      return posterUrl;
+      return mPosterUrl;
    }
 
    @Override

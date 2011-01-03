@@ -23,28 +23,28 @@ import com.mediaportal.remote.data.TvChannelGroup;
 
 @SuppressWarnings("unchecked")
 public class TvServerActivity extends Activity {
-   private ListView listView;
+   private ListView mListView;
 
-   private ArrayAdapter listItems;
-   private ArrayList<Object> breadCrumbList;
+   private ArrayAdapter mListItems;
+   private ArrayList<Object> mBreadCrumbList;
 
    @Override
-   public void onCreate(Bundle savedInstanceState) {
-      super.onCreate(savedInstanceState);
+   public void onCreate(Bundle _savedInstanceState) {
+      super.onCreate(_savedInstanceState);
       setContentView(R.layout.tvserveractivity);
-      listView = (ListView) findViewById(R.id.ListViewItems);
-      listView.setOnItemClickListener(new OnItemClickListener() {
+      mListView = (ListView) findViewById(R.id.ListViewItems);
+      mListView.setOnItemClickListener(new OnItemClickListener() {
          @Override
          public void onItemClick(AdapterView<?> a, View v, int position, long id) {
-            Object selected = listView.getItemAtPosition(position);
+            Object selected = mListView.getItemAtPosition(position);
             handleListClick(v, position, selected);
          }
       });
 
-      breadCrumbList = new ArrayList<Object>();
+      mBreadCrumbList = new ArrayList<Object>();
 
-      listItems = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
-      listView.setAdapter(listItems);
+      mListItems = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
+      mListView.setAdapter(mListItems);
 
       initialSetup();
    }
@@ -56,17 +56,17 @@ public class TvServerActivity extends Activity {
       } else {
          Toast toast = Toast.makeText(this, "No connection to tv server", Toast.LENGTH_SHORT);
          toast.show();
-         breadCrumbList.clear();
-         listItems.clear();
-         listItems.add("Retry");
+         mBreadCrumbList.clear();
+         mListItems.clear();
+         mListItems.add("Retry");
       }
    }
 
-   private void handleListClick(View v, int position, Object selected) {
-      if (selected.getClass().equals(String.class) && selected.equals("...")) {
-         breadCrumbList.remove(breadCrumbList.size() - 1);
-         if (breadCrumbList.size() > 0) {
-            Object last = breadCrumbList.get(breadCrumbList.size() - 1);
+   private void handleListClick(View _view, int _position, Object _selected) {
+      if (_selected.getClass().equals(String.class) && _selected.equals("...")) {
+         mBreadCrumbList.remove(mBreadCrumbList.size() - 1);
+         if (mBreadCrumbList.size() > 0) {
+            Object last = mBreadCrumbList.get(mBreadCrumbList.size() - 1);
 
             fillListView(last);
          } else {
@@ -74,17 +74,17 @@ public class TvServerActivity extends Activity {
          }
 
       } else {
-         breadCrumbList.add(selected);
-         fillListView(selected);
+         mBreadCrumbList.add(_selected);
+         fillListView(_selected);
       }
    }
 
    private void fillListViewRoot() {
-      listItems.clear();
+      mListItems.clear();
 
-      listItems.add("Groups");
-      listItems.add("Cards");
-      listItems.add("Active Cards");
+      mListItems.add("Groups");
+      mListItems.add("Cards");
+      mListItems.add("Active Cards");
 
    }
 
@@ -117,8 +117,8 @@ public class TvServerActivity extends Activity {
    }
 
    private void fillListViewWithActiveCards() {
-      listItems.clear();
-      listItems.add("...");
+      mListItems.clear();
+      mListItems.add("...");
 
       DataHandler service = DataHandler.getCurrentRemoteInstance();
       List<TvCard> cards = service.getTvCardsActive();
@@ -126,13 +126,13 @@ public class TvServerActivity extends Activity {
       if (cards == null)
          return;
       for (TvCard c : cards) {
-         listItems.add(c);
+         mListItems.add(c);
       }
    }
 
    private void fillListViewWithCards() {
-      listItems.clear();
-      listItems.add("...");
+      mListItems.clear();
+      mListItems.add("...");
 
       DataHandler service = DataHandler.getCurrentRemoteInstance();
       List<TvCardDetails> cards = service.getTvCards();
@@ -140,13 +140,13 @@ public class TvServerActivity extends Activity {
       if (cards == null)
          return;
       for (TvCardDetails c : cards) {
-         listItems.add(c);
+         mListItems.add(c);
       }
    }
 
    private void fillListViewWithChannelGroups() {
-      listItems.clear();
-      listItems.add("...");
+      mListItems.clear();
+      mListItems.add("...");
 
       DataHandler service = DataHandler.getCurrentRemoteInstance();
       ArrayList<TvChannelGroup> groups = service.getTvChannelGroups();
@@ -154,14 +154,14 @@ public class TvServerActivity extends Activity {
       if (groups == null)
          return;
       for (TvChannelGroup g : groups) {
-         listItems.add(g);
+         mListItems.add(g);
       }
 
    }
 
-   private void fillListViewWithChannels(TvChannelGroup selected) {
-      listItems.clear();
-      listItems.add("...");
+   private void fillListViewWithChannels(TvChannelGroup _selected) {
+      mListItems.clear();
+      mListItems.add("...");
 
       DataHandler service = DataHandler.getCurrentRemoteInstance();
       
@@ -172,28 +172,28 @@ public class TvServerActivity extends Activity {
             listItems.add(c);
          }
       }*/
-      List<TvChannel> channels = service.getTvChannelsForGroup(selected.getIdGroup());
+      List<TvChannel> channels = service.getTvChannelsForGroup(_selected.getIdGroup());
 
       for (TvChannel c : channels) {
-         listItems.add(c);
+         mListItems.add(c);
       }
    }
 
-   private void fillListViewWithObject(Object selected) {
-      listItems.clear();
-      listItems.add("...");
+   private void fillListViewWithObject(Object _selected) {
+      mListItems.clear();
+      mListItems.add("...");
 
-      List<Field> fields = Ksoap2ResultParser.getAllFields(selected.getClass());
+      List<Field> fields = Ksoap2ResultParser.getAllFields(_selected.getClass());
 
       for (int i = 0; i < fields.size(); i++) {
          fields.get(i).setAccessible(true);
          String fieldName = fields.get(i).getName();
          Object fieldValue;
          try {
-            fieldValue = fields.get(i).get(selected);
-            listItems.add(fieldName + ": " + fieldValue);
+            fieldValue = fields.get(i).get(_selected);
+            mListItems.add(fieldName + ": " + fieldValue);
          } catch (Exception e) {
-            listItems.add(fieldName + ": ?");
+            mListItems.add(fieldName + ": ?");
          }
 
       }

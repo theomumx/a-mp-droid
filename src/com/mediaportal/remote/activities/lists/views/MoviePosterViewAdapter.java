@@ -10,58 +10,52 @@ import com.mediaportal.remote.data.Movie;
 
 public class MoviePosterViewAdapter implements ILoadingAdapterItem {
 
-   private Movie movie;
+   private Movie mMovie;
    public MoviePosterViewAdapter(Movie _movie){
-      movie = _movie;
+      mMovie = _movie;
    }
    
    @Override
    public String getImageCacheName() {
-      String fileName = Utils.getFileNameWithExtension(movie.getCoverThumbPath(), "\\");
-      return "Movies" + File.separator + movie.getId() + File.separator + fileName;
+      String fileName = Utils.getFileNameWithExtension(mMovie.getCoverThumbPath(), "\\");
+      return "Movies" + File.separator + mMovie.getId() + File.separator + fileName;
    }
    
    
    @Override
    public String getImage() {
-      return movie.getCoverThumbPath();
+      return mMovie.getCoverThumbPath();
    }
 
    @Override
    public String getSubText() {
-      // TODO Auto-generated method stub
-      return movie.getName();
+      return mMovie.getName();
    }
 
    @Override
    public String getText() {
-      // TODO Auto-generated method stub
       return null;
    }
 
    @Override
    public int getTextColor() {
-      // TODO Auto-generated method stub
       return 0;
    }
 
    @Override
    public String getTitle() {
-      // TODO Auto-generated method stub
-      return movie.getName();
+      return mMovie.getName();
    }
 
 
    @Override
    public int getSubTextColor() {
-      // TODO Auto-generated method stub
       return 0;
    }
 
 
    @Override
    public int getTitleColor() {
-      // TODO Auto-generated method stub
       return 0;
    }
 
@@ -80,7 +74,7 @@ public class MoviePosterViewAdapter implements ILoadingAdapterItem {
 
    @Override
    public Object getItem() {
-      return movie;
+      return mMovie;
    }
 
 

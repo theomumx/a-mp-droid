@@ -9,10 +9,10 @@ import com.mediaportal.remote.data.SeriesEpisode;
 
 public class EpisodePosterViewAdapter implements ILoadingAdapterItem {
    private int mSeriesId;
-   private SeriesEpisode episode;
+   private SeriesEpisode mEpisode;
 
    public EpisodePosterViewAdapter(int _seriesId, SeriesEpisode _episode) {
-      episode = _episode;
+      mEpisode = _episode;
       mSeriesId = _seriesId;
    }
 
@@ -23,14 +23,14 @@ public class EpisodePosterViewAdapter implements ILoadingAdapterItem {
     */
    @Override
    public String getImageCacheName() {
-      String ext = Utils.getExtension(episode.getBannerUrl());
-      return "Series" + File.separator + mSeriesId + File.separator + "Season." + episode.getSeasonNumber()
-            + File.separator + "Ep" + episode.getEpisodeNumber() + "." + ext;
+      String ext = Utils.getExtension(mEpisode.getBannerUrl());
+      return "Series" + File.separator + mSeriesId + File.separator + "Season." + mEpisode.getSeasonNumber()
+            + File.separator + "Ep" + mEpisode.getEpisodeNumber() + "." + ext;
    }
 
    @Override
    public String getImage() {
-      return episode.getBannerUrl();
+      return mEpisode.getBannerUrl();
    }
 
    @Override
@@ -40,7 +40,7 @@ public class EpisodePosterViewAdapter implements ILoadingAdapterItem {
 
    @Override
    public String getText() {
-      return episode.getSeasonNumber() + "x" + episode.getEpisodeNumber();
+      return mEpisode.getSeasonNumber() + "x" + mEpisode.getEpisodeNumber();
    }
 
    @Override
@@ -50,7 +50,7 @@ public class EpisodePosterViewAdapter implements ILoadingAdapterItem {
 
    @Override
    public String getTitle() {
-      return episode.getName();
+      return mEpisode.getName();
    }
 
    @Override
@@ -75,7 +75,7 @@ public class EpisodePosterViewAdapter implements ILoadingAdapterItem {
 
    @Override
    public Object getItem() {
-      return episode;
+      return mEpisode;
    }
 
 }

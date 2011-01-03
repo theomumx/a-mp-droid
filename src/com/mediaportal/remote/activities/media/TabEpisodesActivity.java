@@ -1,8 +1,5 @@
 package com.mediaportal.remote.activities.media;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 
@@ -21,6 +18,7 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import com.mediaportal.remote.R;
 import com.mediaportal.remote.activities.lists.ILoadingAdapterItem;
 import com.mediaportal.remote.activities.lists.LazyLoadingAdapter;
+import com.mediaportal.remote.activities.lists.Utils;
 import com.mediaportal.remote.activities.lists.views.EpisodePosterViewAdapter;
 import com.mediaportal.remote.activities.quickactions.ActionItem;
 import com.mediaportal.remote.activities.quickactions.QuickAction;
@@ -28,20 +26,18 @@ import com.mediaportal.remote.api.DataHandler;
 import com.mediaportal.remote.api.ItemDownloaderService;
 import com.mediaportal.remote.data.EpisodeDetails;
 import com.mediaportal.remote.data.EpisodeFile;
-import com.mediaportal.remote.data.Series;
 import com.mediaportal.remote.data.SeriesEpisode;
-import com.mediaportal.remote.data.SeriesFull;
 
 public class TabEpisodesActivity extends Activity {
-   private ListView m_listView;
-   private LazyLoadingAdapter adapter;
+   private ListView mlistView;
+   private LazyLoadingAdapter mAdapter;
    MediaPlayer mMediaPlayer;
 
    @Override
-   public void onCreate(Bundle savedInstanceState) {
-      super.onCreate(savedInstanceState);
+   public void onCreate(Bundle _savedInstanceState) {
+      super.onCreate(_savedInstanceState);
       setContentView(R.layout.tabepisodesactivity);
-      m_listView = (ListView) findViewById(R.id.ListView);
+      mlistView = (ListView) findViewById(R.id.ListView);
       mMediaPlayer = new MediaPlayer();
 
       Bundle extras = getIntent().getExtras();
@@ -52,56 +48,55 @@ public class TabEpisodesActivity extends Activity {
          DataHandler service = DataHandler.getCurrentRemoteInstance();
 
          ArrayList<SeriesEpisode> seasons = service.getAllEpisodesForSeason(seriesId, seasonNumber);
-         adapter = new LazyLoadingAdapter(this, R.layout.listitem_thumb);
+         mAdapter = new LazyLoadingAdapter(this, R.layout.listitem_thumb);
          for (int i = 0; i < seasons.size(); i++) {
             SeriesEpisode e = seasons.get(i);
             EpisodeDetails details = service.getEpisode(e.getId());
-            adapter.AddItem(new EpisodePosterViewAdapter(seriesId, details));
+            mAdapter.AddItem(new EpisodePosterViewAdapter(seriesId, details));
          }
 
-         m_listView.setAdapter(adapter);
+         mlistView.setAdapter(mAdapter);
 
       } else {// activity called without movie id (shouldn't happen ;))
 
       }
 
-      m_listView.setOnItemClickListener(new OnItemClickListener() {
+      mlistView.setOnItemClickListener(new OnItemClickListener() {
          @Override
-         public void onItemClick(AdapterView<?> a, View v, int position, long id) {
-            ILoadingAdapterItem selectedItem = (ILoadingAdapterItem) m_listView
-                  .getItemAtPosition(position);
+         public void onItemClick(AdapterView<?> _adapter, View _view, int _position, long _id) {
+            ILoadingAdapterItem selectedItem = (ILoadingAdapterItem) mlistView
+                  .getItemAtPosition(_position);
 
             SeriesEpisode selectedEp = (SeriesEpisode) selectedItem.getItem();
          }
       });
 
-      m_listView.setOnItemLongClickListener(new OnItemLongClickListener() {
+      mlistView.setOnItemLongClickListener(new OnItemLongClickListener() {
          @Override
-         public boolean onItemLongClick(AdapterView<?> arg0, View v, final int arg2, long arg3) {
-            QuickAction qa = new QuickAction(v);
+         public boolean onItemLongClick(AdapterView<?> _item, View _view, final int _position, long _id) {
+            QuickAction qa = new QuickAction(_view);
             ActionItem sdCardAction = new ActionItem();
 
             sdCardAction.setTitle("Download to sd card");
             sdCardAction.setIcon(getResources().getDrawable(R.drawable.quickaction_sdcard));
 
-            final EpisodeDetails selected = (EpisodeDetails) ((ILoadingAdapterItem) arg0
-                  .getItemAtPosition(arg2)).getItem();
+            final EpisodeDetails selected = (EpisodeDetails) ((ILoadingAdapterItem) _item
+                  .getItemAtPosition(_position)).getItem();
 
             sdCardAction.setOnClickListener(new OnClickListener() {
                @Override
-               public void onClick(View v) {
+               public void onClick(View _view) {
                   EpisodeFile epFile = selected.getEpisodeFile();
-                  Filename fileInfo = new Filename(epFile.getFileName(), '\\', '.');
+                  String fileName = Utils.getFileNameWithExtension(epFile.getFileName(), "\\");
                   String url = "http://10.1.0.247:4322/json/FS_GetMediaItem/?path="
                         + URLEncoder.encode(epFile.getFileName());
-                  String name = fileInfo.filename() + "." + fileInfo.extension();
-                  Intent download = new Intent(v.getContext(), ItemDownloaderService.class);
+                  Intent download = new Intent(_view.getContext(), ItemDownloaderService.class);
                   download.putExtra("url", url);
-                  download.putExtra("name", name);
+                  download.putExtra("name", fileName);
                   startService(download);
 
                   Toast
-                        .makeText(v.getContext(), "Url: " + epFile.getFileName(),
+                        .makeText(_view.getContext(), "Url: " + epFile.getFileName(),
                               Toast.LENGTH_SHORT).show();
                }
             });
@@ -115,42 +110,10 @@ public class TabEpisodesActivity extends Activity {
 
    }
 
-   /**
-    * This class assumes that the string used to initialize fullPath has a
-    * directory path, filename, and extension. The methods won't work if it
-    * doesn't.
-    */
-   class Filename {
-      private String fullPath;
-      private char pathSeparator, extensionSeparator;
-
-      public Filename(String str, char sep, char ext) {
-         fullPath = str;
-         pathSeparator = sep;
-         extensionSeparator = ext;
-      }
-
-      public String extension() {
-         int dot = fullPath.lastIndexOf(extensionSeparator);
-         return fullPath.substring(dot + 1);
-      }
-
-      public String filename() { // gets filename without extension
-         int dot = fullPath.lastIndexOf(extensionSeparator);
-         int sep = fullPath.lastIndexOf(pathSeparator);
-         return fullPath.substring(sep + 1, dot);
-      }
-
-      public String path() {
-         int sep = fullPath.lastIndexOf(pathSeparator);
-         return fullPath.substring(0, sep);
-      }
-   }
-
    @Override
    public void onDestroy() {
-      adapter.imageLoader.stopThread();
-      m_listView.setAdapter(null);
+      mAdapter.imageLoader.stopThread();
+      mlistView.setAdapter(null);
       super.onDestroy();
    }
 }
