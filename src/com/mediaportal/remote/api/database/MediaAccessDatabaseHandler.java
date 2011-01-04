@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import android.content.Context;
 
-import com.db4o.ObjectContainer;
 import com.mediaportal.remote.api.IMediaAccessDatabase;
 import com.mediaportal.remote.data.Movie;
 

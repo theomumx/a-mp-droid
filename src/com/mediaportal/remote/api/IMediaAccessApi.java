@@ -18,7 +18,7 @@ import com.mediaportal.remote.data.SupportedFunctions;
 import com.mediaportal.remote.data.VideoShare;
 
 
-public interface IMediaAccessApi {  
+public interface IMediaAccessApi extends IApiInterface {  
 	ArrayList<Movie> getAllMovies();
 	int getMovieCount();
 	ArrayList<Movie> getMovies(int _start, int _end);

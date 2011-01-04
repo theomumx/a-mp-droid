@@ -2,7 +2,7 @@ package com.mediaportal.remote.api;
 
 import com.mediaportal.remote.data.commands.RemoteKey;
 
-public interface IClientControlApi {
+public interface IClientControlApi extends IApiInterface {
    boolean connect();
    void disconnect();
    boolean isConnected();

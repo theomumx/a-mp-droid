@@ -61,6 +61,11 @@ public class GmaWebserviceApi implements IMediaAccessApi {
       m_seriesAPI = new GmaWebserviceSeriesApi(m_wcfService);
       m_musicAPI = new GmaWebserviceMusicApi(m_wcfService);
    }
+   
+   @Override
+   public String getAddress() {
+      return m_server;
+   }
 
    public SupportedFunctions getSupportedFunctions() {
       String methodName = GET_SUPPORTED_FUNCTIONS;
@@ -233,7 +238,4 @@ public class GmaWebserviceApi implements IMediaAccessApi {
    public ArrayList<MusicAlbum> getAlbums(int _start, int _end) {
       return m_musicAPI.getAlbums(_start, _end);
    }
-
-
-
 }

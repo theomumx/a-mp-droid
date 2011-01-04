@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+	<PreferenceCategory android:title="@string/settings_categories_clients"
+		android:key="cat_clients" android:summary="Edit Clients">
+		<PreferenceScreen android:title="Clients" android:summary="Add, edit, remove clients">
+					<intent 
+				android:action="android.intent.action.MAIN" 
+				android:data="" android:targetPackage="com.mediaportal.remote" android:targetClass="com.mediaportal.remote.activities.settings.ClientSettingsActivity"/> 
+		</PreferenceScreen>
+	</PreferenceCategory>
+	<PreferenceCategory android:title="@string/settings_category_general"
+		android:key="cat_general">
+		<CheckBoxPreference android:summary="@string/settings_preference_vibrate_desc"
+			android:title="@string/settings_preference_vibrate_title"></CheckBoxPreference>
+	</PreferenceCategory>
+</PreferenceScreen>

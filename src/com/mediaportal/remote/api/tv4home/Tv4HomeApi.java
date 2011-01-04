@@ -77,6 +77,11 @@ public class Tv4HomeApi implements ITvControlApi {
       m_wcfService = new WcfAccessHandler(WCF_PREFIX + m_server + ":" + m_port + WCF_SUFFIX,
             WCF_NAMESPACE, WCF_METHOD_PREFIX);
    }
+   
+   @Override
+   public String getAddress() {
+      return m_server;
+   }
 
    @Override
    public void AddSchedule(int _channelId, String _title, Date _startTime, Date _endTime,
