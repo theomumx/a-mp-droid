@@ -16,7 +16,10 @@ import com.mediaportal.remote.data.commands.RemoteKey;
 public class MPClientController implements IClientControlApi {
 
    
-
+   @Override
+   public String getAddress() {
+      return "";
+   }
 
    public boolean SendKey(RemoteKey _key) {
       MPClientMessage msg = new MPClientMessage("button", _key.getAction(), "");
@@ -26,6 +29,8 @@ public class MPClientController implements IClientControlApi {
       return false;
 
    }
+   
+   
 
    private MPClientServerMessage sendRestMessage(MPClientMessage msg) {
       try {

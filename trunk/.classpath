@@ -5,6 +5,6 @@
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry kind="lib" path="C:/Users/DieBagger/Documents/Work/Android/aMPdroid/libs/ksoap2-android-assembly-2.5.2-jar-with-dependencies.jar"/>
 	<classpathentry kind="lib" path="C:/Users/DieBagger/Documents/Work/Android/aMPdroid/libs/myjson-1.5.jar"/>
-	<classpathentry kind="lib" path="C:/Users/DieBagger/Documents/Work/Android/aMPdroid/libs/db4o-7.12.156.14667-core-java5.jar"/>
+	<classpathentry kind="lib" path="C:/Users/DieBagger/Documents/Work/Android/aMPdroid/libs/neodatis-odb-1.9.30.689.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

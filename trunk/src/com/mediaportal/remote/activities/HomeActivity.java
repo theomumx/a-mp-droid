@@ -4,14 +4,18 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.view.MenuItem.OnMenuItemClickListener;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.mediaportal.remote.R;
 import com.mediaportal.remote.activities.actionbar.ActionBar;
 import com.mediaportal.remote.activities.actionbar.ActionBar.IntentAction;
+import com.mediaportal.remote.activities.settings.SettingsActivity;
 import com.mediaportal.remote.api.DataHandler;
 import com.mediaportal.remote.utils.Util;
 
@@ -96,6 +100,9 @@ public class HomeActivity extends Activity {
             Toast toast = Toast.makeText(_view.getContext(), "Plugins not implemented yet",
                   Toast.LENGTH_SHORT);
             toast.show();
+            
+            Intent settingsIntent = new Intent(_view.getContext(), SettingsActivity.class);
+            startActivity(settingsIntent);
          }
       });
    }
@@ -106,4 +113,25 @@ public class HomeActivity extends Activity {
       Window window = getWindow();
       window.setFormat(PixelFormat.RGBA_8888);
    }
+
+   @Override
+   public boolean onCreateOptionsMenu(Menu _menu) {
+      MenuItem settingsItem = _menu.add(0, Menu.FIRST, Menu.NONE, "Settings");
+      settingsItem.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+         @Override
+         public boolean onMenuItemClick(MenuItem item) {
+            startSettings();
+            return true;
+         }
+      });
+
+      return true;
+   }
+   
+   private void startSettings() {
+      Intent settingsIntent = new Intent(this, SettingsActivity.class);
+      startActivity(settingsIntent);
+      //startActivityForResult(settingsIntent, 0);
+   }
+
 }

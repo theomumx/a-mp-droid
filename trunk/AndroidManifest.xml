@@ -9,7 +9,7 @@
 	<application android:icon="@drawable/icon" android:label="@string/app_name"
 		android:debuggable="true" android:allowClearUserData="true">
 		<activity android:name="com.mediaportal.remote.activities.WelcomeScreenActivity"
-			android:label="@string/app_name" android:noHistory="true"
+			android:label="@string/app_name"
 			android:theme="@android:style/Theme.NoTitleBar">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
@@ -54,5 +54,13 @@
 
 		<service android:enabled="true"
 			android:name="com.mediaportal.remote.api.ItemDownloaderService"></service>
+
+		<activity
+			android:name="com.mediaportal.remote.activities.settings.SettingsActivity"
+			android:screenOrientation="portrait"></activity>
+
+		<activity
+			android:name="com.mediaportal.remote.activities.settings.ClientSettingsActivity"
+			android:screenOrientation="portrait"></activity>
 	</application>
 </manifest> 

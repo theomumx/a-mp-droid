@@ -105,6 +105,11 @@ public class WifiRemoteMpController implements IClientControlApi {
       this.port = _port;
       this.listeners = new ArrayList<IClientControlListener>();
    }
+   
+   @Override
+   public String getAddress() {
+      return server;
+   }
 
    /**
     * Connect to client

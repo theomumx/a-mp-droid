@@ -15,7 +15,7 @@ import com.mediaportal.remote.data.TvRtspClient;
 import com.mediaportal.remote.data.TvSchedule;
 import com.mediaportal.remote.data.TvUser;
 
-public interface ITvControlApi {
+public interface ITvControlApi extends IApiInterface {
 	boolean TestConnectionToTVService();
 
 	void AddSchedule(int channelId, String title, Date startTime, Date endTime,
