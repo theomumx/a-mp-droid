@@ -100,7 +100,7 @@ public class ImageHandler {
          // from web
          try {
             DataHandler service = DataHandler.getCurrentRemoteInstance();
-            b = service.getImage(url, 400, 150);
+            b = service.getImage(url, 200, 200);
          } catch (Exception ex) {
             ex.printStackTrace();
             return null;

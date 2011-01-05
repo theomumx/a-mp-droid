@@ -41,9 +41,8 @@ public class WelcomeScreenActivity extends Activity {
       @Override
       protected Boolean doInBackground(RemoteClient... _clients) {
 
-         DataHandler.setupRemoteHandler(_clients[0]);
-         DataHandler.setCurrentRemoteInstance(_clients[0].getClientId());
-
+         DataHandler.setupRemoteHandler(_clients[0], false);
+         
          try {
             Thread.sleep(0);// for testing, show welcomescreen longer than
             // necessary
@@ -123,6 +122,19 @@ public class WelcomeScreenActivity extends Activity {
 
    }
    
+   
+   
+   @Override
+   protected void onStart() {
+      final ProgressBar progress = (ProgressBar) findViewById(R.id.ProgressBarWelcomeScreen);
+      progress.setVisibility(View.INVISIBLE);
+      final Button connectButton = (Button) findViewById(R.id.ButtonConnect);
+      connectButton.setEnabled(true);
+      super.onStart();
+   }
+
+
+
    @Override
    public boolean onCreateOptionsMenu(Menu _menu) {
       MenuItem settingsItem = _menu.add(0, Menu.FIRST, Menu.NONE, "Settings");
