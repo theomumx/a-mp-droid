@@ -26,66 +26,90 @@ import com.mediaportal.remote.data.commands.RemoteKey;
 public class DataHandler {
    private RemoteClient client;
    private RemoteFunctions functions;
-   private static List<DataHandler> clientList = new ArrayList<DataHandler>();
+   private static List<RemoteClient> clientList = new ArrayList<RemoteClient>();
    private static int currentClient = 0;
    private static DataHandler dataHandler;
-   private IMediaAccessDatabase mediaDatabase; 
+   private IMediaAccessDatabase mediaDatabase;
 
    private DataHandler(RemoteClient _client) {
       client = _client;
    }
 
-   
+   public static boolean setupRemoteHandler(RemoteClient _client, boolean _checkConnection) {
+      dataHandler = new DataHandler(_client);
+      setFunctions(_client, false);
 
-   public static boolean setupRemoteHandler(RemoteClient _client) {
-      DataHandler remoteHandler = new DataHandler(_client);
-      RemoteFunctions functions = new RemoteFunctions();
+      return true;
+   }
+   
+   private static void setFunctions(RemoteClient _client, boolean _checkConnection){
+      dataHandler.functions = new RemoteFunctions();
 
       ITvControlApi tvApi = _client.getTvControlApi();
       if (tvApi != null) {
-         functions.setTvEnabled(true);
-         functions.setTvAvailable(tvApi.TestConnectionToTVService());
+         dataHandler.functions.setTvEnabled(true);
+         if (_checkConnection) {
+            dataHandler.functions.setTvAvailable(tvApi.TestConnectionToTVService());
+         }
       } else {
-         functions.setTvEnabled(false);
-      }
-      
-      IMediaAccessApi mediaApi = _client.getRemoteAccessApi();
-      if (mediaApi != null) {
-         functions.setMediaEnabled(true);
-         functions.setMediaAvailable(true);//todo: test function for media access
-      } else {
-         functions.setMediaEnabled(false);
-      }
-      
-      IMediaAccessApi remoteApi = _client.getRemoteAccessApi();
-      if (remoteApi != null) {
-         functions.setRemoteEnabled(true);
-         functions.setRemoteAvailable(true);//todo: test function for remote access
-      } else {
-         functions.setRemoteEnabled(false);
+         dataHandler.functions.setTvEnabled(false);
       }
 
-      clientList.add(remoteHandler);
-      return true;
+      IMediaAccessApi mediaApi = _client.getRemoteAccessApi();
+      if (mediaApi != null) {
+         dataHandler.functions.setMediaEnabled(true);
+         if (_checkConnection) {
+            // todo: test function for media access
+            dataHandler.functions.setMediaAvailable(true);
+         }
+      } else {
+         dataHandler.functions.setMediaEnabled(false);
+      }
+
+      IMediaAccessApi remoteApi = _client.getRemoteAccessApi();
+      if (remoteApi != null) {
+         dataHandler.functions.setRemoteEnabled(true);
+         if (_checkConnection) {
+            // todo: test function for remote access
+            dataHandler.functions.setRemoteAvailable(true);
+         }
+      } else {
+         dataHandler.functions.setRemoteEnabled(false);
+      }
    }
 
    public static DataHandler getCurrentRemoteInstance() {
-      return getRemoteInstance(currentClient);
+      return dataHandler;
    }
 
-   public static DataHandler getRemoteInstance(int _id) {
-      for (DataHandler r : clientList) {
-         if (r.client.getClientId() == _id)
-            return r;
+   public static void clearRemotClients() {
+      clientList.clear();
+   }
+
+   public static void addRemoteClient(RemoteClient _client) {
+      clientList.add(_client);
+   }
+
+   public static List<RemoteClient> getRemoteClients() {
+      return clientList;
+   }
+
+   public static void updateRemoteClient(RemoteClient mClient) {
+      for (int i = 0; i < clientList.size(); i++) {
+         if (clientList.get(i).getClientId() == mClient.getClientId()) {
+            clientList.set(i, mClient);
+         }
       }
-      return null;
    }
 
    public static void setCurrentRemoteInstance(int _id) {
-      currentClient = _id;
+      for (RemoteClient c : clientList) {
+         dataHandler.client = c;
+         setFunctions(dataHandler.client, false);
+      }
    }
-   
-   public List<VideoShare> getAllVideoShares(){
+
+   public List<VideoShare> getAllVideoShares() {
       return client.getRemoteAccessApi().getVideoShares();
    }
 
@@ -105,7 +129,7 @@ public class DataHandler {
    }
 
    public ArrayList<Series> getAllSeries() {
-      //mediaDatabase.getAllSeries();
+      // mediaDatabase.getAllSeries();
       IMediaAccessApi remoteAccess = client.getRemoteAccessApi();
       return remoteAccess.getAllSeries();
    }
@@ -139,7 +163,6 @@ public class DataHandler {
       IMediaAccessApi remoteAccess = client.getRemoteAccessApi();
       return remoteAccess.getAllEpisodesForSeason(_seriesId, _seasonNumber);
    }
-   
 
    public EpisodeDetails getEpisode(int _id) {
       IMediaAccessApi remoteAccess = client.getRemoteAccessApi();
@@ -160,18 +183,16 @@ public class DataHandler {
       IMediaAccessApi remoteAccess = client.getRemoteAccessApi();
       return remoteAccess.getAlbums(_start, _end);
    }
-   
+
    public Bitmap getImage(String _url) {
       IMediaAccessApi remoteAccess = client.getRemoteAccessApi();
       return remoteAccess.getBitmap(_url);
    }
-   
 
    public Bitmap getImage(String _url, int _maxWidth, int _maxHeight) {
       IMediaAccessApi remoteAccess = client.getRemoteAccessApi();
       return remoteAccess.getBitmap(_url, _maxWidth, _maxHeight);
    }
-   
 
    public ArrayList<TvChannelGroup> getTvChannelGroups() {
       ITvControlApi tvApi = client.getTvControlApi();
@@ -216,42 +237,36 @@ public class DataHandler {
       return functions;
    }
 
-
-   public void addClientControlListener(IClientControlListener _listener){
+   public void addClientControlListener(IClientControlListener _listener) {
       client.getClientControlApi().addApiListener(_listener);
    }
-   
-   public boolean connectClientControl(){
-      return client.getClientControlApi().connect();      
+
+   public boolean connectClientControl() {
+      return client.getClientControlApi().connect();
    }
-   
-   public void disconnectClientControl(){
+
+   public void disconnectClientControl() {
       client.getClientControlApi().disconnect();
    }
-   
-   public boolean isClientControlConnected(){
+
+   public boolean isClientControlConnected() {
       return client.getClientControlApi().isConnected();
    }
-   
-   public void sendRemoteButton(RemoteKey _button){
+
+   public void sendRemoteButton(RemoteKey _button) {
       client.getClientControlApi().sendKeyCommand(_button);
    }
 
    public void sendClientVolume(int _level) {
-      client.getClientControlApi().setVolume(_level);      
+      client.getClientControlApi().setVolume(_level);
    }
-   
-   public int getClientVolume(){
+
+   public int getClientVolume() {
       return client.getClientControlApi().getVolume();
    }
-   
-   public URL getDownloadUri(String _filePath){
+
+   public URL getDownloadUri(String _filePath) {
       return client.getRemoteAccessApi().getDownloadUri(_filePath);
    }
-
-
-
-
-
 
 }

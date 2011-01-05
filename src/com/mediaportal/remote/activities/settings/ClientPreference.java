@@ -1,5 +1,7 @@
 package com.mediaportal.remote.activities.settings;
 
+import java.util.Random;
+
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -15,6 +17,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.mediaportal.remote.R;
+import com.mediaportal.remote.api.DataHandler;
 import com.mediaportal.remote.api.database.RemoteClientFactory;
 import com.mediaportal.remote.api.gmawebservice.GmaWebserviceApi;
 import com.mediaportal.remote.api.tv4home.Tv4HomeApi;
@@ -129,7 +132,8 @@ public class ClientPreference extends DialogPreference {
       super.onDialogClosed(positiveResult);
       if (positiveResult) {
          if (mClient == null) {
-            mClient = new RemoteClient(0);
+            Random rnd = new Random();
+            mClient = new RemoteClient(rnd.nextInt());
             RemoteClientFactory.createRemoteClient(mClient);
          }         
          mClient.setClientName(mNameView.getText().toString());
@@ -144,6 +148,8 @@ public class ClientPreference extends DialogPreference {
          mClient.setClientControlApi(clientApi);
 
          RemoteClientFactory.updateRemoteClient(mClient);
+         
+         DataHandler.updateRemoteClient(mClient);
          //host.user = mUserView.getText().toString();
          //host.pass = mPassView.getText().toString();
 
