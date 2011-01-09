@@ -16,10 +16,10 @@ import android.widget.AdapterView.OnItemClickListener;
 import com.mediaportal.remote.R;
 import com.mediaportal.remote.api.DataHandler;
 import com.mediaportal.remote.api.soap.Ksoap2ResultParser;
-import com.mediaportal.remote.data.TvCard;
 import com.mediaportal.remote.data.TvCardDetails;
 import com.mediaportal.remote.data.TvChannel;
 import com.mediaportal.remote.data.TvChannelGroup;
+import com.mediaportal.remote.data.TvVirtualCard;
 
 @SuppressWarnings("unchecked")
 public class TvServerActivity extends Activity {
@@ -32,6 +32,7 @@ public class TvServerActivity extends Activity {
    public void onCreate(Bundle _savedInstanceState) {
       super.onCreate(_savedInstanceState);
       setContentView(R.layout.tvserveractivity);
+      
       mListView = (ListView) findViewById(R.id.ListViewItems);
       mListView.setOnItemClickListener(new OnItemClickListener() {
          @Override
@@ -121,11 +122,11 @@ public class TvServerActivity extends Activity {
       mListItems.add("...");
 
       DataHandler service = DataHandler.getCurrentRemoteInstance();
-      List<TvCard> cards = service.getTvCardsActive();
+      List<TvVirtualCard> cards = service.getTvCardsActive();
 
       if (cards == null)
          return;
-      for (TvCard c : cards) {
+      for (TvVirtualCard c : cards) {
          mListItems.add(c);
       }
    }

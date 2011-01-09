@@ -2,8 +2,6 @@ package com.mediaportal.remote.data;
 
 import java.util.Date;
 
-import com.mediaportal.remote.activities.lists.ILoadingAdapterItem;
-
 public class SeriesEpisode {
 	private int Id;
 	private String Name;

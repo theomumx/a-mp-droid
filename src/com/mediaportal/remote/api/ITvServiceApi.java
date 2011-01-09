@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.mediaportal.remote.data.TvCard;
+import com.mediaportal.remote.data.TvVirtualCard;
 import com.mediaportal.remote.data.TvCardDetails;
 import com.mediaportal.remote.data.TvChannel;
 import com.mediaportal.remote.data.TvChannelDetails;
@@ -15,17 +15,17 @@ import com.mediaportal.remote.data.TvRtspClient;
 import com.mediaportal.remote.data.TvSchedule;
 import com.mediaportal.remote.data.TvUser;
 
-public interface ITvControlApi extends IApiInterface {
+public interface ITvServiceApi extends IApiInterface {
 	boolean TestConnectionToTVService();
 
 	void AddSchedule(int channelId, String title, Date startTime, Date endTime,
 			int scheduleType);
 
-	String SwitchTVServerToChannelAndGetStreamingUrl(int channelId);
+	String SwitchTVServerToChannelAndGetStreamingUrl(String _user, int channelId);
 
-	String SwitchTVServerToChannelAndGetTimeshiftFilename(int channelId);
+	String SwitchTVServerToChannelAndGetTimeshiftFilename(String _user, int channelId);
 
-	void CancelCurrentTimeShifting();
+	boolean CancelCurrentTimeShifting(String _user);
 
 	List<TvChannel> GetChannels(int groupId);
 
@@ -33,7 +33,7 @@ public interface ITvControlApi extends IApiInterface {
 
 	List<TvSchedule> GetSchedules();
 
-	TvChannelDetails GetChannelById(int _channelId);
+	TvChannel GetChannelById(int _channelId);
 
 	TvProgram GetProgramById(int programId);
 
@@ -50,7 +50,7 @@ public interface ITvControlApi extends IApiInterface {
 
 	List<TvCardDetails> GetCards();
 
-	List<TvCard> GetActiveCards();
+	List<TvVirtualCard> GetActiveCards();
 
 	List<TvRtspClient> GetStreamingClients();
 
@@ -69,5 +69,7 @@ public interface ITvControlApi extends IApiInterface {
    List<TvChannelDetails> GetChannelsDetails(int groupId);
 
    List<TvChannelDetails> GetChannelsDetails(int groupId, int startIndex, int endIndex);
+
+   TvChannelDetails GetChannelDetailedById(int channelId);
 
 }

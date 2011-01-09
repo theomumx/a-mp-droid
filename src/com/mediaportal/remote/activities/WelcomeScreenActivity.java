@@ -23,9 +23,6 @@ import com.mediaportal.remote.R;
 import com.mediaportal.remote.activities.settings.SettingsActivity;
 import com.mediaportal.remote.api.DataHandler;
 import com.mediaportal.remote.api.database.RemoteClientFactory;
-import com.mediaportal.remote.api.gmawebservice.GmaWebserviceApi;
-import com.mediaportal.remote.api.tv4home.Tv4HomeApi;
-import com.mediaportal.remote.api.wifiremote.WifiRemoteMpController;
 import com.mediaportal.remote.data.RemoteClient;
 import com.mediaportal.remote.utils.Util;
 
@@ -87,22 +84,30 @@ public class WelcomeScreenActivity extends Activity {
       // RemoteClientFactory.createRemoteClient(client);
       // RemoteClientFactory.closeDatabase();
 
+     
+      //RemoteClientFactory.closeDatabase();
+
+
+
+
+
+   }
+   
+   
+   
+   @Override
+   protected void onStart() {
+      final ProgressBar progress = (ProgressBar) findViewById(R.id.ProgressBarWelcomeScreen);
+      progress.setVisibility(View.INVISIBLE);
+      final Button connectButton = (Button) findViewById(R.id.ButtonConnect);
+      connectButton.setEnabled(true);
+      
+      final Spinner spinner = (Spinner) findViewById(R.id.SpinnerSelectClients);
+      
       RemoteClientFactory.openDatabase(this);
 
       List<RemoteClient> clients = RemoteClientFactory.getClients();
       
-      RemoteClientFactory.closeDatabase();
-
-      final Spinner spinner = (Spinner) findViewById(R.id.SpinnerSelectClients);
-      if (clients != null && clients.size() > 0) {
-         ArrayAdapter<RemoteClient> adapter = new ArrayAdapter<RemoteClient>(this,
-               android.R.layout.simple_spinner_item, clients);
-         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-         spinner.setAdapter(adapter);
-      }
-
-      final ProgressBar progress = (ProgressBar) findViewById(R.id.ProgressBarWelcomeScreen);
-      final Button connectButton = (Button) findViewById(R.id.ButtonConnect);
       connectButton.setOnClickListener(new OnClickListener() {
          @Override
          public void onClick(View _view) {
@@ -119,17 +124,16 @@ public class WelcomeScreenActivity extends Activity {
             }
          }
       });
+      
+      if (clients != null && clients.size() > 0) {
+         ArrayAdapter<RemoteClient> adapter = new ArrayAdapter<RemoteClient>(this,
+               android.R.layout.simple_spinner_item, clients);
+         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+         spinner.setAdapter(adapter);
+      }
 
-   }
-   
-   
-   
-   @Override
-   protected void onStart() {
-      final ProgressBar progress = (ProgressBar) findViewById(R.id.ProgressBarWelcomeScreen);
-      progress.setVisibility(View.INVISIBLE);
-      final Button connectButton = (Button) findViewById(R.id.ButtonConnect);
-      connectButton.setEnabled(true);
+     
+      
       super.onStart();
    }
 

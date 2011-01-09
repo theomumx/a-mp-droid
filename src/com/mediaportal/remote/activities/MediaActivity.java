@@ -32,7 +32,7 @@ public class MediaActivity extends TabActivity {
       setContentView(R.layout.mediaactivity);
       
       ActionBar actionBar = (ActionBar) findViewById(R.id.actionbar);
-      actionBar.setTitle("aMPdroid");
+      actionBar.setTitle("Media Browsing");
       actionBar.setHomeAction(new IntentAction(this, null, R.drawable.actionbar_home));
       
       actionBar.addAction(new IntentAction(this, null, R.drawable.actionbar_remote));

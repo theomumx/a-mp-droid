@@ -18,7 +18,7 @@ public class RemoteClientFactory {
    public static void openDatabase(Context _context) {
       if (mDatabase == null) {
          File directory = _context.getDir("database", Context.MODE_PRIVATE);
-         String fileName = directory.getAbsolutePath()+"/test-android.neodatis";
+         String fileName = directory.getAbsolutePath()+"/test-android2.neodatis";
          mDatabase = ODBFactory.open(fileName);
       }
    }
@@ -60,6 +60,7 @@ public class RemoteClientFactory {
    public static void updateRemoteClient(RemoteClient _client) {
       if (mDatabase != null) {
          mDatabase.store(_client);
+         mDatabase.commit();
       }
    }
 

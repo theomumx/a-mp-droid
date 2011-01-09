@@ -9,8 +9,7 @@
 	<application android:icon="@drawable/icon" android:label="@string/app_name"
 		android:debuggable="true" android:allowClearUserData="true">
 		<activity android:name="com.mediaportal.remote.activities.WelcomeScreenActivity"
-			android:label="@string/app_name"
-			android:theme="@android:style/Theme.NoTitleBar">
+			android:label="@string/app_name" android:theme="@android:style/Theme.NoTitleBar">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
 				<category android:name="android.intent.category.LAUNCHER" />
@@ -46,6 +45,16 @@
 		<activity android:name="com.mediaportal.remote.activities.PicturesActivity"
 			android:screenOrientation="portrait"></activity>
 		<activity android:name="com.mediaportal.remote.activities.TvServerActivity"
+			android:screenOrientation="portrait"></activity>
+		<activity android:name="com.mediaportal.remote.activities.TvServerOverviewActivity"
+			android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar"></activity>
+		<activity android:name="com.mediaportal.remote.activities.TvServerStateActivity"
+			android:screenOrientation="portrait"></activity>
+		<activity
+			android:name="com.mediaportal.remote.activities.TvServerRecordingsActivity"
+			android:screenOrientation="portrait"></activity>
+		<activity
+			android:name="com.mediaportal.remote.activities.TvServerSchedulesActivity"
 			android:screenOrientation="portrait"></activity>
 		<activity android:name="com.mediaportal.remote.activities.RemoteControlActivity"
 			android:screenOrientation="portrait"></activity>

@@ -1,8 +1,5 @@
 package com.mediaportal.remote.data;
 
-import android.graphics.Color;
-
-import com.mediaportal.remote.activities.lists.ILoadingAdapterItem;
 
 public class Movie {
 	private int Id;

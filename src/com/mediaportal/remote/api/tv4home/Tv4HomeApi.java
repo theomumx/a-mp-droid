@@ -10,10 +10,10 @@ import org.ksoap2.serialization.SoapPrimitive;
 
 import android.util.Log;
 
-import com.mediaportal.remote.api.ITvControlApi;
+import com.mediaportal.remote.api.ITvServiceApi;
 import com.mediaportal.remote.api.gmawebservice.soap.WcfAccessHandler;
 import com.mediaportal.remote.api.soap.Ksoap2ResultParser;
-import com.mediaportal.remote.data.TvCard;
+import com.mediaportal.remote.data.TvVirtualCard;
 import com.mediaportal.remote.data.TvCardDetails;
 import com.mediaportal.remote.data.TvChannel;
 import com.mediaportal.remote.data.TvChannelDetails;
@@ -31,20 +31,21 @@ import com.mediaportal.remote.data.TvUser;
  * 
  * @author DieBagger
  */
-public class Tv4HomeApi implements ITvControlApi {
+public class Tv4HomeApi implements ITvServiceApi {
    private final String TEST_SERVICE = "TestConnectionToTVService";
    private final String GET_GROUPS = "GetGroups";
-   private final String GET_CHANNELS = "GetBaseChannels";
-   private final String GET_CHANNELS_INDEX = "GetBaseChannelsByRange";
-   private final String GET_CHANNELS_DETAILS = "GetChannels";
-   private final String GET_CHANNELS_DETAILS_INDEX = "GetChannelsByRange";   
+   private final String GET_CHANNELS = "GetChannelsBasic";
+   private final String GET_CHANNELS_INDEX = "GetChannelsBasicByRange";
+   private final String GET_CHANNELS_DETAILS = "GetChannelsDetailed";
+   private final String GET_CHANNELS_DETAILS_INDEX = "GetChannelsDetailedByRange";   
    private final String GET_CHANNELS_COUNT = "GetChannelCount";
    private final String GET_CARDS = "GetCards";
    private final String GET_ACTIVE_CARDS = "GetActiveCards";
    private final String ADD_SCHEDULE = "AddSchedule";
    private final String CANCEL_SCHEDULE = "CancelSchedule";
    private final String CANCEL_CURRENT_TIMESHIFT = "CancelCurrentTimeShifting";
-   private final String GET_CHANNEL_BY_ID = "GetChannelById";
+   private final String GET_CHANNEL_BY_ID = "GetChannelDetailedById";
+   private final String GET_CHANNEL_DETAILED_BY_ID = "GetChannelDetailedById";
    private final String GET_ACTIVE_USERS = "GetActiveUsers";
    private final String GET_CURRENT_PROGRAM_CHANNEL = "GetCurrentProgramOnChannel";
    private final String GET_PROGRAM = "GetProgramById";
@@ -93,8 +94,13 @@ public class Tv4HomeApi implements ITvControlApi {
    }
 
    @Override
-   public void CancelCurrentTimeShifting() {
-      m_wcfService.MakeSoapCall(CANCEL_CURRENT_TIMESHIFT);
+   public boolean CancelCurrentTimeShifting(String _user) {
+      SoapPrimitive result = (SoapPrimitive)m_wcfService.MakeSoapCall(CANCEL_CURRENT_TIMESHIFT,
+            m_wcfService.CreateProperty("userName", _user));
+      
+      Boolean resultObject = (Boolean) Ksoap2ResultParser.getPrimitive(result, Boolean.class);
+
+      return resultObject;
    }
 
    @Override
@@ -104,13 +110,13 @@ public class Tv4HomeApi implements ITvControlApi {
    }
 
    @Override
-   public List<TvCard> GetActiveCards() {
+   public List<TvVirtualCard> GetActiveCards() {
       SoapObject result = (SoapObject) m_wcfService.MakeSoapCall(GET_ACTIVE_CARDS);
 
-      TvCard[] channels = (TvCard[]) Ksoap2ResultParser.createObject(result, TvCard[].class);
+      TvVirtualCard[] channels = (TvVirtualCard[]) Ksoap2ResultParser.createObject(result, TvVirtualCard[].class);
 
       if (channels != null) {
-         return new ArrayList<TvCard>(Arrays.asList(channels));
+         return new ArrayList<TvVirtualCard>(Arrays.asList(channels));
       } else {
          return null;
       }
@@ -144,7 +150,17 @@ public class Tv4HomeApi implements ITvControlApi {
    }
 
    @Override
-   public TvChannelDetails GetChannelById(int _channelId) {
+   public TvChannel GetChannelById(int _channelId) {
+      SoapObject result = (SoapObject) m_wcfService.MakeSoapCall(GET_CHANNEL_BY_ID, m_wcfService
+            .CreateProperty("channelId", _channelId));
+
+      TvChannelDetails channel = (TvChannelDetails) Ksoap2ResultParser.createObject(result, TvChannelDetails.class);
+
+      return channel;
+   }
+   
+   @Override
+   public TvChannelDetails GetChannelDetailedById(int _channelId) {
       SoapObject result = (SoapObject) m_wcfService.MakeSoapCall(GET_CHANNEL_BY_ID, m_wcfService
             .CreateProperty("channelId", _channelId));
 
@@ -395,9 +411,9 @@ public class Tv4HomeApi implements ITvControlApi {
    }
 
    @Override
-   public String SwitchTVServerToChannelAndGetStreamingUrl(int _channelId) {
+   public String SwitchTVServerToChannelAndGetStreamingUrl(String _user, int _channelId) {
       SoapPrimitive result = (SoapPrimitive) m_wcfService.MakeSoapCall(SWITCH_CHANNEL_GET_URL,
-            m_wcfService.CreateProperty("channelId", _channelId));
+            m_wcfService.CreateProperty("userName", _user), m_wcfService.CreateProperty("channelId", _channelId));
 
       String resultObject = (String) Ksoap2ResultParser.getPrimitive(result, String.class);
 
@@ -405,9 +421,9 @@ public class Tv4HomeApi implements ITvControlApi {
    }
 
    @Override
-   public String SwitchTVServerToChannelAndGetTimeshiftFilename(int _channelId) {
+   public String SwitchTVServerToChannelAndGetTimeshiftFilename(String _user, int _channelId) {
       SoapPrimitive result = (SoapPrimitive) m_wcfService.MakeSoapCall(SWITCH_CHANNEL_GET_FILE,
-            m_wcfService.CreateProperty("channelId", _channelId));
+            m_wcfService.CreateProperty("userName", _user), m_wcfService.CreateProperty("channelId", _channelId));
 
       String resultObject = (String) Ksoap2ResultParser.getPrimitive(result, String.class);
 

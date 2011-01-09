@@ -16,10 +16,12 @@ import com.mediaportal.remote.data.SeriesEpisode;
 import com.mediaportal.remote.data.SeriesFull;
 import com.mediaportal.remote.data.SeriesSeason;
 import com.mediaportal.remote.data.SupportedFunctions;
-import com.mediaportal.remote.data.TvCard;
 import com.mediaportal.remote.data.TvCardDetails;
 import com.mediaportal.remote.data.TvChannel;
 import com.mediaportal.remote.data.TvChannelGroup;
+import com.mediaportal.remote.data.TvRecording;
+import com.mediaportal.remote.data.TvSchedule;
+import com.mediaportal.remote.data.TvVirtualCard;
 import com.mediaportal.remote.data.VideoShare;
 import com.mediaportal.remote.data.commands.RemoteKey;
 
@@ -45,7 +47,7 @@ public class DataHandler {
    private static void setFunctions(RemoteClient _client, boolean _checkConnection){
       dataHandler.functions = new RemoteFunctions();
 
-      ITvControlApi tvApi = _client.getTvControlApi();
+      ITvServiceApi tvApi = _client.getTvControlApi();
       if (tvApi != null) {
          dataHandler.functions.setTvEnabled(true);
          if (_checkConnection) {
@@ -195,38 +197,60 @@ public class DataHandler {
    }
 
    public ArrayList<TvChannelGroup> getTvChannelGroups() {
-      ITvControlApi tvApi = client.getTvControlApi();
+      ITvServiceApi tvApi = client.getTvControlApi();
       return tvApi.GetGroups();
    }
 
    public List<TvChannel> getTvChannelsForGroup(int _groupId) {
-      ITvControlApi tvApi = client.getTvControlApi();
+      ITvServiceApi tvApi = client.getTvControlApi();
       return tvApi.GetChannels(_groupId);
    }
 
    public List<TvChannel> getTvChannelsForGroup(int _groupId, int _startIndex, int _endIndex) {
-      ITvControlApi tvApi = client.getTvControlApi();
+      ITvServiceApi tvApi = client.getTvControlApi();
       return tvApi.GetChannels(_groupId, _startIndex, _endIndex);
    }
 
    public int getTvChannelsCount(int _groupId) {
-      ITvControlApi tvApi = client.getTvControlApi();
+      ITvServiceApi tvApi = client.getTvControlApi();
       return tvApi.GetChannelsCount(_groupId);
    }
 
    public List<TvCardDetails> getTvCards() {
-      ITvControlApi tvApi = client.getTvControlApi();
+      ITvServiceApi tvApi = client.getTvControlApi();
       return tvApi.GetCards();
    }
 
-   public List<TvCard> getTvCardsActive() {
-      ITvControlApi tvApi = client.getTvControlApi();
+   public List<TvVirtualCard> getTvCardsActive() {
+      ITvServiceApi tvApi = client.getTvControlApi();
       return tvApi.GetActiveCards();
+   }
+   
+   public String startTimeshift(int _channelId) {
+      ITvServiceApi tvApi = client.getTvControlApi();
+      return tvApi.SwitchTVServerToChannelAndGetStreamingUrl("Android2", _channelId);
    }
 
    public boolean isTvServiceActive() {
-      ITvControlApi tvApi = client.getTvControlApi();
+      ITvServiceApi tvApi = client.getTvControlApi();
       return tvApi.TestConnectionToTVService();
+   }
+   
+
+   public boolean stopTimeshift(String _user) {
+      ITvServiceApi tvApi = client.getTvControlApi();
+      return tvApi.CancelCurrentTimeShifting(_user);
+   }
+   
+   public List<TvRecording> getTvRecordings() {
+      ITvServiceApi tvApi = client.getTvControlApi();
+      return tvApi.GetRecordings();
+   }
+   
+
+   public List<TvSchedule> getTvSchedules() {
+      ITvServiceApi tvApi = client.getTvControlApi();
+      return tvApi.GetSchedules();
    }
 
    public void setFunctions(RemoteFunctions functions) {
@@ -268,5 +292,11 @@ public class DataHandler {
    public URL getDownloadUri(String _filePath) {
       return client.getRemoteAccessApi().getDownloadUri(_filePath);
    }
+
+
+
+
+
+
 
 }
