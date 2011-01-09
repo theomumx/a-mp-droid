@@ -22,7 +22,7 @@ public class ClientSettingsActivity extends PreferenceActivity {
       setTitle("MediaPortal Clients");
       PreferenceScreen root = getPreferenceManager().createPreferenceScreen(this);
 
-      RemoteClientFactory.openDatabase(this);
+      //RemoteClientFactory.openDatabase(this);
 
       List<RemoteClient> clients = RemoteClientFactory.getClients();
 
@@ -40,7 +40,7 @@ public class ClientSettingsActivity extends PreferenceActivity {
 
    @Override
    protected void onPause() {
-      RemoteClientFactory.closeDatabase();
+      //RemoteClientFactory.closeDatabase();
       super.onPause();
    }
 

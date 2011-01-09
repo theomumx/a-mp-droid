@@ -3,14 +3,14 @@ package com.mediaportal.remote.data;
 import com.mediaportal.remote.api.IApiInterface;
 import com.mediaportal.remote.api.IClientControlApi;
 import com.mediaportal.remote.api.IMediaAccessApi;
-import com.mediaportal.remote.api.ITvControlApi;
+import com.mediaportal.remote.api.ITvServiceApi;
 
 public class RemoteClient {
    private int mClientId;
    private String mClientName;
    private String mClientDescription;
    private IMediaAccessApi mRemoteAccessApi;
-   private ITvControlApi mTvControlApi;
+   private ITvServiceApi mTvControlApi;
    private IClientControlApi mClientControlApi;
 
    public RemoteClient(int _clientId) {
@@ -23,7 +23,7 @@ public class RemoteClient {
    }
 
    public RemoteClient(int _clientId, String _clientName, IMediaAccessApi _remoteAccessApi,
-         ITvControlApi _tvControlApi, IClientControlApi _clientControlApi) {
+         ITvServiceApi _tvControlApi, IClientControlApi _clientControlApi) {
       this(_clientId, _clientName);
       mRemoteAccessApi = _remoteAccessApi;
       mTvControlApi = _tvControlApi;
@@ -104,11 +104,11 @@ public class RemoteClient {
       this.mRemoteAccessApi = remoteAccessApi;
    }
 
-   public ITvControlApi getTvControlApi() {
+   public ITvServiceApi getTvControlApi() {
       return mTvControlApi;
    }
 
-   public void setTvControlApi(ITvControlApi tvControlApi) {
+   public void setTvControlApi(ITvServiceApi tvControlApi) {
       this.mTvControlApi = tvControlApi;
    }
 

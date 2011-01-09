@@ -67,7 +67,7 @@ public class HomeActivity extends Activity {
       buttonTv.setOnClickListener(new View.OnClickListener() {
          public void onClick(View _view) {
             Util.Vibrate(_view.getContext(), 50);
-            Intent myIntent = new Intent(_view.getContext(), TvServerActivity.class);
+            Intent myIntent = new Intent(_view.getContext(), TvServerOverviewActivity.class);
             startActivity(myIntent);
          }
       });
