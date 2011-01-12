@@ -289,7 +289,7 @@ public class DataHandler {
       return client.getClientControlApi().getVolume();
    }
 
-   public URL getDownloadUri(String _filePath) {
+   public String getDownloadUri(String _filePath) {
       return client.getRemoteAccessApi().getDownloadUri(_filePath);
    }
 

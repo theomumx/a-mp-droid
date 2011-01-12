@@ -13,6 +13,8 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 
 import com.mediaportal.remote.R;
+import com.mediaportal.remote.lists.Utils;
+import com.mediaportal.remote.utils.DownloaderUtils;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -115,8 +117,8 @@ public class ItemDownloaderService extends Service {
                   mIntent, 0);
 
             // configure the notification
-            mNotification = new Notification(R.drawable.quickaction_sdcard, "Download", System
-                  .currentTimeMillis());
+            mNotification = new Notification(R.drawable.quickaction_sdcard, "Download",
+                  System.currentTimeMillis());
             mNotification.flags = mNotification.flags | Notification.FLAG_ONGOING_EVENT;
             mNotification.contentView = new RemoteViews(getApplicationContext().getPackageName(),
                   R.layout.download_progress);
@@ -134,16 +136,16 @@ public class ItemDownloaderService extends Service {
             conn.connect();
             InputStream inputStream = conn.getInputStream();
 
-            File imageFile = null;
-            File tmpDir = new File(Environment.getExternalStorageDirectory() + "/downloads");
-            if (!tmpDir.exists()) {
-               tmpDir = new File(Environment.getExternalStorageDirectory() + "/download");
-               if (tmpDir.mkdirs()) {
+            File downloadFile = new File(DownloaderUtils.getBaseDirectory() + "/" + myFileName);
+            File donwloadDir = new File(Utils.getFolder(downloadFile.toString(), "/"));
+            
+            if (!donwloadDir.exists()) {
+               if (donwloadDir.mkdirs()) {
                   Log.d("ItemDownloaderService", "created directory on sd card");
                }
             }
-            imageFile = new File(tmpDir.getAbsolutePath() + "//" + myFileName);
-            OutputStream out = new FileOutputStream(imageFile);
+
+            OutputStream out = new FileOutputStream(downloadFile);
             byte buf[] = new byte[1024];
             int fileSize = conn.getContentLength();
             long read = 0;
@@ -180,7 +182,7 @@ public class ItemDownloaderService extends Service {
       private void createNotificationText(int _progress) {
          int totalDownloads = mNumberOfJobs + mDownloadJobs.size();
          String text = "Donwload "
-               + mCurrentJob.getName()
+               + Utils.getFileNameWithExtension(mCurrentJob.getName(), "/")
                + (mDownloadJobs.size() > 0 ? " (" + mNumberOfJobs + "/" + totalDownloads + ")" : "");
          mNotification.contentView.setTextViewText(R.id.status_text, text);
          mNotification.contentView.setProgressBar(R.id.status_progress, 100, _progress, false);
@@ -191,12 +193,18 @@ public class ItemDownloaderService extends Service {
       protected void onPostExecute(Boolean result) {
          stopSelf();
          mNotificationManager.cancel(NOTIFICATION_ID);
+         Notification notification = new Notification(R.drawable.mp_logo_2, "Notify",
+               System.currentTimeMillis());
+         if (result) {
+            notification.setLatestEventInfo(getApplicationContext(), "aMPdroid",
+                  "Downloads finished", PendingIntent.getActivity(getApplicationContext(), 0,
+                        mIntent, PendingIntent.FLAG_CANCEL_CURRENT));
+         } else {
+            notification.setLatestEventInfo(getApplicationContext(), "aMPdroid",
+                  "Downloads failed", PendingIntent.getActivity(getApplicationContext(), 0,
+                        mIntent, PendingIntent.FLAG_CANCEL_CURRENT));
+         }
 
-         Notification notification = new Notification(R.drawable.mp_logo_2, "Notify", System
-               .currentTimeMillis());
-         notification.setLatestEventInfo(getApplicationContext(), "aMPdroid", "Downloads finished",
-               PendingIntent.getActivity(getApplicationContext(), 0, mIntent,
-                     PendingIntent.FLAG_CANCEL_CURRENT));
          mNotificationManager.notify(49, notification);
 
          super.onPostExecute(result);

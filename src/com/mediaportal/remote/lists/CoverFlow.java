@@ -1,4 +1,4 @@
-package com.mediaportal.remote.activities.lists;
+package com.mediaportal.remote.lists;
 
 /*
  * Copyright (C) 2010 Neil Davies

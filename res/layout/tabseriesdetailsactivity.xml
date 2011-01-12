@@ -28,7 +28,7 @@
 				
 			</LinearLayout>
 		</LinearLayout>
-		<com.mediaportal.remote.activities.lists.AnimatedSizingGallery
+		<com.mediaportal.remote.lists.AnimatedSizingGallery
 			android:layout_width="fill_parent" android:id="@+id/GalleryAllMoviePosters"
 			android:layout_marginLeft="10dip" android:layout_marginRight="10dip"
 			android:layout_height="0dip" android:layout_weight="2" />

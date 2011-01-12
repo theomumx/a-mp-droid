@@ -1,4 +1,4 @@
-package com.mediaportal.remote.activities.lists;
+package com.mediaportal.remote.lists;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -60,5 +60,10 @@ public class Utils {
       int dot = _path.lastIndexOf(_extensionSeperator);
       int sep = _path.lastIndexOf(_pathSeperator);
       return _path.substring(sep + 1, dot);
+   }
+
+   public static String getFolder(String _path, String _pathSeperator) {
+      int sepPos = _path.lastIndexOf(_pathSeperator);
+      return _path.substring(0, sepPos);
    }
 }

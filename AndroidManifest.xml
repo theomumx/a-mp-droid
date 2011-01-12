@@ -15,11 +15,15 @@
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
-
+		<activity android:name="com.mediaportal.remote.activities.BaseActivity"
+			android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar">
+		</activity>
 		<activity android:name="com.mediaportal.remote.activities.HomeActivity"
-			android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar"></activity>
+			android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar">
+		</activity>
 		<activity android:name="com.mediaportal.remote.activities.MediaActivity"
-			android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar"></activity>
+			android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar">
+		</activity>
 		<activity android:name="com.mediaportal.remote.activities.media.TabMoviesActivity"
 			android:screenOrientation="portrait"></activity>
 		<activity
@@ -47,15 +51,26 @@
 		<activity android:name="com.mediaportal.remote.activities.TvServerActivity"
 			android:screenOrientation="portrait"></activity>
 		<activity android:name="com.mediaportal.remote.activities.TvServerOverviewActivity"
+			android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar">
+		</activity>
+		<activity
+			android:name="com.mediaportal.remote.activities.tvserver.TvServerStateActivity"
 			android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar"></activity>
-		<activity android:name="com.mediaportal.remote.activities.TvServerStateActivity"
-			android:screenOrientation="portrait"></activity>
 		<activity
-			android:name="com.mediaportal.remote.activities.TvServerRecordingsActivity"
-			android:screenOrientation="portrait"></activity>
+			android:name="com.mediaportal.remote.activities.tvserver.TvServerRecordingsActivity"
+			android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar"></activity>
 		<activity
-			android:name="com.mediaportal.remote.activities.TvServerSchedulesActivity"
-			android:screenOrientation="portrait"></activity>
+			android:name="com.mediaportal.remote.activities.tvserver.TvServerSchedulesActivity"
+			android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar">
+		</activity>
+		<activity
+			android:name="com.mediaportal.remote.activities.tvserver.TvServerChannelsActivity"
+			android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar">
+		</activity>
+		<activity
+			android:name="com.mediaportal.remote.activities.tvserver.TvServerEpgActivity"
+			android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar">
+		</activity>
 		<activity android:name="com.mediaportal.remote.activities.RemoteControlActivity"
 			android:screenOrientation="portrait"></activity>
 		<activity android:name="com.mediaportal.remote.activities.StatusBarActivity"

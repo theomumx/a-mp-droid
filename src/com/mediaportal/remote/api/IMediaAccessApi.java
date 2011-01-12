@@ -35,7 +35,7 @@ public interface IMediaAccessApi extends IApiInterface {
 	SupportedFunctions getSupportedFunctions();
 	ArrayList<MusicAlbum> getAllAlbums();
 	List<MusicAlbum> getAlbums(int _start, int _end);
-   URL getDownloadUri(String _filePath);
+   String getDownloadUri(String _filePath);
    ArrayList<VideoShare> getVideoShares();
    EpisodeDetails getEpisode(int id);
    

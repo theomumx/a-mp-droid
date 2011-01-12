@@ -20,7 +20,7 @@ import com.mediaportal.remote.data.TvCardDetails;
 import com.mediaportal.remote.data.TvChannel;
 import com.mediaportal.remote.data.TvChannelGroup;
 import com.mediaportal.remote.data.TvVirtualCard;
-
+@Deprecated
 @SuppressWarnings("unchecked")
 public class TvServerActivity extends Activity {
    private ListView mListView;

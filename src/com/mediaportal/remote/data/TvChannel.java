@@ -8,8 +8,8 @@ public class TvChannel {
    
    @Override
    public String toString() {
-      if (Name != null) {
-         return Name;
+      if (DisplayName != null) {
+         return DisplayName;
       } else
          return "[Unknown Channel]";
    }

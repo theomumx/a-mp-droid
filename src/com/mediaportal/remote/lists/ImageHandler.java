@@ -1,4 +1,4 @@
-package com.mediaportal.remote.activities.lists;
+package com.mediaportal.remote.lists;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -43,7 +43,7 @@ public class ImageHandler {
       // Find the dir to save cached images
       if (android.os.Environment.getExternalStorageState().equals(
             android.os.Environment.MEDIA_MOUNTED))
-         cacheDir = new File(android.os.Environment.getExternalStorageDirectory(), "aMPdroid");
+         cacheDir = new File(android.os.Environment.getExternalStorageDirectory(), "aMPdroid/Cache");
       else
          cacheDir = context.getCacheDir();
       if (!cacheDir.exists())

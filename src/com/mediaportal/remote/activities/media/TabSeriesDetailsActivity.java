@@ -20,11 +20,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.mediaportal.remote.R;
-import com.mediaportal.remote.activities.lists.LazyLoadingGalleryAdapter;
-import com.mediaportal.remote.activities.lists.views.PosterGalleryViewAdapter;
 import com.mediaportal.remote.api.DataHandler;
 import com.mediaportal.remote.data.SeriesFull;
 import com.mediaportal.remote.data.SeriesSeason;
+import com.mediaportal.remote.lists.LazyLoadingGalleryAdapter;
+import com.mediaportal.remote.lists.views.PosterGalleryViewAdapter;
 
 public class TabSeriesDetailsActivity extends Activity {
    private LazyLoadingGalleryAdapter mAdapter;
@@ -33,6 +33,7 @@ public class TabSeriesDetailsActivity extends Activity {
    private TextView mSeriesName;
    private TextView mSeriesOverview;
    private Gallery mPosterGallery;
+   private SeriesFull mSeries;
 
    @Override
    public void onCreate(Bundle _savedInstanceState) {
@@ -50,9 +51,9 @@ public class TabSeriesDetailsActivity extends Activity {
 
          DataHandler service = DataHandler.getCurrentRemoteInstance();
 
-         SeriesFull fullSeries = service.getFullSeries(seriesId);
+         mSeries = service.getFullSeries(seriesId);
 
-         String seriesPoster = fullSeries.getCurrentPosterUrl();
+         String seriesPoster = mSeries.getCurrentPosterUrl();
          if (seriesPoster != null && !seriesPoster.equals("")) {
             Bitmap seriesPosterThumb = service.getImage(seriesPoster, 200, 400);
             if (seriesPosterThumb != null) {
@@ -60,11 +61,11 @@ public class TabSeriesDetailsActivity extends Activity {
             }
          }
 
-         mSeriesName.setText(fullSeries.getPrettyName());
+         mSeriesName.setText(mSeries.getPrettyName());
 
          mAdapter = new LazyLoadingGalleryAdapter(this, service);
          
-         String[] posterUrls = fullSeries.getPosterUrls();
+         String[] posterUrls = mSeries.getPosterUrls();
          if (posterUrls != null) {
             for (int i = 0; i < posterUrls.length; i++) {
                mAdapter.AddItem(new PosterGalleryViewAdapter(posterUrls[i]));
@@ -85,10 +86,10 @@ public class TabSeriesDetailsActivity extends Activity {
             }
          }
 */
-         // mPosterGallery.setSpacing(-10);
+         //mPosterGallery.setSpacing(-10);
          mPosterGallery.setAdapter(mAdapter);
 
-         mSeriesOverview.setText(fullSeries.getSummary());
+         mSeriesOverview.setText(mSeries.getSummary());
 
          ArrayList<SeriesSeason> seasons = service.getAllSeasons(seriesId);
 
@@ -97,8 +98,8 @@ public class TabSeriesDetailsActivity extends Activity {
             TextView text = (TextView) view.findViewById(R.id.TextViewTitle);
             ImageView image = (ImageView) view.findViewById(R.id.ImageViewEventImage);
             TextView subtext = (TextView) view.findViewById(R.id.TextViewText);
-            ProgressBar progress = (ProgressBar) view.findViewById(R.id.ProgressBarLoading);
-            progress.setVisibility(View.GONE);
+            //ProgressBar progress = (ProgressBar) view.findViewById(R.id.ProgressBarLoading);
+            //progress.setVisibility(View.GONE);
 
             SeriesSeason s = seasons.get(i);
             String seasonBanner = s.getSeasonBanner();
@@ -146,6 +147,7 @@ public class TabSeriesDetailsActivity extends Activity {
                   SeriesSeason s = (SeriesSeason) _view.getTag();
                   myIntent.putExtra("series_id", s.getSeriesId());
                   myIntent.putExtra("season_number", s.getSeasonNumber());
+                  myIntent.putExtra("series_name", mSeries.getPrettyName());
 
                   myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
