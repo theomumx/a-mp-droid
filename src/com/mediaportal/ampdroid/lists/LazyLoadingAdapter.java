@@ -112,9 +112,11 @@ public class LazyLoadingAdapter extends BaseAdapter {
             if (holder.text != null) {
                holder.text.setText(data.get(position).getText());
                int color = data.get(position).getTextColor();
-               if (color != -99) {
-                  holder.text.setTextColor(color);
-               }
+               
+               holder.text.setTextColor(Color.WHITE);
+               //if (color != -99) {
+               //   holder.text.setTextColor(color);
+               //}
             }
 
             if (holder.subtext != null) {
