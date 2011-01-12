@@ -22,9 +22,9 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
 import com.mediaportal.remote.R;
-import com.mediaportal.remote.activities.lists.CoverFlow;
 import com.mediaportal.remote.api.DataHandler;
 import com.mediaportal.remote.data.Series;
+import com.mediaportal.remote.lists.CoverFlow;
 
 public class TabVideosActivity extends Activity {
    public class ImageAdapter extends BaseAdapter {

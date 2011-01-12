@@ -3,44 +3,50 @@ package com.mediaportal.remote.data;
 import java.util.Date;
 
 public class TvVirtualCard {
-    int BitRateMode;
-    String ChannelName;
-    String Device;
-    boolean Enabled;
-    int GetTimeshiftStoppedReason;
-    boolean GrabTeletext;
-    boolean HasTeletext;
-    int Id;
-    int IdChannel;
-    boolean IsGrabbingEpg;
-    boolean IsRecording;
-    boolean IsScanning;
-    boolean IsScrambled;
-    boolean IsTimeShifting;
-    boolean IsTunerLocked;
-    int MaxChannel;
-    int MinChannel;
-    String Name;
-    int QualityType;
-    String RecordingFileName;
-    String RecordingFolder;
-    int RecordingFormat;
-    int RecordingScheduleId;
-    Date RecordingStarted;
-    String RemoteServer;
-    String RTSPUrl;
-    int SignalLevel;
-    int SignalQuality;
-    String TimeShiftFileName;
-    String TimeshiftFolder;
-    Date TimeShiftStarted;
-    int Type;
+   int BitRateMode;
+   String ChannelName;
+   String Device;
+   boolean Enabled;
+   int GetTimeshiftStoppedReason;
+   boolean GrabTeletext;
+   boolean HasTeletext;
+   int Id;
+   int IdChannel;
+   boolean IsGrabbingEpg;
+   boolean IsRecording;
+   boolean IsScanning;
+   boolean IsScrambled;
+   boolean IsTimeShifting;
+   boolean IsTunerLocked;
+   int MaxChannel;
+   int MinChannel;
+   String Name;
+   int QualityType;
+   String RecordingFileName;
+   String RecordingFolder;
+   int RecordingFormat;
+   int RecordingScheduleId;
+   Date RecordingStarted;
+   String RemoteServer;
+   String RTSPUrl;
+   int SignalLevel;
+   int SignalQuality;
+   String TimeShiftFileName;
+   String TimeshiftFolder;
+   Date TimeShiftStarted;
+   int Type;
 
    TvUser User;
 
    @Override
-    public String toString() {
-      if (Name != null) {
+   public String toString() {
+      if (ChannelName != null) {
+         if (User != null) {
+            return ChannelName + " - " + User.Name;
+         } else {
+            return ChannelName;
+         }
+      } else if (Name != null) {
          return Name;
       } else
          return "[Unknown Card]";

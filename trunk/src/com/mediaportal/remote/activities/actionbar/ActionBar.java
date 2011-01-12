@@ -45,17 +45,11 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
    private LinearLayout mActionsView;
    private ImageButton mHomeBtn;
    private RelativeLayout mHomeLayout;
+   
+   private boolean mIsInitialised = false;
 
    public ActionBar(Context _context, AttributeSet _attrs) {
       super(_context, _attrs);
-
-      /*
-       * for (int i = 0; i < attrs.getAttributeCount(); i++) { Log.d(TAG,
-       * "value: " + attrs.getAttributeValue(i) + ", name: " +
-       * attrs.getAttributeName(i)); if
-       * ("title".equals(attrs.getAttributeName(i))) {
-       * setTitle(attrs.getAttributeValue(i)); } }
-       */
 
       mInflater = (LayoutInflater) _context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
@@ -68,6 +62,14 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
 
       mTitleView = (TextView) mBarView.findViewById(R.id.actionbar_title);
       mActionsView = (LinearLayout) mBarView.findViewById(R.id.actionbar_actions);
+   }
+   
+   public void setInitialised(boolean isInitialised) {
+      this.mIsInitialised = isInitialised;
+   }
+
+   public boolean isInitialised() {
+      return mIsInitialised;
    }
 
    public void setHomeAction(IntentAction action) {
@@ -160,6 +162,8 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
       view.setOnClickListener(this);
       return view;
    }
+
+
 
    /**
     * A {@link LinkedList} that holds a list of {@link Action}s.

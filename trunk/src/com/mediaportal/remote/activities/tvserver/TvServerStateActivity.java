@@ -1,31 +1,31 @@
-package com.mediaportal.remote.activities;
+package com.mediaportal.remote.activities.tvserver;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Spinner;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.AdapterView.OnItemSelectedListener;
 
 import com.mediaportal.remote.R;
-import com.mediaportal.remote.activities.quickactions.ActionItem;
-import com.mediaportal.remote.activities.quickactions.QuickAction;
+import com.mediaportal.remote.activities.BaseActivity;
 import com.mediaportal.remote.api.DataHandler;
 import com.mediaportal.remote.data.TvChannel;
 import com.mediaportal.remote.data.TvChannelGroup;
 import com.mediaportal.remote.data.TvVirtualCard;
+import com.mediaportal.remote.quickactions.ActionItem;
+import com.mediaportal.remote.quickactions.QuickAction;
 import com.mediaportal.remote.utils.Util;
 
-public class TvServerStateActivity extends Activity {
+public class TvServerStateActivity extends BaseActivity {
    private ListView mListView;
    private Button mStartTimeshift;
    private Button mStartRecording;
@@ -39,6 +39,7 @@ public class TvServerStateActivity extends Activity {
 
    @Override
    public void onCreate(Bundle _savedInstanceState) {
+      setHome(false);
       super.onCreate(_savedInstanceState);
       setContentView(R.layout.tvserverstateactivity);
       mListView = (ListView) findViewById(R.id.ListViewCards);

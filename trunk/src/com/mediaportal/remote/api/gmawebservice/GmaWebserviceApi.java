@@ -215,13 +215,11 @@ public class GmaWebserviceApi implements IMediaAccessApi {
    }
    
    @Override
-   public URL getDownloadUri(String _filePath){
-      URL fileUrl = null;
+   public String getDownloadUri(String _filePath){
+      String fileUrl = null;
       try {
-         fileUrl = new URL(JSON_PREFIX + m_server + ":" + m_port + JSON_SUFFIX
-                  + "/FS_GetMediaItem/?path=" + URLEncoder.encode(_filePath, "UTF-8"));
-      } catch (MalformedURLException e) {
-         e.printStackTrace();
+         fileUrl = JSON_PREFIX + m_server + ":" + m_port + JSON_SUFFIX
+                  + "/FS_GetMediaItem/?path=" + URLEncoder.encode(_filePath, "UTF-8");
       } catch (UnsupportedEncodingException e) {
          e.printStackTrace();
       }

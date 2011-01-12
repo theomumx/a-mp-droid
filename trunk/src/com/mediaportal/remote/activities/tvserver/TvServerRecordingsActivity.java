@@ -1,22 +1,23 @@
-package com.mediaportal.remote.activities;
+package com.mediaportal.remote.activities.tvserver;
 
 import java.util.List;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.mediaportal.remote.R;
+import com.mediaportal.remote.activities.BaseActivity;
 import com.mediaportal.remote.api.DataHandler;
 import com.mediaportal.remote.data.TvRecording;
 
-public class TvServerRecordingsActivity extends Activity {
+public class TvServerRecordingsActivity extends BaseActivity {
    private DataHandler mService;
    private ListView mListView;
    
    @Override
    public void onCreate(Bundle _savedInstanceState) {
+      setHome(false);
       super.onCreate(_savedInstanceState);
       setContentView(R.layout.tvserverrecordingsactivity);
       mListView = (ListView) findViewById(R.id.ListViewRecordings);

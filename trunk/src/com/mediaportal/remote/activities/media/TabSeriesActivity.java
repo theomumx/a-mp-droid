@@ -14,13 +14,14 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 
 import com.mediaportal.remote.R;
-import com.mediaportal.remote.activities.lists.ILoadingAdapterItem;
-import com.mediaportal.remote.activities.lists.LazyLoadingAdapter;
-import com.mediaportal.remote.activities.lists.views.SeriesPosterViewAdapter;
-import com.mediaportal.remote.activities.quickactions.ActionItem;
-import com.mediaportal.remote.activities.quickactions.QuickAction;
 import com.mediaportal.remote.api.DataHandler;
 import com.mediaportal.remote.data.Series;
+import com.mediaportal.remote.lists.ILoadingAdapterItem;
+import com.mediaportal.remote.lists.LazyLoadingAdapter;
+import com.mediaportal.remote.lists.views.SeriesPosterViewAdapter;
+import com.mediaportal.remote.lists.views.SeriesThumbViewAdapter;
+import com.mediaportal.remote.quickactions.ActionItem;
+import com.mediaportal.remote.quickactions.QuickAction;
 
 public class TabSeriesActivity extends Activity {
    private ListView mListView;
@@ -36,11 +37,11 @@ public class TabSeriesActivity extends Activity {
       List<Series> series = service.getAllSeries();
       // List<TvSeason> season = service.getAllSeasons(series.get(0).getId());
 
-      mAdapter = new LazyLoadingAdapter(this, R.layout.listitem_poster);
+      mAdapter = new LazyLoadingAdapter(this, R.layout.listitem_thumb);
 
       if (series != null) {
          for (Series s : series) {
-            mAdapter.AddItem(new SeriesPosterViewAdapter(s));
+            mAdapter.AddItem(new SeriesThumbViewAdapter(s));
          }
       }
 
@@ -58,6 +59,7 @@ public class TabSeriesActivity extends Activity {
             Series selectedSeries = (Series) selectedItem.getItem();
             Intent myIntent = new Intent(_view.getContext(), TabSeriesDetailsActivity.class);
             myIntent.putExtra("series_id", selectedSeries.getId());
+            myIntent.putExtra("series_name", selectedSeries.getPrettyName());
             myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             //startActivity(myIntent);
 

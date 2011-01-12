@@ -1,4 +1,4 @@
-package com.mediaportal.remote.activities.lists;
+package com.mediaportal.remote.lists;
 
 import java.util.ArrayList;
 

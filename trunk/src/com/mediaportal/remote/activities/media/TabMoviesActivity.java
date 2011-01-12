@@ -11,11 +11,11 @@ import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
 
 import com.mediaportal.remote.R;
-import com.mediaportal.remote.activities.lists.ILoadingAdapterItem;
-import com.mediaportal.remote.activities.lists.LazyLoadingAdapter;
-import com.mediaportal.remote.activities.lists.views.MoviePosterViewAdapter;
 import com.mediaportal.remote.api.DataHandler;
 import com.mediaportal.remote.data.Movie;
+import com.mediaportal.remote.lists.ILoadingAdapterItem;
+import com.mediaportal.remote.lists.LazyLoadingAdapter;
+import com.mediaportal.remote.lists.views.MoviePosterViewAdapter;
 
 public class TabMoviesActivity extends Activity {
 	private ListView mListView;

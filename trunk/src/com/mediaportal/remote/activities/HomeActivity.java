@@ -19,28 +19,20 @@ import com.mediaportal.remote.activities.settings.SettingsActivity;
 import com.mediaportal.remote.api.DataHandler;
 import com.mediaportal.remote.utils.Util;
 
-public class HomeActivity extends Activity {
+public class HomeActivity extends BaseActivity {
    private StatusBarActivityHandler statusBarHandler = null;
    
    /** Called when the activity is first created. */
    @Override
    public void onCreate(Bundle _savedInstanceState) {
+      setHome(true);
       super.onCreate(_savedInstanceState);
       setContentView(R.layout.homescreen);
       
-      ActionBar actionBar = (ActionBar) findViewById(R.id.actionbar);
-      actionBar.setTitle("aMPdroid");
-      actionBar.setHomeAction(new IntentAction(this, null, R.drawable.actionbar_home));
-      
-      actionBar.addAction(new IntentAction(this, null, R.drawable.actionbar_remote));
-      actionBar.addAction(new IntentAction(this, null, R.drawable.actionbar_search));
-      //actionBar.addAction(new ToastAction());
-
       
       DataHandler remoteController = DataHandler.getCurrentRemoteInstance();
       statusBarHandler = new StatusBarActivityHandler(this, remoteController);
       statusBarHandler.setupRemoteStatus();
-      
 
       final ImageButton buttonRemote = (ImageButton) findViewById(R.id.ImageButtonRemote);
       buttonRemote.setOnClickListener(new View.OnClickListener() {
