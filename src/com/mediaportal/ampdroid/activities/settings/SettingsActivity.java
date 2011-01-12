@@ -1,10 +1,8 @@
-package com.mediaportal.remote.activities.settings;
-
-import com.mediaportal.remote.R;
+package com.mediaportal.ampdroid.activities.settings;
 
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
-
+import com.mediaportal.ampdroid.R;
 public class SettingsActivity extends PreferenceActivity {
    @Override
    protected void onCreate(Bundle savedInstanceState) {

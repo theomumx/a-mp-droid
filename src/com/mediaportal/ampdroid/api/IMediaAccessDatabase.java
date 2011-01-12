@@ -1,8 +1,8 @@
-package com.mediaportal.remote.api;
+package com.mediaportal.ampdroid.api;
 
 import java.util.ArrayList;
 
-import com.mediaportal.remote.data.Movie;
+import com.mediaportal.ampdroid.data.Movie;
 
 public interface IMediaAccessDatabase {
    ArrayList<Movie> getAllMovies();

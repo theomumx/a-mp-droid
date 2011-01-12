@@ -1,25 +1,18 @@
-package com.mediaportal.remote.lists;
+package com.mediaportal.ampdroid.lists;
 
 import java.util.ArrayList;
 
 import android.app.Activity;
-import android.app.Service;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.Typeface;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Gallery;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
-import com.mediaportal.remote.R;
-import com.mediaportal.remote.api.DataHandler;
+import com.mediaportal.ampdroid.api.DataHandler;
 
 public class LazyLoadingGalleryAdapter extends BaseAdapter {
    private Activity activity;

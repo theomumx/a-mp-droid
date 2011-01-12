@@ -1,4 +1,4 @@
-package com.mediaportal.remote.lists;
+package com.mediaportal.ampdroid.lists;
 
 
 public interface ILoadingAdapterItem {

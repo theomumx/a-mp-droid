@@ -1,19 +1,19 @@
-package com.mediaportal.remote.api;
+package com.mediaportal.ampdroid.api;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.mediaportal.remote.data.TvVirtualCard;
-import com.mediaportal.remote.data.TvCardDetails;
-import com.mediaportal.remote.data.TvChannel;
-import com.mediaportal.remote.data.TvChannelDetails;
-import com.mediaportal.remote.data.TvChannelGroup;
-import com.mediaportal.remote.data.TvProgram;
-import com.mediaportal.remote.data.TvRecording;
-import com.mediaportal.remote.data.TvRtspClient;
-import com.mediaportal.remote.data.TvSchedule;
-import com.mediaportal.remote.data.TvUser;
+import com.mediaportal.ampdroid.data.TvCardDetails;
+import com.mediaportal.ampdroid.data.TvChannel;
+import com.mediaportal.ampdroid.data.TvChannelDetails;
+import com.mediaportal.ampdroid.data.TvChannelGroup;
+import com.mediaportal.ampdroid.data.TvProgram;
+import com.mediaportal.ampdroid.data.TvRecording;
+import com.mediaportal.ampdroid.data.TvRtspClient;
+import com.mediaportal.ampdroid.data.TvSchedule;
+import com.mediaportal.ampdroid.data.TvUser;
+import com.mediaportal.ampdroid.data.TvVirtualCard;
 
 public interface ITvServiceApi extends IApiInterface {
 	boolean TestConnectionToTVService();

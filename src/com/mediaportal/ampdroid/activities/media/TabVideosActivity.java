@@ -1,4 +1,4 @@
-package com.mediaportal.remote.activities.media;
+package com.mediaportal.ampdroid.activities.media;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,14 +6,14 @@ import java.util.List;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.LinearGradient;
 import android.graphics.Matrix;
 import android.graphics.Paint;
-import android.graphics.PorterDuffXfermode;
-import android.graphics.Bitmap.Config;
 import android.graphics.PorterDuff.Mode;
+import android.graphics.PorterDuffXfermode;
 import android.graphics.Shader.TileMode;
 import android.os.Bundle;
 import android.view.View;
@@ -21,11 +21,10 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
-import com.mediaportal.remote.R;
-import com.mediaportal.remote.api.DataHandler;
-import com.mediaportal.remote.data.Series;
-import com.mediaportal.remote.lists.CoverFlow;
-
+import com.mediaportal.ampdroid.api.DataHandler;
+import com.mediaportal.ampdroid.data.Series;
+import com.mediaportal.ampdroid.lists.CoverFlow;
+import com.mediaportal.ampdroid.R;
 public class TabVideosActivity extends Activity {
    public class ImageAdapter extends BaseAdapter {
       int mGalleryItemBackground;
@@ -158,13 +157,13 @@ public class TabVideosActivity extends Activity {
    @Override
    public void onCreate(Bundle _savedInstanceState) {
       super.onCreate(_savedInstanceState);
-      // setContentView(R.layout.tabvideosactivity);
+      setContentView(R.layout.tabvideosactivity);
 
       // Gallery3D gall3d = new Gallery3D(this);
       // gall3d.setAdapter(new ImageAdapter(this));
       // setContentView(gall3d);
 
-      CoverFlow coverFlow;
+      /*CoverFlow coverFlow;
       coverFlow = new CoverFlow(this);
 
       // coverFlow.setAdapter(new ImageAdapter(this));
@@ -180,7 +179,7 @@ public class TabVideosActivity extends Activity {
       coverFlow.setAnimationDuration(100);
       // /coverFlow.setAnimat
 
-      setContentView(coverFlow);
+      setContentView(coverFlow);*/
 
    }
 }

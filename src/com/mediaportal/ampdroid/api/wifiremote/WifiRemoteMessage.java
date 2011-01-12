@@ -1,4 +1,4 @@
-package com.mediaportal.remote.api.wifiremote;
+package com.mediaportal.ampdroid.api.wifiremote;
 
 public class WifiRemoteMessage {
    public WifiRemoteMessage(String _type, String _command) {

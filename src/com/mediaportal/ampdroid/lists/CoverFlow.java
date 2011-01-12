@@ -1,4 +1,4 @@
-package com.mediaportal.remote.lists;
+package com.mediaportal.ampdroid.lists;
 
 /*
  * Copyright (C) 2010 Neil Davies

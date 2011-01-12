@@ -1,4 +1,4 @@
-package com.mediaportal.remote.lists;
+package com.mediaportal.ampdroid.lists;
 
 import java.io.InputStream;
 import java.io.OutputStream;

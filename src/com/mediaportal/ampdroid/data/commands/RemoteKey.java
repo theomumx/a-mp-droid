@@ -1,4 +1,4 @@
-package com.mediaportal.remote.data.commands;
+package com.mediaportal.ampdroid.data.commands;
 
 public class RemoteKey {
    private int id;

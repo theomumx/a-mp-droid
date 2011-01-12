@@ -1,7 +1,8 @@
-package com.mediaportal.remote.quickactions;
+package com.mediaportal.ampdroid.quickactions;
 
 
 import android.graphics.drawable.Drawable;
+import android.view.View;
 import android.view.View.OnClickListener;
 
 /**

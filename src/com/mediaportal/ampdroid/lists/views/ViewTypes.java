@@ -1,4 +1,4 @@
-package com.mediaportal.remote.lists.views;
+package com.mediaportal.ampdroid.lists.views;
 
 public enum ViewTypes {
    PosterView,

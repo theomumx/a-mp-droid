@@ -1,4 +1,4 @@
-package com.mediaportal.remote.api.tv4home;
+package com.mediaportal.ampdroid.api.tv4home;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -10,19 +10,19 @@ import org.ksoap2.serialization.SoapPrimitive;
 
 import android.util.Log;
 
-import com.mediaportal.remote.api.ITvServiceApi;
-import com.mediaportal.remote.api.gmawebservice.soap.WcfAccessHandler;
-import com.mediaportal.remote.api.soap.Ksoap2ResultParser;
-import com.mediaportal.remote.data.TvVirtualCard;
-import com.mediaportal.remote.data.TvCardDetails;
-import com.mediaportal.remote.data.TvChannel;
-import com.mediaportal.remote.data.TvChannelDetails;
-import com.mediaportal.remote.data.TvChannelGroup;
-import com.mediaportal.remote.data.TvProgram;
-import com.mediaportal.remote.data.TvRecording;
-import com.mediaportal.remote.data.TvRtspClient;
-import com.mediaportal.remote.data.TvSchedule;
-import com.mediaportal.remote.data.TvUser;
+import com.mediaportal.ampdroid.api.ITvServiceApi;
+import com.mediaportal.ampdroid.api.gmawebservice.soap.WcfAccessHandler;
+import com.mediaportal.ampdroid.api.soap.Ksoap2ResultParser;
+import com.mediaportal.ampdroid.data.TvCardDetails;
+import com.mediaportal.ampdroid.data.TvChannel;
+import com.mediaportal.ampdroid.data.TvChannelDetails;
+import com.mediaportal.ampdroid.data.TvChannelGroup;
+import com.mediaportal.ampdroid.data.TvProgram;
+import com.mediaportal.ampdroid.data.TvRecording;
+import com.mediaportal.ampdroid.data.TvRtspClient;
+import com.mediaportal.ampdroid.data.TvSchedule;
+import com.mediaportal.ampdroid.data.TvUser;
+import com.mediaportal.ampdroid.data.TvVirtualCard;
 
 /**
  * Wrapper for the functionality offered by the Tv4Home WCF webservice

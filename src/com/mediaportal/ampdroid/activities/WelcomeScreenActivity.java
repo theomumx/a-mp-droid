@@ -1,4 +1,4 @@
-package com.mediaportal.remote.activities;
+package com.mediaportal.ampdroid.activities;
 
 import java.util.List;
 
@@ -10,22 +10,21 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.Window;
 import android.view.MenuItem.OnMenuItemClickListener;
+import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 
-import com.mediaportal.remote.R;
-import com.mediaportal.remote.activities.settings.SettingsActivity;
-import com.mediaportal.remote.api.DataHandler;
-import com.mediaportal.remote.api.database.RemoteClientFactory;
-import com.mediaportal.remote.data.RemoteClient;
-import com.mediaportal.remote.utils.Util;
-
+import com.mediaportal.ampdroid.activities.settings.SettingsActivity;
+import com.mediaportal.ampdroid.api.DataHandler;
+import com.mediaportal.ampdroid.api.database.RemoteClientFactory;
+import com.mediaportal.ampdroid.data.RemoteClient;
+import com.mediaportal.ampdroid.utils.Util;
+import com.mediaportal.ampdroid.R;
 public class WelcomeScreenActivity extends Activity {
    private class StartupTask extends AsyncTask<RemoteClient, String, Boolean> {
 

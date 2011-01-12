@@ -1,9 +1,7 @@
-package com.mediaportal.remote.lists;
+package com.mediaportal.ampdroid.lists;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import com.mediaportal.remote.R;
 
 import android.app.Activity;
 import android.content.Context;
@@ -13,9 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
-
+import com.mediaportal.ampdroid.R;
 public class TvServerFeaturesAdapter extends BaseAdapter {
 
    

@@ -1,29 +1,28 @@
-package com.mediaportal.remote.api;
+package com.mediaportal.ampdroid.api;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 import android.graphics.Bitmap;
 
-import com.mediaportal.remote.data.EpisodeDetails;
-import com.mediaportal.remote.data.Movie;
-import com.mediaportal.remote.data.MovieFull;
-import com.mediaportal.remote.data.MusicAlbum;
-import com.mediaportal.remote.data.RemoteClient;
-import com.mediaportal.remote.data.Series;
-import com.mediaportal.remote.data.SeriesEpisode;
-import com.mediaportal.remote.data.SeriesFull;
-import com.mediaportal.remote.data.SeriesSeason;
-import com.mediaportal.remote.data.SupportedFunctions;
-import com.mediaportal.remote.data.TvCardDetails;
-import com.mediaportal.remote.data.TvChannel;
-import com.mediaportal.remote.data.TvChannelGroup;
-import com.mediaportal.remote.data.TvRecording;
-import com.mediaportal.remote.data.TvSchedule;
-import com.mediaportal.remote.data.TvVirtualCard;
-import com.mediaportal.remote.data.VideoShare;
-import com.mediaportal.remote.data.commands.RemoteKey;
+import com.mediaportal.ampdroid.data.EpisodeDetails;
+import com.mediaportal.ampdroid.data.Movie;
+import com.mediaportal.ampdroid.data.MovieFull;
+import com.mediaportal.ampdroid.data.MusicAlbum;
+import com.mediaportal.ampdroid.data.RemoteClient;
+import com.mediaportal.ampdroid.data.Series;
+import com.mediaportal.ampdroid.data.SeriesEpisode;
+import com.mediaportal.ampdroid.data.SeriesFull;
+import com.mediaportal.ampdroid.data.SeriesSeason;
+import com.mediaportal.ampdroid.data.SupportedFunctions;
+import com.mediaportal.ampdroid.data.TvCardDetails;
+import com.mediaportal.ampdroid.data.TvChannel;
+import com.mediaportal.ampdroid.data.TvChannelGroup;
+import com.mediaportal.ampdroid.data.TvRecording;
+import com.mediaportal.ampdroid.data.TvSchedule;
+import com.mediaportal.ampdroid.data.TvVirtualCard;
+import com.mediaportal.ampdroid.data.VideoShare;
+import com.mediaportal.ampdroid.data.commands.RemoteKey;
 
 public class DataHandler {
    private RemoteClient client;

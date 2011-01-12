@@ -1,4 +1,4 @@
-package com.mediaportal.remote.activities.media;
+package com.mediaportal.ampdroid.activities.media;
 
 import java.util.List;
 
@@ -6,15 +6,14 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.AdapterView.OnItemClickListener;
 
-import com.mediaportal.remote.R;
-import com.mediaportal.remote.api.DataHandler;
-import com.mediaportal.remote.data.VideoShare;
-import com.mediaportal.remote.utils.Util;
-
+import com.mediaportal.ampdroid.api.DataHandler;
+import com.mediaportal.ampdroid.data.VideoShare;
+import com.mediaportal.ampdroid.utils.Util;
+import com.mediaportal.ampdroid.R;
 public class TabSharesActivity extends Activity {
    private ListView mListView;
    private ArrayAdapter<VideoShare> mListItems;

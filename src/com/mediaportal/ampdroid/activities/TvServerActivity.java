@@ -1,5 +1,5 @@
-package com.mediaportal.remote.activities;
-
+package com.mediaportal.ampdroid.activities;
+import com.mediaportal.ampdroid.R;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,18 +8,17 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
 
-import com.mediaportal.remote.R;
-import com.mediaportal.remote.api.DataHandler;
-import com.mediaportal.remote.api.soap.Ksoap2ResultParser;
-import com.mediaportal.remote.data.TvCardDetails;
-import com.mediaportal.remote.data.TvChannel;
-import com.mediaportal.remote.data.TvChannelGroup;
-import com.mediaportal.remote.data.TvVirtualCard;
+import com.mediaportal.ampdroid.api.DataHandler;
+import com.mediaportal.ampdroid.api.soap.Ksoap2ResultParser;
+import com.mediaportal.ampdroid.data.TvCardDetails;
+import com.mediaportal.ampdroid.data.TvChannel;
+import com.mediaportal.ampdroid.data.TvChannelGroup;
+import com.mediaportal.ampdroid.data.TvVirtualCard;
 @Deprecated
 @SuppressWarnings("unchecked")
 public class TvServerActivity extends Activity {

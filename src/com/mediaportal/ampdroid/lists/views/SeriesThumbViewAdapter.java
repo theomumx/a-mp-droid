@@ -1,10 +1,10 @@
-package com.mediaportal.remote.lists.views;
+package com.mediaportal.ampdroid.lists.views;
 
 import java.io.File;
 
-import com.mediaportal.remote.data.Series;
-import com.mediaportal.remote.lists.ILoadingAdapterItem;
-import com.mediaportal.remote.lists.Utils;
+import com.mediaportal.ampdroid.data.Series;
+import com.mediaportal.ampdroid.lists.ILoadingAdapterItem;
+import com.mediaportal.ampdroid.lists.Utils;
 
 public class SeriesThumbViewAdapter implements ILoadingAdapterItem {
    private Series mSeries;

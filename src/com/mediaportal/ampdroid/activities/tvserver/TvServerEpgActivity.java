@@ -1,13 +1,12 @@
-package com.mediaportal.remote.activities.tvserver;
+package com.mediaportal.ampdroid.activities.tvserver;
 
 import android.os.Bundle;
 import android.widget.ListView;
 
-import com.mediaportal.remote.R;
-import com.mediaportal.remote.activities.BaseActivity;
-import com.mediaportal.remote.api.DataHandler;
-import com.mediaportal.remote.utils.Util;
-
+import com.mediaportal.ampdroid.activities.BaseActivity;
+import com.mediaportal.ampdroid.api.DataHandler;
+import com.mediaportal.ampdroid.utils.Util;
+import com.mediaportal.ampdroid.R;
 public class TvServerEpgActivity extends BaseActivity {
    private DataHandler mService;
    private ListView mListView;
@@ -15,6 +14,7 @@ public class TvServerEpgActivity extends BaseActivity {
    @Override
    public void onCreate(Bundle _savedInstanceState) {
       setHome(false);
+      setTitle(R.string.title_tvserver_epg);
       super.onCreate(_savedInstanceState);
       setContentView(R.layout.tvserverschedulesactivity);
       mListView = (ListView) findViewById(R.id.ListViewSchedules);

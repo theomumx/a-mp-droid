@@ -1,4 +1,4 @@
-package com.mediaportal.remote.activities.media;
+package com.mediaportal.ampdroid.activities.media;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
@@ -6,10 +6,9 @@ import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.mediaportal.remote.R;
-import com.mediaportal.remote.api.DataHandler;
-import com.mediaportal.remote.data.MovieFull;
-
+import com.mediaportal.ampdroid.api.DataHandler;
+import com.mediaportal.ampdroid.data.MovieFull;
+import com.mediaportal.ampdroid.R;
 public class TabMovieDetailsActivity extends Activity {
 	@Override
 	public void onCreate(Bundle _savedInstanceState) {

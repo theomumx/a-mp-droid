@@ -1,8 +1,6 @@
-package com.mediaportal.remote.activities.media;
+package com.mediaportal.ampdroid.activities.media;
 
 import java.io.File;
-import java.net.URI;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 
 import android.app.Activity;
@@ -13,25 +11,23 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.ListView;
 
-import com.mediaportal.remote.R;
-import com.mediaportal.remote.api.DataHandler;
-import com.mediaportal.remote.api.ItemDownloaderService;
-import com.mediaportal.remote.data.EpisodeDetails;
-import com.mediaportal.remote.data.EpisodeFile;
-import com.mediaportal.remote.data.SeriesEpisode;
-import com.mediaportal.remote.lists.ILoadingAdapterItem;
-import com.mediaportal.remote.lists.LazyLoadingAdapter;
-import com.mediaportal.remote.lists.Utils;
-import com.mediaportal.remote.lists.views.EpisodePosterViewAdapter;
-import com.mediaportal.remote.quickactions.ActionItem;
-import com.mediaportal.remote.quickactions.QuickAction;
-import com.mediaportal.remote.utils.DownloaderUtils;
-
+import com.mediaportal.ampdroid.api.DataHandler;
+import com.mediaportal.ampdroid.api.ItemDownloaderService;
+import com.mediaportal.ampdroid.data.EpisodeDetails;
+import com.mediaportal.ampdroid.data.EpisodeFile;
+import com.mediaportal.ampdroid.data.SeriesEpisode;
+import com.mediaportal.ampdroid.lists.ILoadingAdapterItem;
+import com.mediaportal.ampdroid.lists.LazyLoadingAdapter;
+import com.mediaportal.ampdroid.lists.Utils;
+import com.mediaportal.ampdroid.lists.views.EpisodePosterViewAdapter;
+import com.mediaportal.ampdroid.quickactions.ActionItem;
+import com.mediaportal.ampdroid.quickactions.QuickAction;
+import com.mediaportal.ampdroid.utils.DownloaderUtils;
+import com.mediaportal.ampdroid.R;
 public class TabEpisodesActivity extends Activity {
    private ListView mlistView;
    private LazyLoadingAdapter mAdapter;

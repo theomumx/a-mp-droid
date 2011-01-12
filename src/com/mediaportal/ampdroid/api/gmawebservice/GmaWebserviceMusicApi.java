@@ -1,4 +1,4 @@
-package com.mediaportal.remote.api.gmawebservice;
+package com.mediaportal.ampdroid.api.gmawebservice;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -8,11 +8,11 @@ import org.ksoap2.serialization.SoapPrimitive;
 
 import android.util.Log;
 
-import com.mediaportal.remote.api.gmawebservice.soap.WcfAccessHandler;
-import com.mediaportal.remote.api.soap.Ksoap2ResultParser;
-import com.mediaportal.remote.data.MusicAlbum;
-import com.mediaportal.remote.data.MusicArtist;
-import com.mediaportal.remote.data.MusicTrack;
+import com.mediaportal.ampdroid.api.gmawebservice.soap.WcfAccessHandler;
+import com.mediaportal.ampdroid.api.soap.Ksoap2ResultParser;
+import com.mediaportal.ampdroid.data.MusicAlbum;
+import com.mediaportal.ampdroid.data.MusicArtist;
+import com.mediaportal.ampdroid.data.MusicTrack;
 
 public class GmaWebserviceMusicApi {
    private WcfAccessHandler m_wcfService;

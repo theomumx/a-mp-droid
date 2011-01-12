@@ -1,11 +1,11 @@
-package com.mediaportal.remote.activities;
-
-import com.mediaportal.remote.R;
-import com.mediaportal.remote.activities.actionbar.ActionBar;
-import com.mediaportal.remote.activities.actionbar.ActionBar.IntentAction;
+package com.mediaportal.ampdroid.activities;
 
 import android.app.Activity;
 import android.os.Bundle;
+
+import com.mediaportal.ampdroid.R;
+import com.mediaportal.ampdroid.activities.actionbar.ActionBar;
+import com.mediaportal.ampdroid.activities.actionbar.ActionBar.IntentAction;
 
 public class BaseActivity extends Activity {
    private boolean isHome = false;
@@ -24,7 +24,7 @@ public class BaseActivity extends Activity {
       if (actionBar != null) {
          actionBar.setTitle(this.getTitle());
 
-         if (isHome) {
+         if (!isHome) {
             actionBar.setHomeAction(new IntentAction(this, null, R.drawable.actionbar_home));
          }
 

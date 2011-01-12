@@ -1,9 +1,9 @@
-package com.mediaportal.remote.activities;
+package com.mediaportal.ampdroid.activities;
+
+import com.mediaportal.ampdroid.R;
 
 import android.app.Activity;
 import android.os.Bundle;
-
-import com.mediaportal.remote.R;
 
 public class MusicActivity extends Activity {
    /** Called when the activity is first created. */

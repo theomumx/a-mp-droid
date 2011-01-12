@@ -1,29 +1,24 @@
-package com.mediaportal.remote.quickactions;
+package com.mediaportal.ampdroid.quickactions;
 
+
+import java.util.ArrayList;
 
 import android.content.Context;
-
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
-
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.LinearLayout;
-
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.Interpolator;
-import android.view.ViewGroup;
-
-import java.util.ArrayList;
-
-import com.mediaportal.remote.R;
-
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import com.mediaportal.ampdroid.R;
 /**
  * Popup window, shows action list as icon and text (QuickContact / Twitter app). 
  * 

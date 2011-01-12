@@ -1,4 +1,4 @@
-package com.mediaportal.remote.api.gmawebservice;
+package com.mediaportal.ampdroid.api.gmawebservice;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -8,13 +8,13 @@ import org.ksoap2.serialization.SoapPrimitive;
 
 import android.util.Log;
 
-import com.mediaportal.remote.api.gmawebservice.soap.WcfAccessHandler;
-import com.mediaportal.remote.api.soap.Ksoap2ResultParser;
-import com.mediaportal.remote.data.EpisodeDetails;
-import com.mediaportal.remote.data.Series;
-import com.mediaportal.remote.data.SeriesEpisode;
-import com.mediaportal.remote.data.SeriesFull;
-import com.mediaportal.remote.data.SeriesSeason;
+import com.mediaportal.ampdroid.api.gmawebservice.soap.WcfAccessHandler;
+import com.mediaportal.ampdroid.api.soap.Ksoap2ResultParser;
+import com.mediaportal.ampdroid.data.EpisodeDetails;
+import com.mediaportal.ampdroid.data.Series;
+import com.mediaportal.ampdroid.data.SeriesEpisode;
+import com.mediaportal.ampdroid.data.SeriesFull;
+import com.mediaportal.ampdroid.data.SeriesSeason;
 
 public class GmaWebserviceSeriesApi {
 

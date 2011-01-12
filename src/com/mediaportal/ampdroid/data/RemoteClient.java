@@ -1,9 +1,9 @@
-package com.mediaportal.remote.data;
+package com.mediaportal.ampdroid.data;
 
-import com.mediaportal.remote.api.IApiInterface;
-import com.mediaportal.remote.api.IClientControlApi;
-import com.mediaportal.remote.api.IMediaAccessApi;
-import com.mediaportal.remote.api.ITvServiceApi;
+import com.mediaportal.ampdroid.api.IApiInterface;
+import com.mediaportal.ampdroid.api.IClientControlApi;
+import com.mediaportal.ampdroid.api.IMediaAccessApi;
+import com.mediaportal.ampdroid.api.ITvServiceApi;
 
 public class RemoteClient {
    private int mClientId;

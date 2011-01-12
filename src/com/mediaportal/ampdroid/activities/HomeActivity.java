@@ -1,23 +1,20 @@
-package com.mediaportal.remote.activities;
+package com.mediaportal.ampdroid.activities;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.View;
 import android.view.Window;
-import android.view.MenuItem.OnMenuItemClickListener;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import com.mediaportal.remote.R;
-import com.mediaportal.remote.activities.actionbar.ActionBar;
-import com.mediaportal.remote.activities.actionbar.ActionBar.IntentAction;
-import com.mediaportal.remote.activities.settings.SettingsActivity;
-import com.mediaportal.remote.api.DataHandler;
-import com.mediaportal.remote.utils.Util;
+import com.mediaportal.ampdroid.R;
+import com.mediaportal.ampdroid.activities.settings.SettingsActivity;
+import com.mediaportal.ampdroid.api.DataHandler;
+import com.mediaportal.ampdroid.utils.Util;
 
 public class HomeActivity extends BaseActivity {
    private StatusBarActivityHandler statusBarHandler = null;

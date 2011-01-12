@@ -1,4 +1,4 @@
-package com.mediaportal.remote.api.gmawebservice;
+package com.mediaportal.ampdroid.api.gmawebservice;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -8,10 +8,10 @@ import org.ksoap2.serialization.SoapPrimitive;
 
 import android.util.Log;
 
-import com.mediaportal.remote.api.gmawebservice.soap.WcfAccessHandler;
-import com.mediaportal.remote.api.soap.Ksoap2ResultParser;
-import com.mediaportal.remote.data.Movie;
-import com.mediaportal.remote.data.MovieFull;
+import com.mediaportal.ampdroid.api.gmawebservice.soap.WcfAccessHandler;
+import com.mediaportal.ampdroid.api.soap.Ksoap2ResultParser;
+import com.mediaportal.ampdroid.data.Movie;
+import com.mediaportal.ampdroid.data.MovieFull;
 
 class GmaWebserviceMovieApi {
 	private WcfAccessHandler m_wcfService;

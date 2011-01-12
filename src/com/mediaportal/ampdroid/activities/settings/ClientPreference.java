@@ -1,4 +1,4 @@
-package com.mediaportal.remote.activities.settings;
+package com.mediaportal.ampdroid.activities.settings;
 
 import java.util.Random;
 
@@ -10,20 +10,19 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import android.util.AttributeSet;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 
-import com.mediaportal.remote.R;
-import com.mediaportal.remote.api.DataHandler;
-import com.mediaportal.remote.api.database.RemoteClientFactory;
-import com.mediaportal.remote.api.gmawebservice.GmaWebserviceApi;
-import com.mediaportal.remote.api.tv4home.Tv4HomeApi;
-import com.mediaportal.remote.api.wifiremote.WifiRemoteMpController;
-import com.mediaportal.remote.data.RemoteClient;
-
+import com.mediaportal.ampdroid.api.DataHandler;
+import com.mediaportal.ampdroid.api.database.RemoteClientFactory;
+import com.mediaportal.ampdroid.api.gmawebservice.GmaWebserviceApi;
+import com.mediaportal.ampdroid.api.tv4home.Tv4HomeApi;
+import com.mediaportal.ampdroid.api.wifiremote.WifiRemoteMpController;
+import com.mediaportal.ampdroid.data.RemoteClient;
+import com.mediaportal.ampdroid.R;
 public class ClientPreference extends DialogPreference {
    private Context mContext;
    private RemoteClient mClient;

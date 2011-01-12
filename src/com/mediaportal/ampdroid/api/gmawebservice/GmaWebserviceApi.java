@@ -1,4 +1,4 @@
-package com.mediaportal.remote.api.gmawebservice;
+package com.mediaportal.ampdroid.api.gmawebservice;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,19 +16,19 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
 
-import com.mediaportal.remote.api.IMediaAccessApi;
-import com.mediaportal.remote.api.gmawebservice.soap.WcfAccessHandler;
-import com.mediaportal.remote.api.soap.Ksoap2ResultParser;
-import com.mediaportal.remote.data.EpisodeDetails;
-import com.mediaportal.remote.data.Movie;
-import com.mediaportal.remote.data.MovieFull;
-import com.mediaportal.remote.data.MusicAlbum;
-import com.mediaportal.remote.data.Series;
-import com.mediaportal.remote.data.SeriesEpisode;
-import com.mediaportal.remote.data.SeriesFull;
-import com.mediaportal.remote.data.SeriesSeason;
-import com.mediaportal.remote.data.SupportedFunctions;
-import com.mediaportal.remote.data.VideoShare;
+import com.mediaportal.ampdroid.api.IMediaAccessApi;
+import com.mediaportal.ampdroid.api.gmawebservice.soap.WcfAccessHandler;
+import com.mediaportal.ampdroid.api.soap.Ksoap2ResultParser;
+import com.mediaportal.ampdroid.data.EpisodeDetails;
+import com.mediaportal.ampdroid.data.Movie;
+import com.mediaportal.ampdroid.data.MovieFull;
+import com.mediaportal.ampdroid.data.MusicAlbum;
+import com.mediaportal.ampdroid.data.Series;
+import com.mediaportal.ampdroid.data.SeriesEpisode;
+import com.mediaportal.ampdroid.data.SeriesFull;
+import com.mediaportal.ampdroid.data.SeriesSeason;
+import com.mediaportal.ampdroid.data.SupportedFunctions;
+import com.mediaportal.ampdroid.data.VideoShare;
 
 public class GmaWebserviceApi implements IMediaAccessApi {
    private GmaWebserviceMovieApi m_moviesAPI;

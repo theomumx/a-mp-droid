@@ -1,4 +1,4 @@
-package com.mediaportal.remote.activities.media;
+package com.mediaportal.ampdroid.activities.media;
 
 import java.util.ArrayList;
 
@@ -16,16 +16,14 @@ import android.widget.Button;
 import android.widget.Gallery;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.mediaportal.remote.R;
-import com.mediaportal.remote.api.DataHandler;
-import com.mediaportal.remote.data.SeriesFull;
-import com.mediaportal.remote.data.SeriesSeason;
-import com.mediaportal.remote.lists.LazyLoadingGalleryAdapter;
-import com.mediaportal.remote.lists.views.PosterGalleryViewAdapter;
-
+import com.mediaportal.ampdroid.api.DataHandler;
+import com.mediaportal.ampdroid.data.SeriesFull;
+import com.mediaportal.ampdroid.data.SeriesSeason;
+import com.mediaportal.ampdroid.lists.LazyLoadingGalleryAdapter;
+import com.mediaportal.ampdroid.lists.views.PosterGalleryViewAdapter;
+import com.mediaportal.ampdroid.R;
 public class TabSeriesDetailsActivity extends Activity {
    private LazyLoadingGalleryAdapter mAdapter;
    private LinearLayout mSeasonLayout;
