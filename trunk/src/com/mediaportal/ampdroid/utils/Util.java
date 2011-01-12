@@ -1,4 +1,4 @@
-package com.mediaportal.remote.utils;
+package com.mediaportal.ampdroid.utils;
 
 import android.content.Context;
 import android.os.Vibrator;

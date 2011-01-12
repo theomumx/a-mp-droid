@@ -1,4 +1,4 @@
-package com.mediaportal.remote.activities.media;
+package com.mediaportal.ampdroid.activities.media;
 
 import java.util.List;
 
@@ -8,21 +8,19 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.ListView;
+import android.widget.Toast;
 
-import com.mediaportal.remote.R;
-import com.mediaportal.remote.api.DataHandler;
-import com.mediaportal.remote.data.Series;
-import com.mediaportal.remote.lists.ILoadingAdapterItem;
-import com.mediaportal.remote.lists.LazyLoadingAdapter;
-import com.mediaportal.remote.lists.views.SeriesPosterViewAdapter;
-import com.mediaportal.remote.lists.views.SeriesThumbViewAdapter;
-import com.mediaportal.remote.quickactions.ActionItem;
-import com.mediaportal.remote.quickactions.QuickAction;
-
+import com.mediaportal.ampdroid.api.DataHandler;
+import com.mediaportal.ampdroid.data.Series;
+import com.mediaportal.ampdroid.lists.ILoadingAdapterItem;
+import com.mediaportal.ampdroid.lists.LazyLoadingAdapter;
+import com.mediaportal.ampdroid.lists.views.SeriesThumbViewAdapter;
+import com.mediaportal.ampdroid.quickactions.ActionItem;
+import com.mediaportal.ampdroid.quickactions.QuickAction;
+import com.mediaportal.ampdroid.R;
 public class TabSeriesActivity extends Activity {
    private ListView mListView;
    private LazyLoadingAdapter mAdapter;

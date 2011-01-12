@@ -1,4 +1,4 @@
-package com.mediaportal.remote.activities;
+package com.mediaportal.ampdroid.activities;
 
 import android.app.Activity;
 import android.view.MotionEvent;
@@ -7,16 +7,15 @@ import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.SlidingDrawer;
 import android.widget.TextView;
-import android.widget.SeekBar.OnSeekBarChangeListener;
 
-import com.mediaportal.remote.R;
-import com.mediaportal.remote.api.RemoteCommands;
-import com.mediaportal.remote.api.DataHandler;
-import com.mediaportal.remote.data.commands.RemoteKey;
-import com.mediaportal.remote.utils.Util;
-
+import com.mediaportal.ampdroid.api.DataHandler;
+import com.mediaportal.ampdroid.api.RemoteCommands;
+import com.mediaportal.ampdroid.data.commands.RemoteKey;
+import com.mediaportal.ampdroid.utils.Util;
+import com.mediaportal.ampdroid.R;
 public class StatusBarActivityHandler {
    Activity mParent;
    DataHandler mRemote;

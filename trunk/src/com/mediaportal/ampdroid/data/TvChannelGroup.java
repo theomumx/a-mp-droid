@@ -1,4 +1,4 @@
-package com.mediaportal.remote.data;
+package com.mediaportal.ampdroid.data;
 
 public class TvChannelGroup {
 	private String GroupName;

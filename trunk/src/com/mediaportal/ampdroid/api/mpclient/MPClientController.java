@@ -1,4 +1,4 @@
-package com.mediaportal.remote.api.mpclient;
+package com.mediaportal.ampdroid.api.mpclient;
 
 import java.lang.reflect.Type;
 
@@ -7,11 +7,11 @@ import org.json.JSONObject;
 import com.google.myjson.Gson;
 import com.google.myjson.GsonBuilder;
 import com.google.myjson.reflect.TypeToken;
-import com.mediaportal.remote.api.IClientControlApi;
-import com.mediaportal.remote.api.IClientControlListener;
-import com.mediaportal.remote.api.rest.RestClient;
-import com.mediaportal.remote.api.rest.RestClient.RequestMethod;
-import com.mediaportal.remote.data.commands.RemoteKey;
+import com.mediaportal.ampdroid.api.IClientControlApi;
+import com.mediaportal.ampdroid.api.IClientControlListener;
+import com.mediaportal.ampdroid.api.rest.RestClient;
+import com.mediaportal.ampdroid.api.rest.RestClient.RequestMethod;
+import com.mediaportal.ampdroid.data.commands.RemoteKey;
 
 public class MPClientController implements IClientControlApi {
 

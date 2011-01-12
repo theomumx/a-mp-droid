@@ -1,6 +1,6 @@
-package com.mediaportal.remote.api;
+package com.mediaportal.ampdroid.api;
 
-import com.mediaportal.remote.data.commands.RemoteKey;
+import com.mediaportal.ampdroid.data.commands.RemoteKey;
 
 public class RemoteCommands {
    public static RemoteKey leftButton = new RemoteKey(0, "Left", "left", "");

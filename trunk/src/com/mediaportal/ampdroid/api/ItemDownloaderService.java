@@ -1,4 +1,4 @@
-package com.mediaportal.remote.api;
+package com.mediaportal.ampdroid.api;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -9,26 +9,21 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.util.ArrayList;
-
-import com.mediaportal.remote.R;
-import com.mediaportal.remote.lists.Utils;
-import com.mediaportal.remote.utils.DownloaderUtils;
 
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-import android.os.Environment;
 import android.os.IBinder;
 import android.util.Log;
 import android.widget.RemoteViews;
 
+import com.mediaportal.ampdroid.lists.Utils;
+import com.mediaportal.ampdroid.utils.DownloaderUtils;
+import com.mediaportal.ampdroid.R;
 public class ItemDownloaderService extends Service {
    public static final String ITEM_DOWNLOAD_STARTED = "download_started";
    public static final String ITEM_DOWNLOAD_PROGRESSED = "download_progressed";

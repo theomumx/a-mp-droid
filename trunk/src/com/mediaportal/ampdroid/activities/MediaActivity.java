@@ -1,4 +1,4 @@
-package com.mediaportal.remote.activities;
+package com.mediaportal.ampdroid.activities;
 
 import android.app.TabActivity;
 import android.content.Context;
@@ -8,20 +8,19 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TabHost;
+import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.TabHost.TabSpec;
 
-import com.mediaportal.remote.R;
-import com.mediaportal.remote.activities.actionbar.ActionBar;
-import com.mediaportal.remote.activities.actionbar.ActionBar.IntentAction;
-import com.mediaportal.remote.activities.media.TabMoviesActivity;
-import com.mediaportal.remote.activities.media.TabSeriesActivityGroup;
-import com.mediaportal.remote.activities.media.TabSharesActivity;
-import com.mediaportal.remote.activities.media.TabVideosActivity;
-import com.mediaportal.remote.api.DataHandler;
-import com.mediaportal.remote.data.SupportedFunctions;
-
+import com.mediaportal.ampdroid.activities.actionbar.ActionBar;
+import com.mediaportal.ampdroid.activities.actionbar.ActionBar.IntentAction;
+import com.mediaportal.ampdroid.activities.media.TabMoviesActivity;
+import com.mediaportal.ampdroid.activities.media.TabSeriesActivityGroup;
+import com.mediaportal.ampdroid.activities.media.TabSharesActivity;
+import com.mediaportal.ampdroid.activities.media.TabVideosActivity;
+import com.mediaportal.ampdroid.api.DataHandler;
+import com.mediaportal.ampdroid.data.SupportedFunctions;
+import com.mediaportal.ampdroid.R;
 public class MediaActivity extends TabActivity {
    TabHost mTabHost;
 

@@ -1,4 +1,4 @@
-package com.mediaportal.remote.activities;
+package com.mediaportal.ampdroid.activities;
 
 import android.app.Activity;
 import android.content.Context;
@@ -7,17 +7,16 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
 import android.view.View.OnTouchListener;
+import android.view.Window;
 import android.widget.ImageButton;
 
-import com.mediaportal.remote.R;
-import com.mediaportal.remote.api.DataHandler;
-import com.mediaportal.remote.api.IClientControlListener;
-import com.mediaportal.remote.api.RemoteCommands;
-import com.mediaportal.remote.data.commands.RemoteKey;
-import com.mediaportal.remote.utils.Util;
-
+import com.mediaportal.ampdroid.api.DataHandler;
+import com.mediaportal.ampdroid.api.IClientControlListener;
+import com.mediaportal.ampdroid.api.RemoteCommands;
+import com.mediaportal.ampdroid.data.commands.RemoteKey;
+import com.mediaportal.ampdroid.utils.Util;
+import com.mediaportal.ampdroid.R;
 public class RemoteControlActivity extends Activity implements IClientControlListener {
    protected class SendKeyTask extends AsyncTask<RemoteKey, String, String> {
       private DataHandler mController;

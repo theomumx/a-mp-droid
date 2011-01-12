@@ -1,4 +1,4 @@
-package com.mediaportal.remote.api.soap;
+package com.mediaportal.ampdroid.api.soap;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;

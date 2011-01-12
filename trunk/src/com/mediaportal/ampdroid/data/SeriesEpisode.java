@@ -1,4 +1,4 @@
-package com.mediaportal.remote.data;
+package com.mediaportal.ampdroid.data;
 
 import java.util.Date;
 

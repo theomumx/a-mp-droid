@@ -1,6 +1,4 @@
-package com.mediaportal.remote.lists;
-
-import com.mediaportal.remote.R;
+package com.mediaportal.ampdroid.lists;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -13,10 +11,10 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Gallery;
 import android.widget.ImageView;
-import android.widget.AdapterView.OnItemSelectedListener;
-
+import com.mediaportal.ampdroid.R;
 public class AnimatedSizingGallery extends Gallery implements OnItemSelectedListener {
 	public static final String TAG = "AnimatedSizingGallery";
 	private static final int MSG_ZOOM_IN = 1;

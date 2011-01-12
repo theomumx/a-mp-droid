@@ -1,4 +1,4 @@
-package com.mediaportal.remote.lists;
+package com.mediaportal.ampdroid.lists;
 
 import java.util.ArrayList;
 
@@ -14,9 +14,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
-import com.mediaportal.remote.R;
-
+import com.mediaportal.ampdroid.R;
 public class LazyLoadingAdapter extends BaseAdapter {
    private Activity activity;
    private ArrayList<ILoadingAdapterItem> data;

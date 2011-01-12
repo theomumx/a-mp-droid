@@ -1,16 +1,16 @@
-package com.mediaportal.remote.api.database;
+package com.mediaportal.ampdroid.api.database;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-
 
 import org.neodatis.odb.ODB;
 import org.neodatis.odb.ODBFactory;
 import org.neodatis.odb.Objects;
 
 import android.content.Context;
-import com.mediaportal.remote.data.RemoteClient;
+
+import com.mediaportal.ampdroid.data.RemoteClient;
 
 public class RemoteClientFactory {
    public static ODB mDatabase;

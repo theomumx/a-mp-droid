@@ -5,7 +5,7 @@
 		<PreferenceScreen android:title="Clients" android:summary="Add, edit, remove clients">
 					<intent 
 				android:action="android.intent.action.MAIN" 
-				android:data="" android:targetPackage="com.mediaportal.remote" android:targetClass="com.mediaportal.remote.activities.settings.ClientSettingsActivity"/> 
+				android:data="" android:targetPackage="com.mediaportal.ampdroid" android:targetClass="com.mediaportal.ampdroid.activities.settings.ClientSettingsActivity"/> 
 		</PreferenceScreen>
 	</PreferenceCategory>
 	<PreferenceCategory android:title="@string/settings_category_general"

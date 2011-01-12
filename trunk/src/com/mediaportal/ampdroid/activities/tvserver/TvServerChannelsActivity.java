@@ -1,4 +1,4 @@
-package com.mediaportal.remote.activities.tvserver;
+package com.mediaportal.ampdroid.activities.tvserver;
 
 import java.util.List;
 
@@ -10,12 +10,11 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
 
-import com.mediaportal.remote.R;
-import com.mediaportal.remote.activities.BaseActivity;
-import com.mediaportal.remote.api.DataHandler;
-import com.mediaportal.remote.data.TvChannel;
-import com.mediaportal.remote.data.TvChannelGroup;
-
+import com.mediaportal.ampdroid.activities.BaseActivity;
+import com.mediaportal.ampdroid.api.DataHandler;
+import com.mediaportal.ampdroid.data.TvChannel;
+import com.mediaportal.ampdroid.data.TvChannelGroup;
+import com.mediaportal.ampdroid.R;
 public class TvServerChannelsActivity extends BaseActivity {
    private DataHandler mService;
    private ListView mListView;
@@ -23,8 +22,10 @@ public class TvServerChannelsActivity extends BaseActivity {
    
    @Override
    public void onCreate(Bundle _savedInstanceState) {
-      setHome(false);
       super.onCreate(_savedInstanceState);
+      setHome(false);
+      setTitle(R.string.title_tvserver_channels);
+      
       setContentView(R.layout.tvserverchannelsactivity);
       mListView = (ListView) findViewById(R.id.ListViewChannels);
       mGroupsSpinner = (Spinner)findViewById(R.id.SpinnerGroups);

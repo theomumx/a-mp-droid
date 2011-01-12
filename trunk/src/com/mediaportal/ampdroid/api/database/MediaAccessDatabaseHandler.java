@@ -1,11 +1,11 @@
-package com.mediaportal.remote.api.database;
+package com.mediaportal.ampdroid.api.database;
 
 import java.util.ArrayList;
 
 import android.content.Context;
 
-import com.mediaportal.remote.api.IMediaAccessDatabase;
-import com.mediaportal.remote.data.Movie;
+import com.mediaportal.ampdroid.api.IMediaAccessDatabase;
+import com.mediaportal.ampdroid.data.Movie;
 
 public class MediaAccessDatabaseHandler implements IMediaAccessDatabase {
 

@@ -1,4 +1,4 @@
-package com.mediaportal.remote.api.mpclient;
+package com.mediaportal.ampdroid.api.mpclient;
 
 public class MPClientMessage {
    private String action = "";

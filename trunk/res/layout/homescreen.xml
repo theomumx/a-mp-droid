@@ -3,7 +3,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_height="fill_parent" android:layout_width="fill_parent"
 	android:orientation="vertical" android:background="@drawable/background">
-	<com.mediaportal.remote.activities.actionbar.ActionBar
+	<com.mediaportal.ampdroid.activities.actionbar.ActionBar
     android:id="@+id/actionbar"
     style="@style/ActionBar"
     />

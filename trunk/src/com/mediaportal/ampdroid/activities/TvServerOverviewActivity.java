@@ -1,24 +1,20 @@
-package com.mediaportal.remote.activities;
+package com.mediaportal.ampdroid.activities;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ListView;
 
-import com.mediaportal.remote.R;
-import com.mediaportal.remote.activities.actionbar.ActionBar;
-import com.mediaportal.remote.activities.actionbar.ActionBar.IntentAction;
-import com.mediaportal.remote.activities.tvserver.TvServerChannelsActivity;
-import com.mediaportal.remote.activities.tvserver.TvServerEpgActivity;
-import com.mediaportal.remote.activities.tvserver.TvServerRecordingsActivity;
-import com.mediaportal.remote.activities.tvserver.TvServerSchedulesActivity;
-import com.mediaportal.remote.activities.tvserver.TvServerStateActivity;
-import com.mediaportal.remote.lists.TvServerFeature;
-import com.mediaportal.remote.lists.TvServerFeaturesAdapter;
-
+import com.mediaportal.ampdroid.activities.tvserver.TvServerChannelsActivity;
+import com.mediaportal.ampdroid.activities.tvserver.TvServerEpgActivity;
+import com.mediaportal.ampdroid.activities.tvserver.TvServerRecordingsActivity;
+import com.mediaportal.ampdroid.activities.tvserver.TvServerSchedulesActivity;
+import com.mediaportal.ampdroid.activities.tvserver.TvServerStateActivity;
+import com.mediaportal.ampdroid.lists.TvServerFeature;
+import com.mediaportal.ampdroid.lists.TvServerFeaturesAdapter;
+import com.mediaportal.ampdroid.R;
 public class TvServerOverviewActivity extends BaseActivity {
    private ListView mListView;
    private TvServerFeaturesAdapter mFeaturesAdapter;

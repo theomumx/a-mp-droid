@@ -16,4 +16,11 @@
 	<string name="settings_category_general">General</string>
 	<string name="settings_preference_vibrate_title">Vibrate on Touch</string>
 	<string name="settings_preference_vibrate_desc">Screen vibrates on user interaction</string>
+	<string name="title_home">MediaPortal for Android</string>
+	<string name="title_tvserver">TvServer</string>
+	<string name="title_tvserver_state">Manual Control</string>
+	<string name="title_tvserver_channels">Channels</string>
+	<string name="title_tvserver_recordings">Recordings</string>
+	<string name="title_tvserver_schedules">Schedules</string>
+	<string name="title_tvserver_epg">Electronic Program Guide</string>
 </resources>

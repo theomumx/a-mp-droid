@@ -1,4 +1,4 @@
-package com.mediaportal.remote.activities;
+package com.mediaportal.ampdroid.activities;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -11,9 +11,8 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.mediaportal.remote.R;
-import com.mediaportal.remote.api.ItemDownloaderService;
-
+import com.mediaportal.ampdroid.api.ItemDownloaderService;
+import com.mediaportal.ampdroid.R;
 public class PicturesActivity extends Activity {
    private ItemDownloaderReceiver mReceiver;
    

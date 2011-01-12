@@ -1,4 +1,4 @@
-package com.mediaportal.remote.activities.media;
+package com.mediaportal.ampdroid.activities.media;
 
 import java.util.List;
 
@@ -7,16 +7,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ListView;
 
-import com.mediaportal.remote.R;
-import com.mediaportal.remote.api.DataHandler;
-import com.mediaportal.remote.data.Movie;
-import com.mediaportal.remote.lists.ILoadingAdapterItem;
-import com.mediaportal.remote.lists.LazyLoadingAdapter;
-import com.mediaportal.remote.lists.views.MoviePosterViewAdapter;
-
+import com.mediaportal.ampdroid.api.DataHandler;
+import com.mediaportal.ampdroid.data.Movie;
+import com.mediaportal.ampdroid.lists.ILoadingAdapterItem;
+import com.mediaportal.ampdroid.lists.LazyLoadingAdapter;
+import com.mediaportal.ampdroid.lists.views.MoviePosterViewAdapter;
+import com.mediaportal.ampdroid.R;
 public class TabMoviesActivity extends Activity {
 	private ListView mListView;
 	private LazyLoadingAdapter mAdapter;

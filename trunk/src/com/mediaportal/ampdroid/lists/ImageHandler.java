@@ -1,4 +1,4 @@
-package com.mediaportal.remote.lists;
+package com.mediaportal.ampdroid.lists;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -15,9 +15,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.widget.ImageView;
 
-import com.mediaportal.remote.R;
-import com.mediaportal.remote.api.DataHandler;
-
+import com.mediaportal.ampdroid.api.DataHandler;
+import com.mediaportal.ampdroid.R;
 public class ImageHandler {
 
    public static int ImagePrefferedWidth = 400;// width of loaded image ->

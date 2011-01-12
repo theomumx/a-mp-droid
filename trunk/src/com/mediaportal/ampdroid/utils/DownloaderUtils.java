@@ -1,8 +1,8 @@
-package com.mediaportal.remote.utils;
+package com.mediaportal.ampdroid.utils;
 
 import android.os.Environment;
 
-import com.mediaportal.remote.data.SeriesEpisode;
+import com.mediaportal.ampdroid.data.SeriesEpisode;
 
 public class DownloaderUtils {
    public static String getTvEpisodePath(String _seriesName, SeriesEpisode _episode) {

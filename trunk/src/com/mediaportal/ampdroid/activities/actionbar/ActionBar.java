@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.mediaportal.remote.activities.actionbar;
+package com.mediaportal.ampdroid.activities.actionbar;
 
 import java.util.LinkedList;
 
@@ -32,9 +32,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.mediaportal.remote.R;
-
+import com.mediaportal.ampdroid.R;
 public class ActionBar extends RelativeLayout implements OnClickListener {
 
    private LayoutInflater mInflater;

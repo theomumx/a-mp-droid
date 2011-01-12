@@ -1,12 +1,11 @@
-package com.mediaportal.remote.lists.views;
+package com.mediaportal.ampdroid.lists.views;
 
 import java.io.File;
 
-import com.mediaportal.remote.R;
-import com.mediaportal.remote.data.SeriesEpisode;
-import com.mediaportal.remote.lists.ILoadingAdapterItem;
-import com.mediaportal.remote.lists.Utils;
-
+import com.mediaportal.ampdroid.data.SeriesEpisode;
+import com.mediaportal.ampdroid.lists.ILoadingAdapterItem;
+import com.mediaportal.ampdroid.lists.Utils;
+import com.mediaportal.ampdroid.R;
 public class EpisodePosterViewAdapter implements ILoadingAdapterItem {
    private int mSeriesId;
    private SeriesEpisode mEpisode;

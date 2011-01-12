@@ -1,4 +1,4 @@
-package com.mediaportal.remote.activities.settings;
+package com.mediaportal.ampdroid.activities.settings;
 
 import java.util.List;
 
@@ -8,8 +8,8 @@ import android.preference.PreferenceScreen;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.mediaportal.remote.api.database.RemoteClientFactory;
-import com.mediaportal.remote.data.RemoteClient;
+import com.mediaportal.ampdroid.api.database.RemoteClientFactory;
+import com.mediaportal.ampdroid.data.RemoteClient;
 
 public class ClientSettingsActivity extends PreferenceActivity {
    public static final int MENU_ADD_HOST = 1;

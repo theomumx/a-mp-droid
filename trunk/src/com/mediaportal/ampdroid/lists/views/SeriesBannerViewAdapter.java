@@ -1,7 +1,7 @@
-package com.mediaportal.remote.lists.views;
+package com.mediaportal.ampdroid.lists.views;
 
-import com.mediaportal.remote.data.Series;
-import com.mediaportal.remote.lists.ILoadingAdapterItem;
+import com.mediaportal.ampdroid.data.Series;
+import com.mediaportal.ampdroid.lists.ILoadingAdapterItem;
 
 public class SeriesBannerViewAdapter implements ILoadingAdapterItem {
    private Series mSeries;

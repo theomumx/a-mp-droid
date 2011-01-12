@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:orientation="vertical" android:layout_height="fill_parent"
 	android:layout_width="fill_parent">
-	<com.mediaportal.remote.activities.actionbar.ActionBar
+	<com.mediaportal.ampdroid.activities.actionbar.ActionBar
 		android:id="@+id/actionbar" style="@style/ActionBar" />
 	<FrameLayout android:layout_width="fill_parent"
 		android:layout_height="fill_parent" android:layout_marginBottom="60dip" android:background="@color/listview_background">

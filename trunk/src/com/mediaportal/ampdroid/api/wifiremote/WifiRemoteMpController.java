@@ -1,4 +1,4 @@
-package com.mediaportal.remote.api.wifiremote;
+package com.mediaportal.ampdroid.api.wifiremote;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -14,9 +14,9 @@ import android.os.AsyncTask;
 
 import com.google.myjson.Gson;
 import com.google.myjson.GsonBuilder;
-import com.mediaportal.remote.api.IClientControlApi;
-import com.mediaportal.remote.api.IClientControlListener;
-import com.mediaportal.remote.data.commands.RemoteKey;
+import com.mediaportal.ampdroid.api.IClientControlApi;
+import com.mediaportal.ampdroid.api.IClientControlListener;
+import com.mediaportal.ampdroid.data.commands.RemoteKey;
 
 public class WifiRemoteMpController implements IClientControlApi {
    private String server;

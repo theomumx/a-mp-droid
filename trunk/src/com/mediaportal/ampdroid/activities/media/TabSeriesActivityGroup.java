@@ -1,4 +1,4 @@
-package com.mediaportal.remote.activities.media;
+package com.mediaportal.ampdroid.activities.media;
 
 import java.util.ArrayList;
 

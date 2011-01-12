@@ -1,4 +1,4 @@
-package com.mediaportal.remote.api.rest;
+package com.mediaportal.ampdroid.api.rest;
 
 import java.io.BufferedReader;
 import java.io.IOException;

@@ -1,4 +1,4 @@
-package com.mediaportal.remote.api;
+package com.mediaportal.ampdroid.api;
 
 public class RemoteFunctions {
    private boolean tvEnabled;
