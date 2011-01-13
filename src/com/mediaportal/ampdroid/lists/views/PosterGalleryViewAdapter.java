@@ -2,7 +2,10 @@ package com.mediaportal.ampdroid.lists.views;
 
 import java.io.File;
 
+import android.view.View;
+
 import com.mediaportal.ampdroid.lists.ILoadingAdapterItem;
+import com.mediaportal.ampdroid.lists.LazyLoadingAdapter.ViewHolder;
 import com.mediaportal.ampdroid.lists.Utils;
 
 public class PosterGalleryViewAdapter implements ILoadingAdapterItem {
@@ -28,36 +31,6 @@ public class PosterGalleryViewAdapter implements ILoadingAdapterItem {
    }
 
    @Override
-   public String getSubText() {
-      return null;
-   }
-
-   @Override
-   public int getSubTextColor() {
-      return 0;
-   }
-
-   @Override
-   public String getText() {
-      return null;
-   }
-
-   @Override
-   public int getTextColor() {
-      return 0;
-   }
-
-   @Override
-   public String getTitle() {
-      return null;
-   }
-
-   @Override
-   public int getTitleColor() {
-      return 0;
-   }
-
-   @Override
    public int getType() {
       return 0;
    }
@@ -65,6 +38,16 @@ public class PosterGalleryViewAdapter implements ILoadingAdapterItem {
    @Override
    public int getXml() {
       return 0;
+   }
+   @Override
+   public ViewHolder createViewHolder(View _view) {
+      // TODO Auto-generated method stub
+      return null;
+   }
+   @Override
+   public void fillViewFromViewHolder(ViewHolder _holder) {
+      // TODO Auto-generated method stub
+      
    }
 
 

@@ -118,6 +118,16 @@ public class DataHandler {
       IMediaAccessApi remoteAccess = client.getRemoteAccessApi();
       return remoteAccess.getAllMovies();
    }
+   
+   public int getMovieCount() {
+      IMediaAccessApi remoteAccess = client.getRemoteAccessApi();
+      return remoteAccess.getMovieCount();
+   }
+   
+   public List<Movie> getMovies(int _start, int _end) {
+      IMediaAccessApi remoteAccess = client.getRemoteAccessApi();
+      return remoteAccess.getMovies(_start, _end);
+   }
 
    public MovieFull getMovieDetails(int _movieId) {
       IMediaAccessApi remoteAccess = client.getRemoteAccessApi();
@@ -130,7 +140,6 @@ public class DataHandler {
    }
 
    public ArrayList<Series> getAllSeries() {
-      // mediaDatabase.getAllSeries();
       IMediaAccessApi remoteAccess = client.getRemoteAccessApi();
       return remoteAccess.getAllSeries();
    }
@@ -291,11 +300,4 @@ public class DataHandler {
    public String getDownloadUri(String _filePath) {
       return client.getRemoteAccessApi().getDownloadUri(_filePath);
    }
-
-
-
-
-
-
-
 }

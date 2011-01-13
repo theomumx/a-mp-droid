@@ -6,9 +6,9 @@ import android.widget.TextView;
 import com.mediaportal.ampdroid.lists.LazyLoadingAdapter.ViewHolder;
 
 public class SubtextViewHolder extends ViewHolder {
-	TextView subtext;
-	TextView title;
-	ProgressBar progressBar;
+	public TextView subtext;
+	public TextView title;
+	public ProgressBar progressBar;
 	
 	public SubtextViewHolder()
 	{

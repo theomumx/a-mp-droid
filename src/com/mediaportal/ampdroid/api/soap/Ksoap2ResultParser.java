@@ -2,12 +2,15 @@ package com.mediaportal.ampdroid.api.soap;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapPrimitive;
+
+import android.text.format.DateFormat;
 
 /**
  * Parses Soap Messages and return the representing object.
@@ -111,7 +114,9 @@ public class Ksoap2ResultParser {
             return property.toString();
          }
          if (_class.equals(Date.class)) {
-            return null;
+            SimpleDateFormat  formatter = new SimpleDateFormat("yyy-MM-dd'T'hh:mm:ss");
+            Date date = (Date)formatter.parse(property.toString());
+            return date;
          }
          if (_class.equals(Integer.class) || _class.equals(int.class)) {
             return Integer.parseInt(property.toString());

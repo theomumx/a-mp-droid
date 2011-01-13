@@ -9,25 +9,26 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mediaportal.ampdroid.R;
-import com.mediaportal.ampdroid.data.TvRecording;
+import com.mediaportal.ampdroid.data.TvSchedule;
 import com.mediaportal.ampdroid.lists.ILoadingAdapterItem;
 import com.mediaportal.ampdroid.lists.LazyLoadingAdapter.ViewHolder;
 import com.mediaportal.ampdroid.lists.SubtextViewHolder;
-public class TvServerRecordingsThumbsView implements ILoadingAdapterItem {
-   TvRecording mRecording;
 
-   public TvServerRecordingsThumbsView(TvRecording _recording) {
-      mRecording = _recording;
+public class TvServerSchedulesDetailsView implements ILoadingAdapterItem {
+   TvSchedule mSchedule;
+
+   public TvServerSchedulesDetailsView(TvSchedule _schedule) {
+      mSchedule = _schedule;
    }
 
    private String getText() {
       //TODO -> get channel name
-      return "Channel: " + mRecording.getIdChannel();
+      return "Channel: " + mSchedule.getIdChannel();
    }
 
    private String getSubText() {
-      Date begin = mRecording.getStartTime();
-      Date end = mRecording.getEndTime();
+      Date begin = mSchedule.getStartTime();
+      Date end = mSchedule.getEndTime();
       if (begin != null && end != null) {
          String startString = (String) android.text.format.DateFormat.format("yyyy-MM-dd HH:mm", begin);
          String endString = (String) android.text.format.DateFormat.format("hh:mm", end);
@@ -48,7 +49,7 @@ public class TvServerRecordingsThumbsView implements ILoadingAdapterItem {
    }
 
    public String getTitle() {
-      return mRecording.getTitle();
+      return mSchedule.getProgramName();
    }
 
    @Override
@@ -63,7 +64,7 @@ public class TvServerRecordingsThumbsView implements ILoadingAdapterItem {
 
    @Override
    public Object getItem() {
-      return mRecording;
+      return mSchedule;
    }
 
    @Override
