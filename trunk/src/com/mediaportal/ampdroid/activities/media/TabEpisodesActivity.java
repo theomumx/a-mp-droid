@@ -54,7 +54,7 @@ public class TabEpisodesActivity extends Activity {
 
          ArrayList<SeriesEpisode> seasons = mService.getAllEpisodesForSeason(mSeriesId,
                seasonNumber);
-         mAdapter = new LazyLoadingAdapter(this, R.layout.listitem_thumb);
+         mAdapter = new LazyLoadingAdapter(this);
          for (int i = 0; i < seasons.size(); i++) {
             SeriesEpisode e = seasons.get(i);
             EpisodeDetails details = mService.getEpisode(e.getId());

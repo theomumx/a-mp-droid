@@ -1,18 +1,16 @@
 package com.mediaportal.ampdroid.lists;
 
+import com.mediaportal.ampdroid.lists.LazyLoadingAdapter.ViewHolder;
+
+import android.view.View;
+
 
 public interface ILoadingAdapterItem {
-	String getText();
-	String getSubText();
 	String getImage();
 	String getImageCacheName();
-	String getTitle();
-	int getTextColor();
-	int getSubTextColor();
-	int getTitleColor();
 	int getType();
 	int getXml();
-	
 	Object getItem();
-	
+	ViewHolder createViewHolder(View _view);
+	void fillViewFromViewHolder(ViewHolder _holder);
 }

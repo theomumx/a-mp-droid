@@ -4,6 +4,7 @@ import java.util.List;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -13,17 +14,55 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.mediaportal.ampdroid.R;
 import com.mediaportal.ampdroid.api.DataHandler;
 import com.mediaportal.ampdroid.data.Series;
 import com.mediaportal.ampdroid.lists.ILoadingAdapterItem;
 import com.mediaportal.ampdroid.lists.LazyLoadingAdapter;
-import com.mediaportal.ampdroid.lists.views.SeriesThumbViewAdapter;
+import com.mediaportal.ampdroid.lists.views.SeriesPosterViewAdapter;
 import com.mediaportal.ampdroid.quickactions.ActionItem;
 import com.mediaportal.ampdroid.quickactions.QuickAction;
-import com.mediaportal.ampdroid.R;
+
 public class TabSeriesActivity extends Activity {
    private ListView mListView;
    private LazyLoadingAdapter mAdapter;
+   DataHandler mService;
+   private LoadSeriesTask mSeriesLoaderTask;
+
+   private class LoadSeriesTask extends AsyncTask<Integer, List<Series>, Boolean> {
+      @Override
+      protected Boolean doInBackground(Integer... _params) {
+         int seriesCount = mService.getSeriesCount();
+
+         int cursor = 0;
+         while (cursor < seriesCount) {
+            List<Series> series = mService.getSeries(cursor, cursor + 19);
+
+            publishProgress(series);
+
+            cursor += 20;
+         }
+
+         return true;
+      }
+
+      @Override
+      protected void onProgressUpdate(List<Series>... values) {
+         if (values != null) {
+            List<Series> series = values[0];
+            for (Series s : series) {
+               mAdapter.AddItem(new SeriesPosterViewAdapter(s));
+            }
+         }
+         mAdapter.notifyDataSetChanged();
+         super.onProgressUpdate(values);
+      }
+
+      @Override
+      protected void onPostExecute(Boolean _result) {
+         mAdapter.showLoadingItem(false);
+      }
+   }
 
    /** Called when the activity is first created. */
    @Override
@@ -31,20 +70,13 @@ public class TabSeriesActivity extends Activity {
       super.onCreate(_savedInstanceState);
       setContentView(R.layout.tabseriesactivity);
 
-      DataHandler service = DataHandler.getCurrentRemoteInstance();
-      List<Series> series = service.getAllSeries();
-      // List<TvSeason> season = service.getAllSeasons(series.get(0).getId());
-
-      mAdapter = new LazyLoadingAdapter(this, R.layout.listitem_thumb);
-
-      if (series != null) {
-         for (Series s : series) {
-            mAdapter.AddItem(new SeriesThumbViewAdapter(s));
-         }
-      }
+      mService = DataHandler.getCurrentRemoteInstance();
+      mAdapter = new LazyLoadingAdapter(this);
 
       mListView = (ListView) findViewById(R.id.ListViewVideos);
       mListView.setAdapter(mAdapter);
+
+      
 
       mListView.setOnItemClickListener(new OnItemClickListener() {
          @Override
@@ -59,11 +91,11 @@ public class TabSeriesActivity extends Activity {
             myIntent.putExtra("series_id", selectedSeries.getId());
             myIntent.putExtra("series_name", selectedSeries.getPrettyName());
             myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            //startActivity(myIntent);
+            // startActivity(myIntent);
 
             // Create the view using FirstGroup's LocalActivityManager
-            View view = TabSeriesActivityGroup.getGroup().getLocalActivityManager().startActivity("series_details",
-                  myIntent).getDecorView();
+            View view = TabSeriesActivityGroup.getGroup().getLocalActivityManager()
+                  .startActivity("series_details", myIntent).getDecorView();
 
             // Again, replace the view
             TabSeriesActivityGroup.getGroup().replaceView(view);
@@ -105,6 +137,15 @@ public class TabSeriesActivity extends Activity {
             return true;
          }
       });
+      
+      refreshSeries();
+   }
+
+   private void refreshSeries() {
+      mAdapter.setLoadingText("Loading Series ...");
+      mAdapter.showLoadingItem(true);
+      mSeriesLoaderTask = new LoadSeriesTask();
+      mSeriesLoaderTask.execute(0);
 
    }
 }
