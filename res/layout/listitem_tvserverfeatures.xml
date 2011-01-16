@@ -9,14 +9,13 @@
 			android:layout_gravity="center" android:layout_width="wrap_content"
 			android:src="@drawable/dexter_150_300" android:scaleType="centerInside" android:layout_height="115dip"></ImageView>
 	</LinearLayout>
-	<ProgressBar android:layout_width="wrap_content"
-		android:layout_height="wrap_content" android:id="@+id/ProgressBarLoading" android:layout_gravity="center"></ProgressBar>
+	
 	<LinearLayout android:layout_height="wrap_content"
 		android:orientation="vertical" android:id="@+id/LinearLayoutWeeklyItemText"
 		android:layout_width="0dip" android:layout_weight="5" android:layout_gravity="center">
 		<TextView android:layout_width="wrap_content"
 			android:layout_height="wrap_content" android:id="@+id/TextViewTitle"
-			android:text="Title"></TextView>
+			android:text="Title" android:textStyle="bold" android:textSize="18dip"></TextView>
 		<TextView android:layout_width="wrap_content"
 			android:layout_height="wrap_content" android:id="@+id/TextViewText"
 			android:text="Text"></TextView>

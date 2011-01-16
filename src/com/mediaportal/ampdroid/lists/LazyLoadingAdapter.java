@@ -135,4 +135,8 @@ public class LazyLoadingAdapter extends BaseAdapter {
    public void clear() {
       data.clear();
    }
+
+   public void removeItem(ILoadingAdapterItem _item) {
+      data.remove(_item);
+   }
 }

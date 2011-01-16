@@ -43,6 +43,7 @@ public class Tv4HomeApi implements ITvServiceApi {
    private final String GET_ACTIVE_CARDS = "GetActiveCards";
    private final String ADD_SCHEDULE = "AddSchedule";
    private final String CANCEL_SCHEDULE = "CancelSchedule";
+   private final String DELETE_SCHEDULE = "DeleteSchedule";
    private final String CANCEL_CURRENT_TIMESHIFT = "CancelCurrentTimeShifting";
    private final String GET_CHANNEL_BY_ID = "GetChannelDetailedById";
    private final String GET_CHANNEL_DETAILED_BY_ID = "GetChannelDetailedById";
@@ -106,9 +107,14 @@ public class Tv4HomeApi implements ITvServiceApi {
    }
 
    @Override
-   public void CancelSchedule(int _programId) {
+   public void cancelScheduleByProgramId(int _programId) {
       m_wcfService.MakeSoapCall(CANCEL_SCHEDULE, m_wcfService.CreateProperty("programId",
             _programId));
+   }
+   
+   public void cancelScheduleByScheduleId(int _scheduleId) {
+      m_wcfService.MakeSoapCall(DELETE_SCHEDULE, m_wcfService.CreateProperty("scheduleId",
+            _scheduleId));
    }
 
    @Override
