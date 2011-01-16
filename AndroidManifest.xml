@@ -24,12 +24,14 @@
 		<activity android:name="com.mediaportal.ampdroid.activities.MediaActivity"
 			android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar">
 		</activity>
-		<activity android:name="com.mediaportal.ampdroid.activities.media.TabMoviesActivity"
+		<activity
+			android:name="com.mediaportal.ampdroid.activities.media.TabMoviesActivity"
 			android:screenOrientation="portrait"></activity>
 		<activity
 			android:name="com.mediaportal.ampdroid.activities.media.TabMovieDetailsActivity"
 			android:screenOrientation="portrait"></activity>
-		<activity android:name="com.mediaportal.ampdroid.activities.media.TabSeriesActivity"
+		<activity
+			android:name="com.mediaportal.ampdroid.activities.media.TabSeriesActivity"
 			android:screenOrientation="portrait"></activity>
 		<activity
 			android:name="com.mediaportal.ampdroid.activities.media.TabSeriesActivityGroup"
@@ -40,9 +42,11 @@
 		<activity
 			android:name="com.mediaportal.ampdroid.activities.media.TabEpisodesActivity"
 			android:screenOrientation="portrait"></activity>
-		<activity android:name="com.mediaportal.ampdroid.activities.media.TabSharesActivity"
+		<activity
+			android:name="com.mediaportal.ampdroid.activities.media.TabSharesActivity"
 			android:screenOrientation="portrait"></activity>
-		<activity android:name="com.mediaportal.ampdroid.activities.media.TabVideosActivity"
+		<activity
+			android:name="com.mediaportal.ampdroid.activities.media.TabVideosActivity"
 			android:screenOrientation="portrait"></activity>
 		<activity android:name="com.mediaportal.ampdroid.activities.MusicActivity"
 			android:screenOrientation="portrait"></activity>
@@ -50,7 +54,8 @@
 			android:screenOrientation="portrait"></activity>
 		<activity android:name="com.mediaportal.ampdroid.activities.TvServerActivity"
 			android:screenOrientation="portrait"></activity>
-		<activity android:name="com.mediaportal.ampdroid.activities.TvServerOverviewActivity"
+		<activity
+			android:name="com.mediaportal.ampdroid.activities.TvServerOverviewActivity"
 			android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar">
 		</activity>
 		<activity
@@ -65,6 +70,10 @@
 		</activity>
 		<activity
 			android:name="com.mediaportal.ampdroid.activities.tvserver.TvServerChannelsActivity"
+			android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar">
+		</activity>
+		<activity
+			android:name="com.mediaportal.ampdroid.activities.tvserver.TvServerChannelDetailsActivity"
 			android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar">
 		</activity>
 		<activity

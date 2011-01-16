@@ -191,7 +191,7 @@ public class GmaWebserviceSeriesApi {
    public ArrayList<SeriesEpisode> getAllEpisodesForSeason(int _seriesId, int _seasonNumber) {
       SoapObject result = (SoapObject) m_wcfService.MakeSoapCall(GET_ALL_EPISODES_FOR_SEASON,
             m_wcfService.CreateProperty("seriesId", _seriesId), m_wcfService.CreateProperty(
-                  "seasonNumber", _seasonNumber));
+                  "season", _seasonNumber));
       if (result != null) {
          SeriesEpisode[] episodes = (SeriesEpisode[]) Ksoap2ResultParser.createObject(result,
                SeriesEpisode[].class);
@@ -207,9 +207,11 @@ public class GmaWebserviceSeriesApi {
       return null;
    }
 
-   public int getEpisodesCountForSeason() {
+   public int getEpisodesCountForSeason(int _seriesId, int _seasonNumber) {
       SoapPrimitive result = (SoapPrimitive) m_wcfService
-            .MakeSoapCall(GET_EPISODES_COUNT_FOR_SEASON);
+            .MakeSoapCall(GET_EPISODES_COUNT_FOR_SEASON, m_wcfService.CreateProperty(
+                  "seriesId", _seriesId), m_wcfService.CreateProperty(
+                        "season", _seasonNumber));
 
       if (result != null) {
          Integer resultObject = (Integer) Ksoap2ResultParser.getPrimitive(result, Integer.class);

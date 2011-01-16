@@ -2,11 +2,13 @@ package com.mediaportal.ampdroid.activities.media;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -15,6 +17,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 
+import com.mediaportal.ampdroid.R;
 import com.mediaportal.ampdroid.api.DataHandler;
 import com.mediaportal.ampdroid.api.ItemDownloaderService;
 import com.mediaportal.ampdroid.data.EpisodeDetails;
@@ -27,7 +30,7 @@ import com.mediaportal.ampdroid.lists.views.EpisodePosterViewAdapter;
 import com.mediaportal.ampdroid.quickactions.ActionItem;
 import com.mediaportal.ampdroid.quickactions.QuickAction;
 import com.mediaportal.ampdroid.utils.DownloaderUtils;
-import com.mediaportal.ampdroid.R;
+
 public class TabEpisodesActivity extends Activity {
    private ListView mlistView;
    private LazyLoadingAdapter mAdapter;
@@ -36,6 +39,45 @@ public class TabEpisodesActivity extends Activity {
 
    private String mSeriesName;
    private int mSeriesId;
+   private int mSeasonNumber;
+
+   private LoadEpisodesTask mEpisodesLoaderTask;
+
+   private class LoadEpisodesTask extends AsyncTask<Integer, List<SeriesEpisode>, Boolean> {
+      @Override
+      protected Boolean doInBackground(Integer... _params) {
+         int seriesCount = mService.getEpisodesCountForSeason(mSeriesId, mSeasonNumber);
+
+         int cursor = 0;
+         while (cursor < seriesCount) {
+            ArrayList<SeriesEpisode> episodes = mService.getEpisodesForSeason(mSeriesId,
+                  mSeasonNumber, cursor, cursor + 4);
+            publishProgress(episodes);
+
+            cursor += 5;
+         }
+
+         return true;
+      }
+
+      @Override
+      protected void onProgressUpdate(List<SeriesEpisode>... values) {
+         if (values != null) {
+            List<SeriesEpisode> episodes = values[0];
+            for (SeriesEpisode e : episodes) {
+               //EpisodeDetails details = mService.getEpisode(e.getId());
+               mAdapter.AddItem(new EpisodePosterViewAdapter(mSeriesId, e));
+            }
+         }
+         mAdapter.notifyDataSetChanged();
+         super.onProgressUpdate(values);
+      }
+
+      @Override
+      protected void onPostExecute(Boolean _result) {
+         mAdapter.showLoadingItem(false);
+      }
+   }
 
    @Override
    public void onCreate(Bundle _savedInstanceState) {
@@ -48,22 +90,16 @@ public class TabEpisodesActivity extends Activity {
       if (extras != null) {
          mSeriesId = extras.getInt("series_id");
          mSeriesName = extras.getString("series_name");
-         int seasonNumber = extras.getInt("season_number");
+         mSeasonNumber = extras.getInt("season_number");
 
          mService = DataHandler.getCurrentRemoteInstance();
 
-         ArrayList<SeriesEpisode> seasons = mService.getAllEpisodesForSeason(mSeriesId,
-               seasonNumber);
          mAdapter = new LazyLoadingAdapter(this);
-         for (int i = 0; i < seasons.size(); i++) {
-            SeriesEpisode e = seasons.get(i);
-            EpisodeDetails details = mService.getEpisode(e.getId());
-            mAdapter.AddItem(new EpisodePosterViewAdapter(mSeriesId, details));
-         }
-
          mlistView.setAdapter(mAdapter);
+         
+         refreshEpisodes();
 
-      } else {// activity called without movie id (shouldn't happen ;))
+      } else {// activity called without bundle infos (shouldn't happen ;))
 
       }
 
@@ -81,9 +117,10 @@ public class TabEpisodesActivity extends Activity {
          @Override
          public boolean onItemLongClick(AdapterView<?> _item, View _view, final int _position,
                long _id) {
-            final EpisodeDetails selected = (EpisodeDetails) ((ILoadingAdapterItem) _item
+            final SeriesEpisode selected = (SeriesEpisode) ((ILoadingAdapterItem) _item
                   .getItemAtPosition(_position)).getItem();
-            final EpisodeFile epFile = selected.getEpisodeFile();
+            EpisodeDetails details = mService.getEpisode(selected.getId());
+            final EpisodeFile epFile = details.getEpisodeFile();
             String dirName = DownloaderUtils.getTvEpisodePath(mSeriesName, selected);
             final String fileName = dirName
                   + Utils.getFileNameWithExtension(epFile.getFileName(), "\\");
@@ -132,6 +169,13 @@ public class TabEpisodesActivity extends Activity {
             return true;
          }
       });
+   }
+
+   private void refreshEpisodes() {
+      mAdapter.setLoadingText("Loading Series ...");
+      mAdapter.showLoadingItem(true);
+      mEpisodesLoaderTask = new LoadEpisodesTask();
+      mEpisodesLoaderTask.execute(0);
 
    }
 

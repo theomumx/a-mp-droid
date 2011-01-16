@@ -9,6 +9,10 @@ import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 import org.xmlpull.v1.XmlPullParserException;
 
+import com.mediaportal.ampdroid.api.soap.MarshalDate;
+
+import android.util.Log;
+
 
 public class WcfAccessHandler {
 	private String m_url;
@@ -29,6 +33,10 @@ public class WcfAccessHandler {
 					SoapEnvelope.VER11);
 			env.dotNet = true;
 			env.setOutputSoapObject(request);
+			
+			MarshalDate md = new MarshalDate();
+			md.register(env);
+
 
 			if (_parameters != null) {
 				for (PropertyInfo p : _parameters) {
@@ -45,6 +53,10 @@ public class WcfAccessHandler {
 		} catch (XmlPullParserException e) {
 			e.printStackTrace();
 			return null;
+		}
+		catch(Exception ex){
+		   Log.e("WCF", ex.toString());
+		   return null;
 		}
 
 	}

@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -101,6 +103,17 @@ public class TvServerChannelsActivity extends BaseActivity {
          @Override
          public void onNothingSelected(AdapterView<?> arg0) {
             // TODO Auto-generated method stub
+         }
+      });
+      
+      mListView.setOnItemClickListener(new OnItemClickListener(){
+         @Override
+         public void onItemClick(AdapterView<?> _adapter, View _view, int _pos, long _id) {
+            TvChannel channel = mChannelItems.getItem(_pos);
+            
+            Intent myIntent = new Intent(_view.getContext(), TvServerChannelDetailsActivity.class);
+            myIntent.putExtra("channel_id", channel.getIdChannel());
+            startActivity(myIntent);
          }
       });
       

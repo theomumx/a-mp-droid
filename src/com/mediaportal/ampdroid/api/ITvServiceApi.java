@@ -16,51 +16,49 @@ import com.mediaportal.ampdroid.data.TvUser;
 import com.mediaportal.ampdroid.data.TvVirtualCard;
 
 public interface ITvServiceApi extends IApiInterface {
-	boolean TestConnectionToTVService();
+   boolean TestConnectionToTVService();
 
-	void AddSchedule(int channelId, String title, Date startTime, Date endTime,
-			int scheduleType);
+   void AddSchedule(int _channelId, String _title, Date _startTime, Date _endTime, int _scheduleType);
 
-	String SwitchTVServerToChannelAndGetStreamingUrl(String _user, int channelId);
+   String SwitchTVServerToChannelAndGetStreamingUrl(String _user, int channelId);
 
-	String SwitchTVServerToChannelAndGetTimeshiftFilename(String _user, int channelId);
+   String SwitchTVServerToChannelAndGetTimeshiftFilename(String _user, int channelId);
 
-	boolean CancelCurrentTimeShifting(String _user);
+   boolean CancelCurrentTimeShifting(String _user);
 
-	List<TvChannel> GetChannels(int groupId);
+   List<TvChannel> GetChannels(int groupId);
 
-	List<TvRecording> GetRecordings();
+   List<TvRecording> GetRecordings();
 
-	List<TvSchedule> GetSchedules();
+   List<TvSchedule> GetSchedules();
 
-	TvChannel GetChannelById(int _channelId);
+   TvChannel GetChannelById(int _channelId);
 
-	TvProgram GetProgramById(int programId);
+   TvProgram GetProgramById(int programId);
 
-	List<TvProgram> GetProgramsForChannel(int channelId, Date startTime,
-			Date endTime);
+   List<TvProgram> GetProgramsForChannel(int channelId, Date startTime, Date endTime);
 
-	boolean GetProgramIsScheduledOnChannel(int channelId, int programId);
+   boolean GetProgramIsScheduledOnChannel(int channelId, int programId);
 
-	List<TvProgram> SearchPrograms(String searchTerm);
+   List<TvProgram> SearchPrograms(String searchTerm);
 
-	ArrayList<TvChannelGroup> GetGroups();
+   ArrayList<TvChannelGroup> GetGroups();
 
-	void CancelSchedule(int programId);
+   void CancelSchedule(int programId);
 
-	List<TvCardDetails> GetCards();
+   List<TvCardDetails> GetCards();
 
-	List<TvVirtualCard> GetActiveCards();
+   List<TvVirtualCard> GetActiveCards();
 
-	List<TvRtspClient> GetStreamingClients();
+   List<TvRtspClient> GetStreamingClients();
 
-	List<TvUser> GetActiveUsers();
+   List<TvUser> GetActiveUsers();
 
-	TvProgram GetCurrentProgramOnChannel(int channelId);
+   TvProgram GetCurrentProgramOnChannel(int channelId);
 
-	String ReadSettingFromDatabase(String tagName);
+   String ReadSettingFromDatabase(String tagName);
 
-	void WriteSettingToDatabase(String tagName, String value);
+   void WriteSettingToDatabase(String tagName, String value);
 
    List<TvChannel> GetChannels(int _groupId, int _startIndex, int _endIndex);
 

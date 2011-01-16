@@ -1,6 +1,7 @@
 package com.mediaportal.ampdroid.api;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import android.graphics.Bitmap;
@@ -18,6 +19,7 @@ import com.mediaportal.ampdroid.data.SupportedFunctions;
 import com.mediaportal.ampdroid.data.TvCardDetails;
 import com.mediaportal.ampdroid.data.TvChannel;
 import com.mediaportal.ampdroid.data.TvChannelGroup;
+import com.mediaportal.ampdroid.data.TvProgram;
 import com.mediaportal.ampdroid.data.TvRecording;
 import com.mediaportal.ampdroid.data.TvSchedule;
 import com.mediaportal.ampdroid.data.TvVirtualCard;
@@ -173,6 +175,16 @@ public class DataHandler {
       IMediaAccessApi remoteAccess = client.getRemoteAccessApi();
       return remoteAccess.getAllEpisodesForSeason(_seriesId, _seasonNumber);
    }
+   
+   public int getEpisodesCountForSeason(int _seriesId, Integer _seasonNumber) {
+      IMediaAccessApi remoteAccess = client.getRemoteAccessApi();
+      return remoteAccess.getEpisodesCountForSeason(_seriesId, _seasonNumber);
+   }
+   
+   public ArrayList<SeriesEpisode> getEpisodesForSeason(int _seriesId, int _seasonNumber, int _begin, int _end) {
+      IMediaAccessApi remoteAccess = client.getRemoteAccessApi();
+      return remoteAccess.getEpisodesForSeason(_seriesId, _seasonNumber, _begin, _end);
+   }
 
    public EpisodeDetails getEpisode(int _id) {
       IMediaAccessApi remoteAccess = client.getRemoteAccessApi();
@@ -259,6 +271,16 @@ public class DataHandler {
    public List<TvSchedule> getTvSchedules() {
       ITvServiceApi tvApi = client.getTvControlApi();
       return tvApi.GetSchedules();
+   }
+   
+   public List<TvProgram> getTvEpgForChannel(int _channelId, Date _begin, Date _end) {
+      ITvServiceApi tvApi = client.getTvControlApi();
+      return tvApi.GetProgramsForChannel(_channelId, _begin, _end);
+   }
+   
+   public void addTvSchedule(int _channelId, String _title, Date _startTime, Date _endTime) {
+      ITvServiceApi tvApi = client.getTvControlApi();
+      tvApi.AddSchedule(_channelId, _title, _startTime, _endTime, 0);
    }
 
    public void setFunctions(RemoteFunctions functions) {

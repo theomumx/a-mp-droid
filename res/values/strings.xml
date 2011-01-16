@@ -12,6 +12,8 @@
 	<string name="series_actors">Actors</string>
 	<string name="series_seasons">Seasons</string>
 	<string name="movie_actors">Actors:</string>
+	<string name="button_prev">Prev</string>
+	<string name="button_next">Next</string>
 	<string name="settings_categories_clients">Clients</string>
 	<string name="settings_category_general">General</string>
 	<string name="settings_category_tvserver">Tv Server</string>
@@ -25,5 +27,8 @@
 	<string name="title_tvserver_channels">Channels</string>
 	<string name="title_tvserver_recordings">Recordings</string>
 	<string name="title_tvserver_schedules">Schedules</string>
-	<string name="title_tvserver_epg">Electronic Program Guide</string>
+	<string name="title_tvserver_epg">Program Guide</string>
+	<string name="days_yesterday">Yesterday</string>
+	<string name="days_today">Today</string>
+	<string name="days_tomorrow">Tomorrow</string>
 </resources>
