@@ -3,6 +3,7 @@ package com.mediaportal.ampdroid.api.soap;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import org.kobjects.isodate.IsoDate;
 import org.ksoap2.serialization.Marshal;
@@ -29,7 +30,13 @@ public class MarshalDate implements Marshal {
    }
 
    public void writeInstance(XmlSerializer writer, Object obj) throws IOException {
-      writer.text(IsoDate.dateToString((Date) obj, IsoDate.DATE_TIME));
+      Date date = (Date) obj;
+      Calendar cal = Calendar.getInstance();
+      cal.setTime(date);
+      int offset = (int)((cal.get(Calendar.ZONE_OFFSET) + cal.get(Calendar.DST_OFFSET)) / 60000 );
+
+      cal.add(Calendar.MINUTE, offset); 
+      writer.text(IsoDate.dateToString(cal.getTime(), IsoDate.DATE_TIME));
    }
 
 }

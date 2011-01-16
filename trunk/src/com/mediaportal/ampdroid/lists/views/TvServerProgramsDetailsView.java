@@ -3,6 +3,7 @@ package com.mediaportal.ampdroid.lists.views;
 import java.util.Date;
 
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mediaportal.ampdroid.R;
@@ -16,14 +17,14 @@ public class TvServerProgramsDetailsView implements ILoadingAdapterItem {
    private TvProgram mProgram;
    private String mDateString;
    private String mOverviewString;
-
+   
    public TvServerProgramsDetailsView(TvProgram _program) {
       mProgram = _program;
 
       Date begin = mProgram.getStartTime();
       Date end = mProgram.getEndTime();
       if (begin != null && end != null) {
-         String startString = (String) android.text.format.DateFormat.format("hh:mm a", begin);
+         String startString = (String) android.text.format.DateFormat.format("kk:mm", begin);
          // String endString = (String)
          // android.text.format.DateFormat.format("hh:mm a", end);
 
@@ -78,6 +79,7 @@ public class TvServerProgramsDetailsView implements ILoadingAdapterItem {
       holder.title = (TextView) _view.findViewById(R.id.TextViewProgramName);
       holder.text = (TextView) _view.findViewById(R.id.TextViewProgramDescription);
       holder.subtext = (TextView) _view.findViewById(R.id.TextViewProgramDate);
+      holder.image2 = (ImageView) _view.findViewById(R.id.ImageViewRecording);
       return holder;
    }
 
@@ -94,6 +96,15 @@ public class TvServerProgramsDetailsView implements ILoadingAdapterItem {
 
       if (holder.subtext != null) {
          holder.subtext.setText(mDateString);
+      }
+      
+      if(holder.image2 != null){
+         if(mProgram.isIsRecordingOncePending()){
+            holder.image2.setImageResource(R.drawable.tvserver_record_button);
+         }
+         else{
+            holder.image2.setImageBitmap(null);
+         }
       }
    }
 }

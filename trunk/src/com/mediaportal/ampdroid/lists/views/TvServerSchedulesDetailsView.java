@@ -30,8 +30,8 @@ public class TvServerSchedulesDetailsView implements ILoadingAdapterItem {
       Date begin = mSchedule.getStartTime();
       Date end = mSchedule.getEndTime();
       if (begin != null && end != null) {
-         String startString = (String) android.text.format.DateFormat.format("yyyy-MM-dd HH:mm", begin);
-         String endString = (String) android.text.format.DateFormat.format("hh:mm", end);
+         String startString = (String) android.text.format.DateFormat.format("yyyy-MM-dd kk:mm", begin);
+         String endString = (String) android.text.format.DateFormat.format("kk:mm", end);
          return startString + " - " + endString;
       } else {
          return "Unknown time";

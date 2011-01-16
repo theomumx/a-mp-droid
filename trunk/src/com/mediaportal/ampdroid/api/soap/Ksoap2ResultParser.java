@@ -114,7 +114,7 @@ public class Ksoap2ResultParser {
             return property.toString();
          }
          if (_class.equals(Date.class)) {
-            SimpleDateFormat  formatter = new SimpleDateFormat("yyy-MM-dd'T'hh:mm:ss");
+            SimpleDateFormat  formatter = new SimpleDateFormat("yyy-MM-dd'T'kk:mm:ss");
             Date date = (Date)formatter.parse(property.toString());
             return date;
          }

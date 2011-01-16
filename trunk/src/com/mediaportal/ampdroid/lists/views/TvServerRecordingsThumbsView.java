@@ -29,8 +29,8 @@ public class TvServerRecordingsThumbsView implements ILoadingAdapterItem {
       Date begin = mRecording.getStartTime();
       Date end = mRecording.getEndTime();
       if (begin != null && end != null) {
-         String startString = (String) android.text.format.DateFormat.format("yyyy-MM-dd hh:mm a", begin);
-         String endString = (String) android.text.format.DateFormat.format("hh:mm a", end);
+         String startString = (String) android.text.format.DateFormat.format("yyyy-MM-dd kk:mm", begin);
+         String endString = (String) android.text.format.DateFormat.format("kk:mm", end);
          return startString + " - " + endString;
       } else {
          return "Unknown time";
