@@ -235,6 +235,11 @@ public class DataHandler {
       ITvServiceApi tvApi = client.getTvControlApi();
       return tvApi.GetChannelsCount(_groupId);
    }
+   
+   public TvChannel getTvChannel(int _channelId) {
+      ITvServiceApi tvApi = client.getTvControlApi();
+      return tvApi.GetChannelById(_channelId);
+   }
 
    public List<TvCardDetails> getTvCards() {
       ITvServiceApi tvApi = client.getTvControlApi();
@@ -246,9 +251,9 @@ public class DataHandler {
       return tvApi.GetActiveCards();
    }
    
-   public String startTimeshift(int _channelId) {
+   public String startTimeshift(int _channelId, String _clientName) {
       ITvServiceApi tvApi = client.getTvControlApi();
-      return tvApi.SwitchTVServerToChannelAndGetStreamingUrl("Android2", _channelId);
+      return tvApi.SwitchTVServerToChannelAndGetStreamingUrl(_clientName, _channelId);
    }
 
    public boolean isTvServiceActive() {
@@ -332,6 +337,8 @@ public class DataHandler {
    public String getDownloadUri(String _filePath) {
       return client.getRemoteAccessApi().getDownloadUri(_filePath);
    }
+
+
 
 
 }

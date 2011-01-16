@@ -45,7 +45,7 @@ public class Tv4HomeApi implements ITvServiceApi {
    private final String CANCEL_SCHEDULE = "CancelSchedule";
    private final String DELETE_SCHEDULE = "DeleteSchedule";
    private final String CANCEL_CURRENT_TIMESHIFT = "CancelCurrentTimeShifting";
-   private final String GET_CHANNEL_BY_ID = "GetChannelDetailedById";
+   private final String GET_CHANNEL_BY_ID = "GetChannelBasicById";
    private final String GET_CHANNEL_DETAILED_BY_ID = "GetChannelDetailedById";
    private final String GET_ACTIVE_USERS = "GetActiveUsers";
    private final String GET_CURRENT_PROGRAM_CHANNEL = "GetCurrentProgramOnChannel";
@@ -162,14 +162,14 @@ public class Tv4HomeApi implements ITvServiceApi {
       SoapObject result = (SoapObject) m_wcfService.MakeSoapCall(GET_CHANNEL_BY_ID, m_wcfService
             .CreateProperty("channelId", _channelId));
 
-      TvChannelDetails channel = (TvChannelDetails) Ksoap2ResultParser.createObject(result, TvChannelDetails.class);
+      TvChannel channel = (TvChannel) Ksoap2ResultParser.createObject(result, TvChannelDetails.class);
 
       return channel;
    }
    
    @Override
    public TvChannelDetails GetChannelDetailedById(int _channelId) {
-      SoapObject result = (SoapObject) m_wcfService.MakeSoapCall(GET_CHANNEL_BY_ID, m_wcfService
+      SoapObject result = (SoapObject) m_wcfService.MakeSoapCall(GET_CHANNEL_DETAILED_BY_ID, m_wcfService
             .CreateProperty("channelId", _channelId));
 
       TvChannelDetails channel = (TvChannelDetails) Ksoap2ResultParser.createObject(result, TvChannelDetails.class);

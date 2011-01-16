@@ -9,20 +9,25 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mediaportal.ampdroid.R;
+import com.mediaportal.ampdroid.data.TvChannel;
 import com.mediaportal.ampdroid.data.TvRecording;
 import com.mediaportal.ampdroid.lists.ILoadingAdapterItem;
 import com.mediaportal.ampdroid.lists.LazyLoadingAdapter.ViewHolder;
 import com.mediaportal.ampdroid.lists.SubtextViewHolder;
 public class TvServerRecordingsThumbsView implements ILoadingAdapterItem {
    TvRecording mRecording;
-
-   public TvServerRecordingsThumbsView(TvRecording _recording) {
+   TvChannel mChannel;
+   public TvServerRecordingsThumbsView(TvRecording _recording, TvChannel _channel) {
       mRecording = _recording;
+      mChannel = _channel;
    }
 
    private String getText() {
-      //TODO -> get channel name
-      return "Channel: " + mRecording.getIdChannel();
+      if (mChannel != null) {
+         return "Channel: " + mChannel.getDisplayName();
+      } else {
+         return "Channel: " + mRecording.getIdChannel();
+      }
    }
 
    private String getSubText() {
