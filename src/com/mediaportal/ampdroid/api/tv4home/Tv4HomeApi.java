@@ -87,6 +87,8 @@ public class Tv4HomeApi implements ITvServiceApi {
    @Override
    public void AddSchedule(int _channelId, String _title, Date _startTime, Date _endTime,
          int _scheduleType) {
+      //m_wcfService = new WcfAccessHandler(WCF_PREFIX + "bagga-laptop" + ":" + m_port + WCF_SUFFIX,
+      //      WCF_NAMESPACE, WCF_METHOD_PREFIX);
       m_wcfService.MakeSoapCall(ADD_SCHEDULE, m_wcfService.CreateProperty("channelId", _channelId),
             m_wcfService.CreateProperty("title", _title), m_wcfService.CreateProperty("startTime",
                   _startTime), m_wcfService.CreateProperty("endTime", _endTime), m_wcfService

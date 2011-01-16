@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.List;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -21,15 +20,13 @@ import android.widget.Spinner;
 import com.mediaportal.ampdroid.R;
 import com.mediaportal.ampdroid.activities.BaseActivity;
 import com.mediaportal.ampdroid.api.DataHandler;
-import com.mediaportal.ampdroid.api.ItemDownloaderService;
-import com.mediaportal.ampdroid.data.EpisodeDetails;
-import com.mediaportal.ampdroid.data.SeriesEpisode;
 import com.mediaportal.ampdroid.data.TvProgram;
 import com.mediaportal.ampdroid.lists.ILoadingAdapterItem;
 import com.mediaportal.ampdroid.lists.LazyLoadingAdapter;
 import com.mediaportal.ampdroid.lists.views.TvServerProgramsDetailsView;
 import com.mediaportal.ampdroid.quickactions.ActionItem;
 import com.mediaportal.ampdroid.quickactions.QuickAction;
+import com.mediaportal.ampdroid.utils.Util;
 
 public class TvServerChannelDetailsActivity extends BaseActivity {
    private DataHandler mService;
@@ -41,6 +38,39 @@ public class TvServerChannelDetailsActivity extends BaseActivity {
    private ArrayAdapter<EpgDay> mDaysAdapter;
    private LazyLoadingAdapter mEpgAdapter;
    private int mChannelId;
+   
+   private AddScheduleTask mAddScheduleTask;
+
+   private class AddScheduleTask extends AsyncTask<TvProgram, Boolean, Boolean> {
+      private Context mContext;
+      
+      private AddScheduleTask(Context _context){
+         mContext = _context;
+      }
+      
+      @Override
+      protected Boolean doInBackground(TvProgram... _params) {
+         TvProgram program = _params[0];
+         mService.addTvSchedule(program.getIdChannel(), program.getTitle(),
+               program.getStartTime(), program.getEndTime());
+         
+         program.setIsRecordingOncePending(true);
+
+         return true;
+      }
+
+      @Override
+      protected void onPostExecute(Boolean _result) {
+         if(_result){
+            Util.showToast(mContext, "Schedule added");
+            
+            mEpgAdapter.notifyDataSetInvalidated();
+         }
+         else{
+            Util.showToast(mContext, "Couldn't add schedule");
+         }
+      }
+   }
 
    private class LoadEpgTask extends AsyncTask<Integer, Integer, List<TvProgram>> {
       private Context mContext;
@@ -191,7 +221,7 @@ public class TvServerChannelDetailsActivity extends BaseActivity {
                ILoadingAdapterItem item = (ILoadingAdapterItem) mEpgView.getItemAtPosition(_pos);
                final TvProgram program = (TvProgram) item.getItem();
 
-               QuickAction qa = new QuickAction(_view);
+               final QuickAction qa = new QuickAction(_view);
                ActionItem sdCardAction = new ActionItem();
 
                sdCardAction.setTitle("Record this");
@@ -199,8 +229,10 @@ public class TvServerChannelDetailsActivity extends BaseActivity {
                sdCardAction.setOnClickListener(new OnClickListener() {
                   @Override
                   public void onClick(View _view) {
-                     mService.addTvSchedule(program.getIdChannel(), program.getTitle(),
-                           program.getStartTime(), program.getEndTime());
+                     mAddScheduleTask = new AddScheduleTask(_view.getContext());
+                     mAddScheduleTask.execute(program);
+                     
+                     qa.dismiss();
                   }
                });
                qa.addActionItem(sdCardAction);
