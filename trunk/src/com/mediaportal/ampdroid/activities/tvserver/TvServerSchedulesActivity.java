@@ -1,5 +1,7 @@
 package com.mediaportal.ampdroid.activities.tvserver;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import android.content.Context;
@@ -14,7 +16,7 @@ import android.widget.ListView;
 import com.mediaportal.ampdroid.R;
 import com.mediaportal.ampdroid.activities.BaseActivity;
 import com.mediaportal.ampdroid.api.DataHandler;
-import com.mediaportal.ampdroid.data.TvProgram;
+import com.mediaportal.ampdroid.data.TvChannel;
 import com.mediaportal.ampdroid.data.TvSchedule;
 import com.mediaportal.ampdroid.lists.ILoadingAdapterItem;
 import com.mediaportal.ampdroid.lists.LazyLoadingAdapter;
@@ -32,7 +34,6 @@ public class TvServerSchedulesActivity extends BaseActivity {
 
    private class CancelScheduleTask extends AsyncTask<ILoadingAdapterItem, Boolean, Boolean> {
       private Context mContext;
-
       private CancelScheduleTask(Context _context) {
          mContext = _context;
       }
@@ -60,9 +61,19 @@ public class TvServerSchedulesActivity extends BaseActivity {
    }
 
    private class UpdateSchedulesTask extends AsyncTask<Integer, Integer, List<TvSchedule>> {
+      private HashMap<Integer, TvChannel> mChannels;
+      
       @Override
       protected List<TvSchedule> doInBackground(Integer... _params) {
          List<TvSchedule> recordings = mService.getTvSchedules();
+         mChannels = new HashMap<Integer, TvChannel>();
+         for (TvSchedule s : recordings) {
+            if(!mChannels.containsKey(s.getIdChannel())){
+               TvChannel channel = mService.getTvChannel(s.getIdChannel());
+               mChannels.put(s.getIdChannel(), channel);
+            }
+         }
+         
          return recordings;
       }
 
@@ -70,7 +81,8 @@ public class TvServerSchedulesActivity extends BaseActivity {
       protected void onPostExecute(List<TvSchedule> _result) {
          if (_result != null) {
             for (TvSchedule s : _result) {
-               mAdapter.AddItem(new TvServerSchedulesDetailsView(s));
+               TvChannel channel = mChannels.get(s.getIdChannel());
+               mAdapter.AddItem(new TvServerSchedulesDetailsView(s, channel));
             }
 
             mListView.setAdapter(mAdapter);

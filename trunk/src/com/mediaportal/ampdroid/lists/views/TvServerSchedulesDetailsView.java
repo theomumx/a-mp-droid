@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mediaportal.ampdroid.R;
+import com.mediaportal.ampdroid.data.TvChannel;
 import com.mediaportal.ampdroid.data.TvSchedule;
 import com.mediaportal.ampdroid.lists.ILoadingAdapterItem;
 import com.mediaportal.ampdroid.lists.LazyLoadingAdapter.ViewHolder;
@@ -16,21 +17,27 @@ import com.mediaportal.ampdroid.lists.SubtextViewHolder;
 
 public class TvServerSchedulesDetailsView implements ILoadingAdapterItem {
    TvSchedule mSchedule;
+   TvChannel mChannel;
 
-   public TvServerSchedulesDetailsView(TvSchedule _schedule) {
+   public TvServerSchedulesDetailsView(TvSchedule _schedule, TvChannel _channel) {
       mSchedule = _schedule;
+      mChannel = _channel;
    }
 
    private String getText() {
-      //TODO -> get channel name
-      return "Channel: " + mSchedule.getIdChannel();
+      if (mChannel != null) {
+         return "Channel: " + mChannel.getDisplayName();
+      } else {
+         return "Channel: " + mSchedule.getIdChannel();
+      }
    }
 
    private String getSubText() {
       Date begin = mSchedule.getStartTime();
       Date end = mSchedule.getEndTime();
       if (begin != null && end != null) {
-         String startString = (String) android.text.format.DateFormat.format("yyyy-MM-dd kk:mm", begin);
+         String startString = (String) android.text.format.DateFormat.format("yyyy-MM-dd kk:mm",
+               begin);
          String endString = (String) android.text.format.DateFormat.format("kk:mm", end);
          return startString + " - " + endString;
       } else {
@@ -79,7 +86,7 @@ public class TvServerSchedulesDetailsView implements ILoadingAdapterItem {
 
    @Override
    public void fillViewFromViewHolder(ViewHolder _holder) {
-      SubtextViewHolder holder = (SubtextViewHolder)_holder;
+      SubtextViewHolder holder = (SubtextViewHolder) _holder;
       if (holder.title != null) {
          holder.title.setTypeface(null, Typeface.BOLD);
          holder.title.setTextColor(Color.WHITE);

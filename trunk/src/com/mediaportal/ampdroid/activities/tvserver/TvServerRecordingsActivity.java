@@ -1,5 +1,6 @@
 package com.mediaportal.ampdroid.activities.tvserver;
 
+import java.util.HashMap;
 import java.util.List;
 
 import android.os.AsyncTask;
@@ -12,6 +13,7 @@ import android.widget.ListView;
 import com.mediaportal.ampdroid.R;
 import com.mediaportal.ampdroid.activities.BaseActivity;
 import com.mediaportal.ampdroid.api.DataHandler;
+import com.mediaportal.ampdroid.data.TvChannel;
 import com.mediaportal.ampdroid.data.TvRecording;
 import com.mediaportal.ampdroid.lists.LazyLoadingAdapter;
 import com.mediaportal.ampdroid.lists.views.TvServerRecordingsThumbsView;
@@ -22,9 +24,17 @@ public class TvServerRecordingsActivity extends BaseActivity {
    private UpdateRecordingsTask mRecordingsUpdater;
    
    private class UpdateRecordingsTask extends AsyncTask<Integer, Integer, List<TvRecording>> {
+      private HashMap<Integer, TvChannel> mChannels;
       @Override
       protected List<TvRecording> doInBackground(Integer... _params) {
          List<TvRecording> recordings = mService.getTvRecordings();
+         mChannels = new HashMap<Integer, TvChannel>();
+         for (TvRecording s : recordings) {
+            if(!mChannels.containsKey(s.getIdChannel())){
+               TvChannel channel = mService.getTvChannel(s.getIdChannel());
+               mChannels.put(s.getIdChannel(), channel);
+            }
+         }
          return recordings;
       }
 
@@ -32,7 +42,8 @@ public class TvServerRecordingsActivity extends BaseActivity {
       protected void onPostExecute(List<TvRecording> _result) {
          if (_result != null) {
             for(TvRecording r : _result){
-               mAdapter.AddItem(new TvServerRecordingsThumbsView(r));
+               TvChannel channel = mChannels.get(r.getIdChannel());
+               mAdapter.AddItem(new TvServerRecordingsThumbsView(r, channel));
             }
 
             mListView.setAdapter(mAdapter);

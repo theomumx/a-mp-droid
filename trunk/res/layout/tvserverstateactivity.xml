@@ -11,7 +11,7 @@
 			android:orientation="vertical">
 			<TextView android:id="@+id/TextView01" android:layout_width="wrap_content"
 				android:layout_height="wrap_content" android:text="Start Timeshift/Recording"
-				android:layout_gravity="bottom"></TextView>
+				android:layout_gravity="bottom" android:textSize="18dip" android:textStyle="bold" android:layout_marginTop="5dip" android:layout_marginBottom="5dip"></TextView>
 			<LinearLayout android:id="@+id/LinearLayout01"
 				android:layout_height="wrap_content" android:layout_width="fill_parent">
 				<Spinner android:layout_height="wrap_content" android:id="@+id/SpinnerGroups"
@@ -30,9 +30,9 @@
 					android:layout_weight="1"></Button>
 			</LinearLayout>
 			<TextView android:id="@+id/TextView02" android:layout_width="wrap_content"
-				android:layout_height="wrap_content" android:text="Active Cards"></TextView>
+				android:layout_height="wrap_content" android:text="Active Cards" android:layout_marginBottom="5dip" android:layout_marginTop="5dip" android:textSize="18dip" android:textStyle="bold"></TextView>
 			<ListView android:id="@+id/ListViewCards"
-				android:layout_height="fill_parent" android:layout_width="fill_parent">
+				android:layout_height="fill_parent" android:layout_width="fill_parent" android:cacheColorHint="@color/listview_background">
 			</ListView>
 		</LinearLayout>
 		<include layout="@layout/include_sliding_drawer" />

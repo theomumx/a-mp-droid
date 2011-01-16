@@ -29,6 +29,8 @@ import com.mediaportal.ampdroid.api.DataHandler;
 import com.mediaportal.ampdroid.data.TvChannel;
 import com.mediaportal.ampdroid.data.TvChannelGroup;
 import com.mediaportal.ampdroid.data.TvVirtualCard;
+import com.mediaportal.ampdroid.lists.LazyLoadingAdapter;
+import com.mediaportal.ampdroid.lists.views.VirtualCardStateAdapter;
 import com.mediaportal.ampdroid.quickactions.ActionItem;
 import com.mediaportal.ampdroid.quickactions.QuickAction;
 import com.mediaportal.ampdroid.utils.Util;
@@ -39,7 +41,7 @@ public class TvServerStateActivity extends BaseActivity {
    private Button mStartRecording;
    private Spinner mGroups;
    private Spinner mChannels;
-   private ArrayAdapter<TvVirtualCard> mListItems;
+   private LazyLoadingAdapter mListItems;
    private DataHandler mService;
    ArrayAdapter<TvChannel> mChannelItems;
    ArrayAdapter<TvChannelGroup> mGroupsItems;
@@ -106,9 +108,10 @@ public class TvServerStateActivity extends BaseActivity {
          mListItems.clear();
          if (_result != null) {
             for (TvVirtualCard c : _result) {
-               mListItems.add(c);
+               mListItems.AddItem(new VirtualCardStateAdapter(c));
             }
          }
+         mListItems.notifyDataSetChanged();
       }
    }
 
@@ -122,7 +125,7 @@ public class TvServerStateActivity extends BaseActivity {
       @Override
       protected String doInBackground(TvChannel... _params) {
          if (_params != null) {
-            String url = mService.startTimeshift(_params[0].getIdChannel());
+            String url = mService.startTimeshift(_params[0].getIdChannel(), "Android2");
             return url;
          }
          return null;
@@ -207,8 +210,8 @@ public class TvServerStateActivity extends BaseActivity {
             sdCardAction.setTitle("Stop Timeshift");
             sdCardAction.setIcon(getResources().getDrawable(R.drawable.bubble_del));
 
-            Object selected = mListView.getItemAtPosition(_position);
-            final TvVirtualCard card = (TvVirtualCard) selected;
+            VirtualCardStateAdapter selected = (VirtualCardStateAdapter) mListView.getItemAtPosition(_position);
+            final TvVirtualCard card = (TvVirtualCard) selected.getItem();
 
             sdCardAction.setOnClickListener(new OnClickListener() {
                @Override
@@ -241,7 +244,7 @@ public class TvServerStateActivity extends BaseActivity {
 
       mService = DataHandler.getCurrentRemoteInstance();
 
-      mListItems = new ArrayAdapter<TvVirtualCard>(this, android.R.layout.simple_list_item_1);
+      mListItems = new LazyLoadingAdapter(this);
       mListView.setAdapter(mListItems);
 
       mChannelItems = new ArrayAdapter<TvChannel>(this, android.R.layout.simple_spinner_item);
