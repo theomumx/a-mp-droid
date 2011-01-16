@@ -161,6 +161,16 @@ public class GmaWebserviceApi implements IMediaAccessApi {
    }
    
    @Override
+   public ArrayList<SeriesEpisode> getEpisodesForSeason(int _seriesId, int _seasonNumber, int _begin, int _end) {
+      return m_seriesAPI.getEpisodesForSeason(_seriesId, _seasonNumber, _begin, _end);
+   }
+   
+   @Override
+   public int getEpisodesCountForSeason(int _seriesId, int _seasonNumber) {
+      return m_seriesAPI.getEpisodesCountForSeason(_seriesId, _seasonNumber);
+   }
+   
+   @Override
    public EpisodeDetails getEpisode(int _episodeId) {
       return m_seriesAPI.getFullEpisode(_episodeId);
    }
@@ -236,4 +246,6 @@ public class GmaWebserviceApi implements IMediaAccessApi {
    public ArrayList<MusicAlbum> getAlbums(int _start, int _end) {
       return m_musicAPI.getAlbums(_start, _end);
    }
+
+
 }

@@ -16,26 +16,50 @@ import com.mediaportal.ampdroid.data.SeriesSeason;
 import com.mediaportal.ampdroid.data.SupportedFunctions;
 import com.mediaportal.ampdroid.data.VideoShare;
 
+public interface IMediaAccessApi extends IApiInterface {
+   ArrayList<Movie> getAllMovies();
 
-public interface IMediaAccessApi extends IApiInterface {  
-	ArrayList<Movie> getAllMovies();
-	int getMovieCount();
-	ArrayList<Movie> getMovies(int _start, int _end);
-	MovieFull getMovieDetails(int _movieId);
-	Bitmap getBitmap(String _id);
-	Bitmap getBitmap(String _url, int _maxWidth, int _maxHeight);
-	ArrayList<Series> getAllSeries();
-	ArrayList<Series> getSeries(int _start, int _end);
-	SeriesFull getFullSeries(int _seriesId);
-	int getSeriesCount();
-	ArrayList<SeriesSeason> getAllSeasons(int seriesId);
-	ArrayList<SeriesEpisode> getAllEpisodes(int seriesId);
-	ArrayList<SeriesEpisode> getAllEpisodesForSeason(int seriesId, int seasonNumber);
-	SupportedFunctions getSupportedFunctions();
-	ArrayList<MusicAlbum> getAllAlbums();
-	List<MusicAlbum> getAlbums(int _start, int _end);
-   String getDownloadUri(String _filePath);
-   ArrayList<VideoShare> getVideoShares();
-   EpisodeDetails getEpisode(int id);
+   int getMovieCount();
+
+   ArrayList<Movie> getMovies(int _start, int _end);
+
+   MovieFull getMovieDetails(int _movieId);
+
+   Bitmap getBitmap(String _id);
+
+   Bitmap getBitmap(String _url, int _maxWidth, int _maxHeight);
+
+   ArrayList<Series> getAllSeries();
+
+   ArrayList<Series> getSeries(int _start, int _end);
+
+   SeriesFull getFullSeries(int _seriesId);
+
+   int getSeriesCount();
+
+   ArrayList<SeriesSeason> getAllSeasons(int seriesId);
+
+   ArrayList<SeriesEpisode> getAllEpisodes(int seriesId);
+
+   ArrayList<SeriesEpisode> getAllEpisodesForSeason(int seriesId, int seasonNumber);
    
+   ArrayList<SeriesEpisode> getEpisodesForSeason(int _seriesId, int _seasonNumber, int _begin,
+         int _end);
+   
+   int getEpisodesCountForSeason(int _seriesId, int _seasonNumber);
+
+   SupportedFunctions getSupportedFunctions();
+
+   ArrayList<MusicAlbum> getAllAlbums();
+
+   List<MusicAlbum> getAlbums(int _start, int _end);
+
+   String getDownloadUri(String _filePath);
+
+   ArrayList<VideoShare> getVideoShares();
+
+   EpisodeDetails getEpisode(int id);
+
+
+
 }

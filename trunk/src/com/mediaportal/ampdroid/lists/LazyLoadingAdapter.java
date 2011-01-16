@@ -4,16 +4,14 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.Typeface;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
+
 import com.mediaportal.ampdroid.R;
 import com.mediaportal.ampdroid.lists.views.LoadingItemAdapter;
 
@@ -48,7 +46,12 @@ public class LazyLoadingAdapter extends BaseAdapter {
    }
 
    public Object getItem(int position) {
-      return data.get(position);
+      if (position == data.size()) {
+         return loadingIndicator;
+      } else {
+         return data.get(position);
+      }
+      
    }
 
    public long getItemId(int position) {
@@ -71,7 +74,7 @@ public class LazyLoadingAdapter extends BaseAdapter {
 
    @Override
    public int getViewTypeCount() {
-      return super.getViewTypeCount();
+      return 10;
    }
 
    public View getView(int position, View convertView, ViewGroup parent) {
@@ -98,21 +101,17 @@ public class LazyLoadingAdapter extends BaseAdapter {
          }
 
          if (holder != null) {
-            if (getItemViewType(position) == 99) {
-               // loading item
-            } else {
-               item.fillViewFromViewHolder(holder);
+            item.fillViewFromViewHolder(holder);
 
-               if (holder.image != null) {
-                  String image = item.getImage();
-                  String cache = item.getImageCacheName();
+            if (holder.image != null) {
+               String image = item.getImage();
+               String cache = item.getImageCacheName();
 
-                  if (image != null && !image.equals("")) {
-                     holder.image.setTag(image);
-                     imageLoader.DisplayImage(image, cache, activity, holder.image);
-                  } else {// todo: defaultimage
-                     holder.image.setImageResource(R.drawable.mp_logo_2);
-                  }
+               if (image != null && !image.equals("")) {
+                  holder.image.setTag(image);
+                  imageLoader.DisplayImage(image, cache, activity, holder.image);
+               } else {// todo: defaultimage
+                  holder.image.setImageResource(R.drawable.mp_logo_2);
                }
             }
          }
@@ -128,8 +127,12 @@ public class LazyLoadingAdapter extends BaseAdapter {
    public boolean isLoadingItemShown() {
       return showLoadingItem;
    }
-   
-   public void setLoadingText(String _text){
-      ((LoadingItemAdapter)loadingIndicator).setLoadingText(_text);
+
+   public void setLoadingText(String _text) {
+      ((LoadingItemAdapter) loadingIndicator).setLoadingText(_text);
+   }
+
+   public void clear() {
+      data.clear();
    }
 }
