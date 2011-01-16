@@ -44,7 +44,9 @@ public interface ITvServiceApi extends IApiInterface {
 
    ArrayList<TvChannelGroup> GetGroups();
 
-   void CancelSchedule(int programId);
+   void cancelScheduleByProgramId(int _programId);
+   
+   void cancelScheduleByScheduleId(int _scheduleId);
 
    List<TvCardDetails> GetCards();
 
@@ -69,5 +71,7 @@ public interface ITvServiceApi extends IApiInterface {
    List<TvChannelDetails> GetChannelsDetails(int groupId, int startIndex, int endIndex);
 
    TvChannelDetails GetChannelDetailedById(int channelId);
+
+   
 
 }

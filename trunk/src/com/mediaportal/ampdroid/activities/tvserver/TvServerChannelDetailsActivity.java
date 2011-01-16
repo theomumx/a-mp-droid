@@ -38,22 +38,52 @@ public class TvServerChannelDetailsActivity extends BaseActivity {
    private ArrayAdapter<EpgDay> mDaysAdapter;
    private LazyLoadingAdapter mEpgAdapter;
    private int mChannelId;
-   
-   private AddScheduleTask mAddScheduleTask;
 
-   private class AddScheduleTask extends AsyncTask<TvProgram, Boolean, Boolean> {
+   private AddScheduleTask mAddScheduleTask;
+   private CancelScheduleTask mCancelScheduleTask;
+   
+   private class CancelScheduleTask extends AsyncTask<TvProgram, Boolean, Boolean> {
       private Context mContext;
-      
-      private AddScheduleTask(Context _context){
+
+      private CancelScheduleTask(Context _context) {
          mContext = _context;
       }
-      
+
       @Override
       protected Boolean doInBackground(TvProgram... _params) {
          TvProgram program = _params[0];
-         mService.addTvSchedule(program.getIdChannel(), program.getTitle(),
-               program.getStartTime(), program.getEndTime());
-         
+         mService.cancelTvScheduleByProgramId(program.getIdProgram());
+
+         program.setIsRecordingOncePending(false);
+
+         return true;
+      }
+
+      @Override
+      protected void onPostExecute(Boolean _result) {
+         if (_result) {
+            Util.showToast(mContext, "Schedule cancelled");
+
+            mEpgAdapter.notifyDataSetInvalidated();
+         } else {
+            Util.showToast(mContext, "Couldn't cancel schedule");
+         }
+      }
+   }
+
+   private class AddScheduleTask extends AsyncTask<TvProgram, Boolean, Boolean> {
+      private Context mContext;
+
+      private AddScheduleTask(Context _context) {
+         mContext = _context;
+      }
+
+      @Override
+      protected Boolean doInBackground(TvProgram... _params) {
+         TvProgram program = _params[0];
+         mService.addTvSchedule(program.getIdChannel(), program.getTitle(), program.getStartTime(),
+               program.getEndTime());
+
          program.setIsRecordingOncePending(true);
 
          return true;
@@ -61,12 +91,11 @@ public class TvServerChannelDetailsActivity extends BaseActivity {
 
       @Override
       protected void onPostExecute(Boolean _result) {
-         if(_result){
+         if (_result) {
             Util.showToast(mContext, "Schedule added");
-            
+
             mEpgAdapter.notifyDataSetInvalidated();
-         }
-         else{
+         } else {
             Util.showToast(mContext, "Couldn't add schedule");
          }
       }
@@ -222,21 +251,37 @@ public class TvServerChannelDetailsActivity extends BaseActivity {
                final TvProgram program = (TvProgram) item.getItem();
 
                final QuickAction qa = new QuickAction(_view);
-               ActionItem sdCardAction = new ActionItem();
+               
 
-               sdCardAction.setTitle("Record this");
-               sdCardAction.setIcon(getResources().getDrawable(R.drawable.quickaction_sdcard));
-               sdCardAction.setOnClickListener(new OnClickListener() {
-                  @Override
-                  public void onClick(View _view) {
-                     mAddScheduleTask = new AddScheduleTask(_view.getContext());
-                     mAddScheduleTask.execute(program);
-                     
-                     qa.dismiss();
-                  }
-               });
-               qa.addActionItem(sdCardAction);
+               if (program.isIsRecordingOncePending() || program.isIsRecordingSeriesPending()) {
+                  ActionItem addScheduleAction = new ActionItem();
+                  addScheduleAction.setTitle("Cancel Recording");
+                  addScheduleAction.setIcon(getResources().getDrawable(R.drawable.bubble_del));
+                  addScheduleAction.setOnClickListener(new OnClickListener() {
+                     @Override
+                     public void onClick(View _view) {
+                        mCancelScheduleTask = new CancelScheduleTask(_view.getContext());
+                        mCancelScheduleTask.execute(program);
 
+                        qa.dismiss();
+                     }
+                  });
+                  qa.addActionItem(addScheduleAction);
+               } else {
+                  ActionItem addScheduleAction = new ActionItem();
+                  addScheduleAction.setTitle("Record this");
+                  addScheduleAction.setIcon(getResources().getDrawable(R.drawable.quickaction_sdcard));
+                  addScheduleAction.setOnClickListener(new OnClickListener() {
+                     @Override
+                     public void onClick(View _view) {
+                        mAddScheduleTask = new AddScheduleTask(_view.getContext());
+                        mAddScheduleTask.execute(program);
+
+                        qa.dismiss();
+                     }
+                  });
+                  qa.addActionItem(addScheduleAction);
+               }
                qa.show();
             }
          });

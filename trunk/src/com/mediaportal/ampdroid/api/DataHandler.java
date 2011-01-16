@@ -282,6 +282,16 @@ public class DataHandler {
       ITvServiceApi tvApi = client.getTvControlApi();
       tvApi.AddSchedule(_channelId, _title, _startTime, _endTime, 0);
    }
+   
+   public void cancelTvScheduleByProgramId(int _programId) {
+      ITvServiceApi tvApi = client.getTvControlApi();
+      tvApi.cancelScheduleByProgramId(_programId);
+   }
+   
+   public void cancelTvScheduleByScheduleId(int _scheduleId) {
+      ITvServiceApi tvApi = client.getTvControlApi();
+      tvApi.cancelScheduleByScheduleId(_scheduleId);
+   }
 
    public void setFunctions(RemoteFunctions functions) {
       this.functions = functions;
@@ -322,4 +332,6 @@ public class DataHandler {
    public String getDownloadUri(String _filePath) {
       return client.getRemoteAccessApi().getDownloadUri(_filePath);
    }
+
+
 }
