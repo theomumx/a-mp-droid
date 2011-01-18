@@ -11,6 +11,9 @@
 	<string name="welcome_connect">Connect</string>
 	<string name="series_actors">Actors</string>
 	<string name="series_seasons">Seasons</string>
+	<string name="series_release">Release Date</string>
+	<string name="series_runtime">Runtime</string>
+	<string name="series_certification">Certification</string>
 	<string name="movie_actors">Actors:</string>
 	<string name="button_prev">Prev</string>
 	<string name="button_next">Next</string>

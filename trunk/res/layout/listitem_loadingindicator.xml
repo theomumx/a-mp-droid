@@ -4,5 +4,5 @@
   android:layout_width="fill_parent"
   android:orientation="horizontal" android:layout_height="40dip" android:gravity="center">
 <ProgressBar android:id="@+id/ProgressBarLoading" android:indeterminateOnly="true" android:layout_height="30dip" android:layout_width="30dip"></ProgressBar>
-<TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/TextViewLoadingText" android:text="Loading ..."></TextView>
+<TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/TextViewLoadingText" android:text="Loading ..." android:layout_marginLeft="10dip"></TextView>
 </LinearLayout>
