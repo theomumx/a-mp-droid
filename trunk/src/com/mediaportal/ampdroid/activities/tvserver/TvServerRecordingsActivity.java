@@ -16,7 +16,7 @@ import com.mediaportal.ampdroid.api.DataHandler;
 import com.mediaportal.ampdroid.data.TvChannel;
 import com.mediaportal.ampdroid.data.TvRecording;
 import com.mediaportal.ampdroid.lists.LazyLoadingAdapter;
-import com.mediaportal.ampdroid.lists.views.TvServerRecordingsThumbsView;
+import com.mediaportal.ampdroid.lists.views.TvServerRecordingsThumbsViewItem;
 public class TvServerRecordingsActivity extends BaseActivity {
    private DataHandler mService;
    private ListView mListView;
@@ -43,7 +43,7 @@ public class TvServerRecordingsActivity extends BaseActivity {
          if (_result != null) {
             for(TvRecording r : _result){
                TvChannel channel = mChannels.get(r.getIdChannel());
-               mAdapter.AddItem(new TvServerRecordingsThumbsView(r, channel));
+               mAdapter.addItem(new TvServerRecordingsThumbsViewItem(r, channel));
             }
 
             mListView.setAdapter(mAdapter);

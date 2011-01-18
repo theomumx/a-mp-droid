@@ -1,5 +1,6 @@
 package com.mediaportal.ampdroid.lists.views;
 
+
 import java.io.File;
 
 import android.graphics.Color;
@@ -8,37 +9,28 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.mediaportal.ampdroid.R;
-import com.mediaportal.ampdroid.data.SeriesEpisode;
+import com.mediaportal.ampdroid.data.Movie;
 import com.mediaportal.ampdroid.lists.ILoadingAdapterItem;
-import com.mediaportal.ampdroid.lists.LazyLoadingAdapter.ViewHolder;
+import com.mediaportal.ampdroid.lists.LazyLoadingImage;
 import com.mediaportal.ampdroid.lists.SubtextViewHolder;
+import com.mediaportal.ampdroid.lists.LazyLoadingAdapter.ViewHolder;
 import com.mediaportal.ampdroid.lists.Utils;
-
-public class EpisodePosterViewAdapter implements ILoadingAdapterItem {
-   private int mSeriesId;
-   private SeriesEpisode mEpisode;
-
-   public EpisodePosterViewAdapter(int _seriesId, SeriesEpisode _episode) {
-      mEpisode = _episode;
-      mSeriesId = _seriesId;
+import com.mediaportal.ampdroid.R;
+public class MoviePosterViewAdapterItem implements ILoadingAdapterItem {
+   private LazyLoadingImage mImage;
+   private Movie mMovie;
+   public MoviePosterViewAdapterItem(Movie _movie){
+      mMovie = _movie;
+      
+      String fileName = Utils.getFileNameWithExtension(mMovie.getCoverThumbPath(), "\\");
+      String cacheName =   "Movies" + File.separator + mMovie.getId() + File.separator + fileName;
+      
+      mImage = new LazyLoadingImage(mMovie.getCoverThumbPath(), cacheName, 300, 100);
    }
-
-   /**
-    * Returns the cache name for this image.
-    * 
-    * CACHE_DIR\Series\{SERIES_ID}\Season.{SEASON_NR}\Ep{EP_NR}.{Extension}
-    */
+   
    @Override
-   public String getImageCacheName() {
-      String ext = Utils.getExtension(mEpisode.getBannerUrl());
-      return "Series" + File.separator + mSeriesId + File.separator + "Season." + mEpisode.getSeasonNumber()
-            + File.separator + "Ep" + mEpisode.getEpisodeNumber() + "." + ext;
-   }
-
-   @Override
-   public String getImage() {
-      return mEpisode.getBannerUrl();
+   public LazyLoadingImage getImage() {
+      return mImage;
    }
 
    @Override
@@ -46,14 +38,16 @@ public class EpisodePosterViewAdapter implements ILoadingAdapterItem {
       return ViewTypes.PosterView.ordinal();
    }
 
+
    @Override
    public int getXml() {
       return R.layout.listitem_poster;
    }
 
+
    @Override
    public Object getItem() {
-      return mEpisode;
+      return mMovie;
    }
 
    @Override
@@ -73,16 +67,26 @@ public class EpisodePosterViewAdapter implements ILoadingAdapterItem {
          holder.title.setTypeface(null, Typeface.BOLD);
 
          holder.title.setTextColor(Color.WHITE);
-         holder.title.setText(mEpisode.getName());
+         holder.title.setText(mMovie.getName());
       }
 
       if (holder.text != null) {
-         holder.text.setText(mEpisode.getSeasonNumber() + "x" + mEpisode.getEpisodeNumber());
+         holder.text.setText("");
          holder.text.setTextColor(Color.WHITE);
       }
 
       if (holder.subtext != null) {
          holder.subtext.setText("");
       }
+   }
+
+   @Override
+   public int getLoadingImageResource() {
+      return R.drawable.listview_imageloading_poster;
+   }
+   
+   @Override
+   public int getDefaultImageResource() {
+      return R.drawable.listview_imageloading_poster;
    }
 }

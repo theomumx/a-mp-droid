@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -23,7 +24,7 @@ import com.mediaportal.ampdroid.api.DataHandler;
 import com.mediaportal.ampdroid.data.TvProgram;
 import com.mediaportal.ampdroid.lists.ILoadingAdapterItem;
 import com.mediaportal.ampdroid.lists.LazyLoadingAdapter;
-import com.mediaportal.ampdroid.lists.views.TvServerProgramsDetailsView;
+import com.mediaportal.ampdroid.lists.views.TvServerProgramsDetailsViewItem;
 import com.mediaportal.ampdroid.quickactions.ActionItem;
 import com.mediaportal.ampdroid.quickactions.QuickAction;
 import com.mediaportal.ampdroid.utils.Util;
@@ -127,7 +128,7 @@ public class TvServerChannelDetailsActivity extends BaseActivity {
       @Override
       protected void onPostExecute(List<TvProgram> _result) {
          for (TvProgram p : _result) {
-            mEpgAdapter.AddItem(new TvServerProgramsDetailsView(p));
+            mEpgAdapter.addItem(new TvServerProgramsDetailsViewItem(p));
          }
          mEpgAdapter.showLoadingItem(false);
          mEpgAdapter.notifyDataSetChanged();
@@ -244,10 +245,10 @@ public class TvServerChannelDetailsActivity extends BaseActivity {
             }
          });
 
-         mEpgView.setOnItemClickListener(new OnItemClickListener() {
+         mEpgView.setOnItemLongClickListener(new OnItemLongClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> _adapter, View _view, int _pos, long _id) {
-               ILoadingAdapterItem item = (ILoadingAdapterItem) mEpgView.getItemAtPosition(_pos);
+            public boolean onItemLongClick(AdapterView<?> _item, View _view, final int _pos,
+                  long _id) {               ILoadingAdapterItem item = (ILoadingAdapterItem) mEpgView.getItemAtPosition(_pos);
                final TvProgram program = (TvProgram) item.getItem();
 
                final QuickAction qa = new QuickAction(_view);
@@ -270,7 +271,7 @@ public class TvServerChannelDetailsActivity extends BaseActivity {
                } else {
                   ActionItem addScheduleAction = new ActionItem();
                   addScheduleAction.setTitle("Record this");
-                  addScheduleAction.setIcon(getResources().getDrawable(R.drawable.quickaction_sdcard));
+                  addScheduleAction.setIcon(getResources().getDrawable(R.drawable.quickaction_recording));
                   addScheduleAction.setOnClickListener(new OnClickListener() {
                      @Override
                      public void onClick(View _view) {
@@ -283,6 +284,7 @@ public class TvServerChannelDetailsActivity extends BaseActivity {
                   qa.addActionItem(addScheduleAction);
                }
                qa.show();
+               return true;
             }
          });
       }

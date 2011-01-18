@@ -16,7 +16,7 @@
 				android:layout_width="wrap_content" android:layout_marginLeft="10dip"
 				android:padding="10dip">
 				<ImageView android:id="@+id/ImageViewSeriesPoster"
-					android:src="@drawable/dexter_150_300" android:scaleType="fitCenter"
+					android:scaleType="fitCenter"
 					android:layout_height="wrap_content" android:layout_width="wrap_content"></ImageView>
 			</LinearLayout>
 			<LinearLayout android:id="@+id/LinearLayout01"

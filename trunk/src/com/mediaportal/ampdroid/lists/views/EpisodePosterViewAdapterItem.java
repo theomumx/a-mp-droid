@@ -9,45 +9,48 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mediaportal.ampdroid.R;
-import com.mediaportal.ampdroid.data.Series;
+import com.mediaportal.ampdroid.data.SeriesEpisode;
 import com.mediaportal.ampdroid.lists.ILoadingAdapterItem;
+import com.mediaportal.ampdroid.lists.LazyLoadingAdapter.ViewHolder;
+import com.mediaportal.ampdroid.lists.LazyLoadingImage;
 import com.mediaportal.ampdroid.lists.SubtextViewHolder;
 import com.mediaportal.ampdroid.lists.Utils;
-import com.mediaportal.ampdroid.lists.LazyLoadingAdapter.ViewHolder;
 
-public class SeriesBannerViewAdapter implements ILoadingAdapterItem {
-   private Series mSeries;
+public class EpisodePosterViewAdapterItem implements ILoadingAdapterItem {
+   private int mSeriesId;
+   private SeriesEpisode mEpisode;
+   private LazyLoadingImage mImage;
 
-   public SeriesBannerViewAdapter(Series _series) {
-      super();
-      this.mSeries = _series;
+   public EpisodePosterViewAdapterItem(int _seriesId, SeriesEpisode _episode) {
+      mEpisode = _episode;
+      mSeriesId = _seriesId;
+      
+      String ext = Utils.getExtension(mEpisode.getBannerUrl());
+      String cacheName =  "Series" + File.separator + mSeriesId + File.separator + "Season." + mEpisode.getSeasonNumber()
+            + File.separator + "Ep" + mEpisode.getEpisodeNumber() + "." + ext;
+      mImage = new LazyLoadingImage(mEpisode.getBannerUrl(), cacheName, 300, 100);
    }
 
    @Override
-   public String getImage() {
-      return mSeries.getCurrentBannerUrl();
+   public LazyLoadingImage getImage() {
+      return mImage;
    }
+
 
    @Override
    public int getType() {
-      return 0;
+      return ViewTypes.PosterView.ordinal();
    }
 
    @Override
    public int getXml() {
-      return R.layout.listitem_banner;
-   }
-   
-   @Override
-   public Object getItem() {
-      return mSeries;
+      return R.layout.listitem_poster;
    }
 
    @Override
-   public String getImageCacheName() {
-      String fileName = Utils.getFileNameWithExtension(mSeries.getCurrentBannerUrl(), "\\");
-      return "Series" + File.separator + mSeries.getId() + File.separator + "Banner" + File.separator + fileName;
-    }
+   public Object getItem() {
+      return mEpisode;
+   }
 
    @Override
    public ViewHolder createViewHolder(View _view) {
@@ -66,17 +69,28 @@ public class SeriesBannerViewAdapter implements ILoadingAdapterItem {
          holder.title.setTypeface(null, Typeface.BOLD);
 
          holder.title.setTextColor(Color.WHITE);
-         holder.title.setText(mSeries.getPrettyName());
+         holder.title.setText(mEpisode.getName());
       }
 
       if (holder.text != null) {
-         holder.text.setText("");
+         holder.text.setText(mEpisode.getSeasonNumber() + "x" + mEpisode.getEpisodeNumber());
          holder.text.setTextColor(Color.WHITE);
       }
 
       if (holder.subtext != null) {
-         holder.subtext.setText(mSeries.getGenreString());
+         holder.subtext.setText("");
       }
    }
 
+   @Override
+   public int getLoadingImageResource() {
+      // TODO Auto-generated method stub
+      return 0;
+   }
+
+   @Override
+   public int getDefaultImageResource() {
+      // TODO Auto-generated method stub
+      return 0;
+   }
 }

@@ -1,6 +1,5 @@
 package com.mediaportal.ampdroid.lists.views;
 
-
 import java.io.File;
 
 import android.graphics.Color;
@@ -9,46 +8,45 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.mediaportal.ampdroid.data.Movie;
+import com.mediaportal.ampdroid.R;
+import com.mediaportal.ampdroid.data.Series;
 import com.mediaportal.ampdroid.lists.ILoadingAdapterItem;
+import com.mediaportal.ampdroid.lists.LazyLoadingImage;
 import com.mediaportal.ampdroid.lists.SubtextViewHolder;
 import com.mediaportal.ampdroid.lists.LazyLoadingAdapter.ViewHolder;
 import com.mediaportal.ampdroid.lists.Utils;
-import com.mediaportal.ampdroid.R;
-public class MoviePosterViewAdapter implements ILoadingAdapterItem {
 
-   private Movie mMovie;
-   public MoviePosterViewAdapter(Movie _movie){
-      mMovie = _movie;
-   }
-   
-   @Override
-   public String getImageCacheName() {
-      String fileName = Utils.getFileNameWithExtension(mMovie.getCoverThumbPath(), "\\");
-      return "Movies" + File.separator + mMovie.getId() + File.separator + fileName;
-   }
-   
-   
-   @Override
-   public String getImage() {
-      return mMovie.getCoverThumbPath();
+public class SeriesPosterViewAdapterItem implements ILoadingAdapterItem {
+   private Series mSeries;
+   private LazyLoadingImage mImage;
+   public SeriesPosterViewAdapterItem(Series _series) {
+      super();
+      this.mSeries = _series;
+      
+      String fileName = Utils.getFileNameWithExtension(mSeries.getCurrentPosterUrl(), "\\");
+      String cacheName =   "Series" + File.separator + mSeries.getId() + File.separator + "Poster" + File.separator + fileName;
+
+      mImage = new LazyLoadingImage(mSeries.getCurrentPosterUrl(), cacheName, 100, 150);
    }
 
+   @Override
+   public LazyLoadingImage getImage() {
+      return mImage;
+   }
+   
    @Override
    public int getType() {
       return ViewTypes.PosterView.ordinal();
    }
 
-
    @Override
    public int getXml() {
       return R.layout.listitem_poster;
    }
-
-
+   
    @Override
    public Object getItem() {
-      return mMovie;
+      return mSeries;
    }
 
    @Override
@@ -68,7 +66,7 @@ public class MoviePosterViewAdapter implements ILoadingAdapterItem {
          holder.title.setTypeface(null, Typeface.BOLD);
 
          holder.title.setTextColor(Color.WHITE);
-         holder.title.setText(mMovie.getName());
+         holder.title.setText(mSeries.getPrettyName());
       }
 
       if (holder.text != null) {
@@ -77,7 +75,20 @@ public class MoviePosterViewAdapter implements ILoadingAdapterItem {
       }
 
       if (holder.subtext != null) {
-         holder.subtext.setText("");
+         holder.subtext.setText(mSeries.getGenreString());
       }
    }
+
+   @Override
+   public int getLoadingImageResource() {
+      return R.drawable.listview_imageloading_poster;
+   }
+   
+   @Override
+   public int getDefaultImageResource() {
+      return R.drawable.listview_imageloading_poster;
+   }
+
+
+
 }

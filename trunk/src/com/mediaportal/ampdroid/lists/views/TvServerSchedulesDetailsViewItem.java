@@ -10,15 +10,18 @@ import android.widget.TextView;
 
 import com.mediaportal.ampdroid.R;
 import com.mediaportal.ampdroid.data.TvChannel;
-import com.mediaportal.ampdroid.data.TvRecording;
+import com.mediaportal.ampdroid.data.TvSchedule;
 import com.mediaportal.ampdroid.lists.ILoadingAdapterItem;
+import com.mediaportal.ampdroid.lists.LazyLoadingImage;
 import com.mediaportal.ampdroid.lists.LazyLoadingAdapter.ViewHolder;
 import com.mediaportal.ampdroid.lists.SubtextViewHolder;
-public class TvServerRecordingsThumbsView implements ILoadingAdapterItem {
-   TvRecording mRecording;
+
+public class TvServerSchedulesDetailsViewItem implements ILoadingAdapterItem {
+   TvSchedule mSchedule;
    TvChannel mChannel;
-   public TvServerRecordingsThumbsView(TvRecording _recording, TvChannel _channel) {
-      mRecording = _recording;
+
+   public TvServerSchedulesDetailsViewItem(TvSchedule _schedule, TvChannel _channel) {
+      mSchedule = _schedule;
       mChannel = _channel;
    }
 
@@ -26,15 +29,16 @@ public class TvServerRecordingsThumbsView implements ILoadingAdapterItem {
       if (mChannel != null) {
          return "Channel: " + mChannel.getDisplayName();
       } else {
-         return "Channel: " + mRecording.getIdChannel();
+         return "Channel: " + mSchedule.getIdChannel();
       }
    }
 
    private String getSubText() {
-      Date begin = mRecording.getStartTime();
-      Date end = mRecording.getEndTime();
+      Date begin = mSchedule.getStartTime();
+      Date end = mSchedule.getEndTime();
       if (begin != null && end != null) {
-         String startString = (String) android.text.format.DateFormat.format("yyyy-MM-dd kk:mm", begin);
+         String startString = (String) android.text.format.DateFormat.format("yyyy-MM-dd kk:mm",
+               begin);
          String endString = (String) android.text.format.DateFormat.format("kk:mm", end);
          return startString + " - " + endString;
       } else {
@@ -43,17 +47,12 @@ public class TvServerRecordingsThumbsView implements ILoadingAdapterItem {
    }
 
    @Override
-   public String getImage() {
-      return null;
-   }
-
-   @Override
-   public String getImageCacheName() {
+   public LazyLoadingImage getImage() {
       return null;
    }
 
    public String getTitle() {
-      return mRecording.getTitle();
+      return mSchedule.getProgramName();
    }
 
    @Override
@@ -68,7 +67,7 @@ public class TvServerRecordingsThumbsView implements ILoadingAdapterItem {
 
    @Override
    public Object getItem() {
-      return mRecording;
+      return mSchedule;
    }
 
    @Override
@@ -83,7 +82,7 @@ public class TvServerRecordingsThumbsView implements ILoadingAdapterItem {
 
    @Override
    public void fillViewFromViewHolder(ViewHolder _holder) {
-      SubtextViewHolder holder = (SubtextViewHolder)_holder;
+      SubtextViewHolder holder = (SubtextViewHolder) _holder;
       if (holder.title != null) {
          holder.title.setTypeface(null, Typeface.BOLD);
          holder.title.setTextColor(Color.WHITE);
@@ -99,5 +98,17 @@ public class TvServerRecordingsThumbsView implements ILoadingAdapterItem {
          holder.subtext.setText(getSubText());
          holder.subtext.setTextColor(Color.WHITE);
       }
+   }
+
+   @Override
+   public int getLoadingImageResource() {
+      // TODO Auto-generated method stub
+      return 0;
+   }
+
+   @Override
+   public int getDefaultImageResource() {
+      // TODO Auto-generated method stub
+      return 0;
    }
 }

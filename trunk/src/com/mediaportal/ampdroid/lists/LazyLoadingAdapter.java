@@ -1,6 +1,7 @@
 package com.mediaportal.ampdroid.lists;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import android.app.Activity;
 import android.content.Context;
@@ -12,46 +13,85 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.mediaportal.ampdroid.R;
-import com.mediaportal.ampdroid.lists.views.LoadingItemAdapter;
+import com.mediaportal.ampdroid.lists.views.LoadingAdapterItem;
 
 public class LazyLoadingAdapter extends BaseAdapter {
-   private Activity activity;
-   private ArrayList<ILoadingAdapterItem> data;
-   private static LayoutInflater inflater = null;
-   private boolean showLoadingItem;
-   public ImageHandler imageLoader;
-   private ILoadingAdapterItem loadingIndicator;
+   public interface ILoadingListener {
+      void EndOfListReached();
+   }
+
+   private Activity mActivity;
+   private ArrayList<ILoadingAdapterItem> mCurrentViewData;
+   private HashMap<Integer, ArrayList<ILoadingAdapterItem>> mViews;
+   private static LayoutInflater mInflater = null;
+   private boolean mShowLoadingItem;
+   public ImageHandler mImageLoader;
+   private ILoadingAdapterItem mIoadingIndicator;
+   private ILoadingListener mLoadingListener;
+
+   public void setLoadingListener(ILoadingListener _listener) {
+      mLoadingListener = _listener;
+   }
 
    public LazyLoadingAdapter(Activity _activity) {
-      activity = _activity;
-
-      inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-      imageLoader = new ImageHandler(activity.getApplicationContext());
-      data = new ArrayList<ILoadingAdapterItem>();
-      loadingIndicator = new LoadingItemAdapter("");
+      mActivity = _activity;
+      mInflater = (LayoutInflater) mActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+      mImageLoader = new ImageHandler(mActivity.getApplicationContext());
+      mIoadingIndicator = new LoadingAdapterItem("");
+      mViews = new HashMap<Integer, ArrayList<ILoadingAdapterItem>>();
+      mCurrentViewData = new ArrayList<ILoadingAdapterItem>();
    }
 
    public LazyLoadingAdapter(Activity _activity, ArrayList<ILoadingAdapterItem> _items) {
       this(_activity);
-      data = _items;
+      mCurrentViewData = _items;
+   }
+   
+   public void addItem(ILoadingAdapterItem _item){
+      mCurrentViewData.add(_item);
    }
 
-   public void AddItem(ILoadingAdapterItem _item) {
-      data.add(_item);
+   public boolean addItem(int _viewId, ILoadingAdapterItem _item) {
+      if(mViews.containsKey(_viewId)){
+         mViews.get(_viewId).add(_item);
+         return true;
+      }
+      else{
+         return false;
+      }
+   }
+   
+   public boolean setView(int _viewId){
+      if(mViews.containsKey(_viewId)){
+         mCurrentViewData = mViews.get(_viewId);
+         return true;
+      }
+      else{
+         return false;
+      }
+   }
+   
+   public boolean addView(int _viewId){
+      if(!mViews.containsKey(_viewId)){
+         mViews.put(_viewId, new ArrayList<ILoadingAdapterItem>());
+         return true;
+      }
+      else{
+         return false;
+      }
    }
 
    public int getCount() {
-      return (showLoadingItem ? data.size() + 1 : data.size());
+      return (mShowLoadingItem ? mCurrentViewData.size() + 1 : mCurrentViewData.size());
    }
 
    public Object getItem(int position) {
-      if (position == data.size()) {
-         return loadingIndicator;
+      if (position == mCurrentViewData.size()) {
+         return mIoadingIndicator;
       } else {
-         return data.get(position);
+         return mCurrentViewData.get(position);
       }
-      
+
    }
 
    public long getItemId(int position) {
@@ -65,10 +105,10 @@ public class LazyLoadingAdapter extends BaseAdapter {
 
    @Override
    public int getItemViewType(int position) {
-      if (position == data.size()) {
-         return loadingIndicator.getType();
+      if (position == mCurrentViewData.size()) {
+         return mIoadingIndicator.getType();
       } else {
-         return data.get(position).getType();
+         return mCurrentViewData.get(position).getType();
       }
    }
 
@@ -80,17 +120,20 @@ public class LazyLoadingAdapter extends BaseAdapter {
    public View getView(int position, View convertView, ViewGroup parent) {
       View vi = convertView;
       ViewHolder holder = null;
-      if (data != null) {
+      if (mCurrentViewData != null) {
          ILoadingAdapterItem item = null;
-         if (position >= data.size()) {
-            item = loadingIndicator;
+         if (position >= mCurrentViewData.size()) {
+            item = mIoadingIndicator;
+            if (mLoadingListener != null) {
+               mLoadingListener.EndOfListReached();
+            }
          } else {
-            item = data.get(position);
+            item = mCurrentViewData.get(position);
          }
 
          if (convertView == null) {
             try {
-               vi = inflater.inflate(item.getXml(), null);
+               vi = mInflater.inflate(item.getXml(), null);
                holder = item.createViewHolder(vi);
                vi.setTag(holder);
             } catch (Exception ex) {
@@ -104,14 +147,20 @@ public class LazyLoadingAdapter extends BaseAdapter {
             item.fillViewFromViewHolder(holder);
 
             if (holder.image != null) {
-               String image = item.getImage();
-               String cache = item.getImageCacheName();
+               LazyLoadingImage image = item.getImage();
+               int defaultImage = item.getDefaultImageResource();
+               int loadingImage = item.getLoadingImageResource();
 
                if (image != null && !image.equals("")) {
-                  holder.image.setTag(image);
-                  imageLoader.DisplayImage(image, cache, activity, holder.image);
-               } else {// todo: defaultimage
-                  holder.image.setImageResource(R.drawable.mp_logo_2);
+                  holder.image.setTag(image.getImageUrl());
+                  mImageLoader.DisplayImage(image, loadingImage, mActivity, holder.image);
+               } else {
+                  if (defaultImage != 0) {// show nothing as default image
+                     holder.image.setImageBitmap(null);
+                  }
+                  else{
+                     holder.image.setImageResource(defaultImage);
+                  }
                }
             }
          }
@@ -121,22 +170,24 @@ public class LazyLoadingAdapter extends BaseAdapter {
    }
 
    public void showLoadingItem(boolean showLoadingItem) {
-      this.showLoadingItem = showLoadingItem;
+      this.mShowLoadingItem = showLoadingItem;
    }
 
    public boolean isLoadingItemShown() {
-      return showLoadingItem;
+      return mShowLoadingItem;
    }
 
    public void setLoadingText(String _text) {
-      ((LoadingItemAdapter) loadingIndicator).setLoadingText(_text);
+      ((LoadingAdapterItem) mIoadingIndicator).setLoadingText(_text);
    }
 
    public void clear() {
-      data.clear();
+      mCurrentViewData.clear();
    }
 
    public void removeItem(ILoadingAdapterItem _item) {
-      data.remove(_item);
+      mCurrentViewData.remove(_item);
    }
+   
+
 }

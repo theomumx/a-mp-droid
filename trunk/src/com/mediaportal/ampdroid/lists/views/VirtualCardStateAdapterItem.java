@@ -1,5 +1,6 @@
 package com.mediaportal.ampdroid.lists.views;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.view.View;
@@ -8,23 +9,20 @@ import android.widget.TextView;
 import com.mediaportal.ampdroid.R;
 import com.mediaportal.ampdroid.data.TvVirtualCard;
 import com.mediaportal.ampdroid.lists.ILoadingAdapterItem;
+import com.mediaportal.ampdroid.lists.LazyLoadingImage;
 import com.mediaportal.ampdroid.lists.LazyLoadingAdapter.ViewHolder;
 import com.mediaportal.ampdroid.lists.SubtextViewHolder;
 
-public class VirtualCardStateAdapter implements ILoadingAdapterItem {
-
+public class VirtualCardStateAdapterItem implements ILoadingAdapterItem {
+   Context mContext;
    TvVirtualCard mCard;
-   public VirtualCardStateAdapter(TvVirtualCard _card){
+   public VirtualCardStateAdapterItem(Context _context, TvVirtualCard _card){
       mCard = _card;
+      mContext = _context;
    }
    
    @Override
-   public String getImage() {
-      return null;
-   }
-
-   @Override
-   public String getImageCacheName() {
+   public LazyLoadingImage getImage() {
       return null;
    }
 
@@ -64,10 +62,13 @@ public class VirtualCardStateAdapter implements ILoadingAdapterItem {
       if (holder.text != null) {
          String stateString = null;
          if(mCard.isIsRecording()){
-            stateString = "Recording";
+            stateString = mContext.getString(R.string.state_recording);
          }
          else if(mCard.isIsTimeShifting()){
-            stateString = "Timeshifting";
+            stateString = mContext.getString(R.string.state_timeshifting);
+         }
+         else if(mCard.isIsGrabbingEpg()){
+            stateString = mContext.getString(R.string.state_grabbingEpg);
          }
          
          holder.text.setText(stateString);
@@ -79,6 +80,16 @@ public class VirtualCardStateAdapter implements ILoadingAdapterItem {
          holder.subtext.setText(subtextString);
          holder.subtext.setTextColor(Color.WHITE);
       }
+   }
+
+   @Override
+   public int getLoadingImageResource() {
+      return 0;
+   }
+
+   @Override
+   public int getDefaultImageResource() {
+      return 0;
    }
 
 }

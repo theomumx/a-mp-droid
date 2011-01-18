@@ -8,13 +8,13 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 
-public class TabSeriesActivityGroup extends ActivityGroup {
+public class TabMoviesActivityGroup extends ActivityGroup {
 
    // Keep this in a static variable to make it accessible for all the nesten
    // activities, lets them manipulate the view
-   private static TabSeriesActivityGroup mGroup;
+   private static TabMoviesActivityGroup mGroup;
    
-   public static TabSeriesActivityGroup getGroup(){
+   public static TabMoviesActivityGroup getGroup(){
       return mGroup;
    }
 
@@ -29,8 +29,8 @@ public class TabSeriesActivityGroup extends ActivityGroup {
       mGroup = this;
 
       // Start the root activity withing the group and get its view
-      View view = getLocalActivityManager().startActivity("SeriesActivity",
-            new Intent(this, TabSeriesActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
+      View view = getLocalActivityManager().startActivity("MoviesActivity",
+            new Intent(this, TabMoviesActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
             .getDecorView();
 
       // Replace the view of this ActivityGroup
@@ -56,14 +56,14 @@ public class TabSeriesActivityGroup extends ActivityGroup {
 
    @Override
    public void onBackPressed() {
-      TabSeriesActivityGroup.mGroup.back();
+      TabMoviesActivityGroup.mGroup.back();
       return;
    }
 
    @Override
    public boolean onKeyDown(int _keyCode, KeyEvent _event) {
       if (_keyCode == KeyEvent.KEYCODE_BACK) {
-         TabSeriesActivityGroup.mGroup.back();
+         TabMoviesActivityGroup.mGroup.back();
          return true;
       }
       return super.onKeyDown(_keyCode, _event);

@@ -20,7 +20,7 @@ import com.mediaportal.ampdroid.data.TvChannel;
 import com.mediaportal.ampdroid.data.TvSchedule;
 import com.mediaportal.ampdroid.lists.ILoadingAdapterItem;
 import com.mediaportal.ampdroid.lists.LazyLoadingAdapter;
-import com.mediaportal.ampdroid.lists.views.TvServerSchedulesDetailsView;
+import com.mediaportal.ampdroid.lists.views.TvServerSchedulesDetailsViewItem;
 import com.mediaportal.ampdroid.quickactions.ActionItem;
 import com.mediaportal.ampdroid.quickactions.QuickAction;
 import com.mediaportal.ampdroid.utils.Util;
@@ -82,7 +82,7 @@ public class TvServerSchedulesActivity extends BaseActivity {
          if (_result != null) {
             for (TvSchedule s : _result) {
                TvChannel channel = mChannels.get(s.getIdChannel());
-               mAdapter.AddItem(new TvServerSchedulesDetailsView(s, channel));
+               mAdapter.addItem(new TvServerSchedulesDetailsViewItem(s, channel));
             }
 
             mListView.setAdapter(mAdapter);
@@ -114,7 +114,7 @@ public class TvServerSchedulesActivity extends BaseActivity {
 
             ActionItem addScheduleAction = new ActionItem();
             addScheduleAction.setTitle("Cancel Recording");
-            addScheduleAction.setIcon(getResources().getDrawable(R.drawable.bubble_del));
+            addScheduleAction.setIcon(getResources().getDrawable(R.drawable.quickaction_delete));
             addScheduleAction.setOnClickListener(new OnClickListener() {
                @Override
                public void onClick(View _view) {

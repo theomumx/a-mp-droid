@@ -26,7 +26,12 @@
 		</activity>
 		<activity
 			android:name="com.mediaportal.ampdroid.activities.media.TabMoviesActivity"
-			android:screenOrientation="portrait"></activity>
+			android:screenOrientation="portrait">
+		</activity>
+		<activity
+			android:name="com.mediaportal.ampdroid.activities.media.TabMoviesActivityGroup"
+			android:screenOrientation="portrait">
+		</activity>
 		<activity
 			android:name="com.mediaportal.ampdroid.activities.media.TabMovieDetailsActivity"
 			android:screenOrientation="portrait"></activity>

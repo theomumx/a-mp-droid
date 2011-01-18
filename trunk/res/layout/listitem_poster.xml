@@ -7,7 +7,7 @@
 		android:layout_height="wrap_content">
 		<ImageView android:id="@+id/ImageViewEventImage"
 			android:layout_gravity="center" android:layout_width="wrap_content"
-			android:src="@drawable/dexter_150_300" android:scaleType="centerInside" android:layout_height="75dip"></ImageView>
+			android:scaleType="centerInside" android:layout_height="75dip"></ImageView>
 	</LinearLayout>
 	
 	<LinearLayout android:layout_height="wrap_content"

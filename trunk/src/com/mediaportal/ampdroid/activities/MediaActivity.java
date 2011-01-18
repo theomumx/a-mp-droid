@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.mediaportal.ampdroid.activities.actionbar.ActionBar;
 import com.mediaportal.ampdroid.activities.actionbar.ActionBar.IntentAction;
 import com.mediaportal.ampdroid.activities.media.TabMoviesActivity;
+import com.mediaportal.ampdroid.activities.media.TabMoviesActivityGroup;
 import com.mediaportal.ampdroid.activities.media.TabSeriesActivityGroup;
 import com.mediaportal.ampdroid.activities.media.TabSharesActivity;
 import com.mediaportal.ampdroid.activities.media.TabVideosActivity;
@@ -71,7 +72,7 @@ public class MediaActivity extends TabActivity {
          if (functions.supportsMovies()) {
             TabSpec moviesTabSpec = mTabHost.newTabSpec("tid3");
             moviesTabSpec.setIndicator(createTabView(this, "Movies"));
-            moviesTabSpec.setContent(new Intent(this, TabMoviesActivity.class));
+            moviesTabSpec.setContent(new Intent(this, TabMoviesActivityGroup.class));
             mTabHost.addTab(moviesTabSpec);
          }
       } else {

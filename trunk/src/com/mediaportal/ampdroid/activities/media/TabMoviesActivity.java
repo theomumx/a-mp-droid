@@ -16,28 +16,34 @@ import com.mediaportal.ampdroid.api.DataHandler;
 import com.mediaportal.ampdroid.data.Movie;
 import com.mediaportal.ampdroid.lists.ILoadingAdapterItem;
 import com.mediaportal.ampdroid.lists.LazyLoadingAdapter;
-import com.mediaportal.ampdroid.lists.views.MoviePosterViewAdapter;
-public class TabMoviesActivity extends Activity {
-	private ListView mListView;
-	private LazyLoadingAdapter mAdapter;
-   DataHandler mService;
-   private LoadSeriesTask mSeriesLoaderTask;
+import com.mediaportal.ampdroid.lists.LazyLoadingAdapter.ILoadingListener;
+import com.mediaportal.ampdroid.lists.views.MoviePosterViewAdapterItem;
+import com.mediaportal.ampdroid.lists.views.ViewTypes;
 
-   private class LoadSeriesTask extends AsyncTask<Integer, List<Movie>, Boolean> {
+public class TabMoviesActivity extends Activity implements ILoadingListener {
+   private ListView mListView;
+   private LazyLoadingAdapter mAdapter;
+   DataHandler mService;
+   private LoadMoviesTask mSeriesLoaderTask;
+   private int mSeriesLoaded = 0;
+
+   private class LoadMoviesTask extends AsyncTask<Integer, List<Movie>, Boolean> {
       @Override
       protected Boolean doInBackground(Integer... _params) {
+         int loadItems = mSeriesLoaded + _params[0];
          int seriesCount = mService.getMovieCount();
 
-         int cursor = 0;
-         while (cursor < seriesCount) {
-            List<Movie> series = mService.getMovies(cursor, cursor + 19);
-
+         while (mSeriesLoaded < loadItems) {
+            List<Movie> series = mService.getMovies(mSeriesLoaded, mSeriesLoaded + 4);
             publishProgress(series);
-
-            cursor += 20;
+            mSeriesLoaded += 5;
          }
 
-         return true;
+         if (mSeriesLoaded < seriesCount) {
+            return false;// not yet finished;
+         } else {
+            return true;// finished
+         }
       }
 
       @Override
@@ -45,7 +51,7 @@ public class TabMoviesActivity extends Activity {
          if (values != null) {
             List<Movie> series = values[0];
             for (Movie s : series) {
-               mAdapter.AddItem(new MoviePosterViewAdapter(s));
+               mAdapter.addItem(new MoviePosterViewAdapterItem(s));
             }
          }
          mAdapter.notifyDataSetChanged();
@@ -54,44 +60,61 @@ public class TabMoviesActivity extends Activity {
 
       @Override
       protected void onPostExecute(Boolean _result) {
-         mAdapter.showLoadingItem(false);
+         if (_result) {
+            mAdapter.showLoadingItem(false);
+         }
+         mSeriesLoaderTask = null;
       }
    }
 
-	/** Called when the activity is first created. */
-	@Override
-	public void onCreate(Bundle _savedInstanceState) {
-		super.onCreate(_savedInstanceState);
-		setContentView(R.layout.tabmoviesactivity);
+   /** Called when the activity is first created. */
+   @Override
+   public void onCreate(Bundle _savedInstanceState) {
+      super.onCreate(_savedInstanceState);
+      setContentView(R.layout.tabmoviesactivity);
 
-		mService = DataHandler.getCurrentRemoteInstance();
-		mAdapter = new LazyLoadingAdapter(this);
+      mService = DataHandler.getCurrentRemoteInstance();
+      mAdapter = new LazyLoadingAdapter(this);
+      mAdapter.setLoadingListener(this);
 
-		mListView = (ListView) findViewById(R.id.ListViewVideos);
-		mListView.setAdapter(mAdapter);
+      mListView = (ListView) findViewById(R.id.ListViewVideos);
+      mListView.setAdapter(mAdapter);
 
-		mListView.setOnItemClickListener(new OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> a, View v, int position,
-					long id) {
-				Movie selectedMovie = (Movie) ((ILoadingAdapterItem) mListView
-						.getItemAtPosition(position)).getItem();
+      mListView.setOnItemClickListener(new OnItemClickListener() {
+         @Override
+         public void onItemClick(AdapterView<?> a, View v, int position, long id) {
+            Movie selectedMovie = (Movie) ((ILoadingAdapterItem) mListView
+                  .getItemAtPosition(position)).getItem();
 
-				Intent myIntent = new Intent(v.getContext(),
-						TabMovieDetailsActivity.class);
-				myIntent.putExtra("movie_id", selectedMovie.getId());
-				startActivity(myIntent);
+            Intent myIntent = new Intent(v.getContext(), TabMovieDetailsActivity.class);
+            myIntent.putExtra("movie_id", selectedMovie.getId());
 
-			}
-		});
-      refreshMovies();
+            myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+            // Create the view using FirstGroup's LocalActivityManager
+            View view = TabMoviesActivityGroup.getGroup().getLocalActivityManager()
+                  .startActivity("movie_details", myIntent).getDecorView();
+
+            // Again, replace the view
+            TabMoviesActivityGroup.getGroup().replaceView(view);
+
+         }
+      });
+
+      mAdapter.setLoadingText("Loading Movies ...");
+      mAdapter.showLoadingItem(true);
+      loadFurtherMovieItems();
    }
 
-   private void refreshMovies() {
-      mAdapter.setLoadingText("Loading Series ...");
-      mAdapter.showLoadingItem(true);
-      mSeriesLoaderTask = new LoadSeriesTask();
-      mSeriesLoaderTask.execute(0);
+   @Override
+   public void EndOfListReached() {
+      loadFurtherMovieItems();
+   }
 
+   private void loadFurtherMovieItems() {
+      if (mSeriesLoaderTask == null) {
+         mSeriesLoaderTask = new LoadMoviesTask();
+         mSeriesLoaderTask.execute(20);
+      }
    }
 }

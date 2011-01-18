@@ -11,29 +11,29 @@ import android.widget.TextView;
 import com.mediaportal.ampdroid.R;
 import com.mediaportal.ampdroid.data.Series;
 import com.mediaportal.ampdroid.lists.ILoadingAdapterItem;
+import com.mediaportal.ampdroid.lists.LazyLoadingImage;
 import com.mediaportal.ampdroid.lists.SubtextViewHolder;
 import com.mediaportal.ampdroid.lists.LazyLoadingAdapter.ViewHolder;
 import com.mediaportal.ampdroid.lists.Utils;
 
-public class SeriesThumbViewAdapter implements ILoadingAdapterItem {
+public class SeriesThumbViewAdapterItem implements ILoadingAdapterItem {
    private Series mSeries;
-
-   public SeriesThumbViewAdapter(Series _series) {
+   private LazyLoadingImage mImage;
+   public SeriesThumbViewAdapterItem(Series _series) {
       super();
       this.mSeries = _series;
+      
+      String fileName = Utils.getFileNameWithExtension(mSeries.getCurrentFanartUrl(), "\\");
+      String cacheName =   "Series" + File.separator + mSeries.getId() + File.separator + "Thumbs" + File.separator + fileName;
+
+      mImage = new LazyLoadingImage(mSeries.getCurrentFanartUrl(), cacheName, 200, 100);
    }
 
    @Override
-   public String getImage() {
-      return mSeries.getCurrentFanartUrl();
+   public LazyLoadingImage getImage() {
+      return mImage;
    }
    
-   @Override
-   public String getImageCacheName() {
-      String fileName = Utils.getFileNameWithExtension(mSeries.getCurrentFanartUrl(), "\\");
-      return "Series" + File.separator + mSeries.getId() + File.separator + "Poster" + File.separator + fileName;
-   }
-
    @Override
    public int getType() {
       return ViewTypes.ThumbView.ordinal();
@@ -77,5 +77,17 @@ public class SeriesThumbViewAdapter implements ILoadingAdapterItem {
       if (holder.subtext != null) {
          holder.subtext.setText(mSeries.getGenreString());
       }
+   }
+
+   @Override
+   public int getLoadingImageResource() {
+      // TODO Auto-generated method stub
+      return 0;
+   }
+
+   @Override
+   public int getDefaultImageResource() {
+      // TODO Auto-generated method stub
+      return 0;
    }
 }

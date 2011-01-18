@@ -31,4 +31,7 @@
 	<string name="days_yesterday">Yesterday</string>
 	<string name="days_today">Today</string>
 	<string name="days_tomorrow">Tomorrow</string>
+	<string name="state_recording">Recording</string>
+	<string name="state_timeshifting">Timeshifting</string>
+	<string name="state_grabbingEpg">Grabbing EPG</string>
 </resources>

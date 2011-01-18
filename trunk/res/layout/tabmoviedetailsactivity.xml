@@ -3,29 +3,41 @@
 	android:id="@+id/ScrollViewRoot" android:layout_height="wrap_content"
 	android:layout_width="fill_parent">
 	<LinearLayout android:layout_height="wrap_content"
-		android:layout_width="fill_parent" android:orientation="vertical">
+		android:layout_width="fill_parent" android:orientation="vertical"
+		android:paddingLeft="5dip" android:paddingRight="5dip">
+		<TextView android:text="[Movie Title]" android:layout_height="wrap_content"
+			android:id="@+id/TextViewMovieName" android:textStyle="bold"
+			android:layout_width="wrap_content" android:layout_gravity="center_vertical|center_horizontal|center"
+			android:textSize="14dip"></TextView>
 		<LinearLayout android:layout_height="wrap_content"
 			android:id="@+id/LinearLayoutSeriesHeader" android:layout_width="fill_parent">
-			<ImageView android:layout_width="wrap_content"
-				android:layout_height="wrap_content" android:background="@drawable/icon"
-				android:layout_marginLeft="10dip" android:layout_marginRight="10dip"
-				android:layout_marginBottom="10dip" android:layout_marginTop="10dip"
-				android:id="@+id/ImageViewMoviePoster"></ImageView>
+			<LinearLayout android:layout_marginRight="10dip"
+				android:layout_height="wrap_content" android:layout_marginTop="10dip"
+				android:layout_marginBottom="10dip" android:background="@drawable/rounded"
+				android:layout_width="wrap_content" android:layout_marginLeft="10dip"
+				android:padding="10dip">
+				<ImageView android:id="@+id/ImageViewMoviePoster"
+					android:scaleType="fitCenter" android:layout_height="wrap_content"
+					android:layout_width="wrap_content"></ImageView>
+			</LinearLayout>
+
 			<LinearLayout android:id="@+id/LinearLayout01"
 				android:layout_width="wrap_content" android:layout_height="wrap_content"
 				android:orientation="vertical">
-				<TextView android:layout_width="wrap_content"
-					android:layout_height="wrap_content" android:textStyle="bold"
-					android:textSize="14dip" android:layout_gravity="center_vertical|center_horizontal|center"
-					android:text="[Movie Title]" android:id="@+id/TextViewMovieName"></TextView>
+				
 				<TextView android:layout_width="wrap_content"
 					android:layout_height="wrap_content" android:id="@+id/TextViewMovieGenres"
 					android:text="[Genres]"></TextView>
-			</LinearLayout>
+			
+</LinearLayout>
 
 
 
-		</LinearLayout>
+		
+
+
+
+</LinearLayout>
 		<Gallery android:id="@+id/GalleryAllPosters"
 			android:layout_width="fill_parent" android:layout_height="75dip"></Gallery>
 		<TextView android:layout_width="wrap_content"
@@ -43,7 +55,9 @@
 		<LinearLayout android:layout_width="wrap_content"
 			android:layout_height="wrap_content" android:id="@+id/LinearLayoutActors"></LinearLayout>
 
-	</LinearLayout>
+	
+
+</LinearLayout>
 
 
 

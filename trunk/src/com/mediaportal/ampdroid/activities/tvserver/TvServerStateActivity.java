@@ -30,7 +30,7 @@ import com.mediaportal.ampdroid.data.TvChannel;
 import com.mediaportal.ampdroid.data.TvChannelGroup;
 import com.mediaportal.ampdroid.data.TvVirtualCard;
 import com.mediaportal.ampdroid.lists.LazyLoadingAdapter;
-import com.mediaportal.ampdroid.lists.views.VirtualCardStateAdapter;
+import com.mediaportal.ampdroid.lists.views.VirtualCardStateAdapterItem;
 import com.mediaportal.ampdroid.quickactions.ActionItem;
 import com.mediaportal.ampdroid.quickactions.QuickAction;
 import com.mediaportal.ampdroid.utils.Util;
@@ -96,6 +96,12 @@ public class TvServerStateActivity extends BaseActivity {
    }
 
    private class UpdateCardsTask extends AsyncTask<Integer, Integer, List<TvVirtualCard>> {
+      private Context mContext;
+
+      UpdateCardsTask(Context _context){
+         mContext = _context;
+      }
+      
       @Override
       protected List<TvVirtualCard> doInBackground(Integer... _params) {
          List<TvVirtualCard> cards = mService.getTvCardsActive();
@@ -108,7 +114,7 @@ public class TvServerStateActivity extends BaseActivity {
          mListItems.clear();
          if (_result != null) {
             for (TvVirtualCard c : _result) {
-               mListItems.AddItem(new VirtualCardStateAdapter(c));
+               mListItems.addItem(new VirtualCardStateAdapterItem(mContext, c));
             }
          }
          mListItems.notifyDataSetChanged();
@@ -208,9 +214,9 @@ public class TvServerStateActivity extends BaseActivity {
             ActionItem sdCardAction = new ActionItem();
 
             sdCardAction.setTitle("Stop Timeshift");
-            sdCardAction.setIcon(getResources().getDrawable(R.drawable.bubble_del));
+            sdCardAction.setIcon(getResources().getDrawable(R.drawable.quickaction_delete));
 
-            VirtualCardStateAdapter selected = (VirtualCardStateAdapter) mListView.getItemAtPosition(_position);
+            VirtualCardStateAdapterItem selected = (VirtualCardStateAdapterItem) mListView.getItemAtPosition(_position);
             final TvVirtualCard card = (TvVirtualCard) selected.getItem();
 
             sdCardAction.setOnClickListener(new OnClickListener() {
@@ -304,7 +310,7 @@ public class TvServerStateActivity extends BaseActivity {
    }
 
    private void refreshActiveCards() {
-      mCardsUpdater = new UpdateCardsTask();
+      mCardsUpdater = new UpdateCardsTask(this);
       mCardsUpdater.execute(0);
    }
 

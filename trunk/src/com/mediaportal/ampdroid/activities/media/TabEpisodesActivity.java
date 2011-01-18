@@ -26,7 +26,7 @@ import com.mediaportal.ampdroid.data.SeriesEpisode;
 import com.mediaportal.ampdroid.lists.ILoadingAdapterItem;
 import com.mediaportal.ampdroid.lists.LazyLoadingAdapter;
 import com.mediaportal.ampdroid.lists.Utils;
-import com.mediaportal.ampdroid.lists.views.EpisodePosterViewAdapter;
+import com.mediaportal.ampdroid.lists.views.EpisodePosterViewAdapterItem;
 import com.mediaportal.ampdroid.quickactions.ActionItem;
 import com.mediaportal.ampdroid.quickactions.QuickAction;
 import com.mediaportal.ampdroid.utils.DownloaderUtils;
@@ -66,7 +66,7 @@ public class TabEpisodesActivity extends Activity {
             List<SeriesEpisode> episodes = values[0];
             for (SeriesEpisode e : episodes) {
                //EpisodeDetails details = mService.getEpisode(e.getId());
-               mAdapter.AddItem(new EpisodePosterViewAdapter(mSeriesId, e));
+               mAdapter.addItem(new EpisodePosterViewAdapterItem(mSeriesId, e));
             }
          }
          mAdapter.notifyDataSetChanged();
@@ -181,7 +181,7 @@ public class TabEpisodesActivity extends Activity {
 
    @Override
    public void onDestroy() {
-      mAdapter.imageLoader.stopThread();
+      mAdapter.mImageLoader.stopThread();
       mlistView.setAdapter(null);
       super.onDestroy();
    }
