@@ -1,11 +1,16 @@
 package com.mediaportal.ampdroid.activities.media;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
@@ -16,95 +21,139 @@ import android.widget.Button;
 import android.widget.Gallery;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.mediaportal.ampdroid.api.DataHandler;
+import com.mediaportal.ampdroid.data.Movie;
 import com.mediaportal.ampdroid.data.SeriesFull;
 import com.mediaportal.ampdroid.data.SeriesSeason;
+import com.mediaportal.ampdroid.lists.ImageHandler;
 import com.mediaportal.ampdroid.lists.LazyLoadingGalleryAdapter;
+import com.mediaportal.ampdroid.lists.LazyLoadingImage;
+import com.mediaportal.ampdroid.lists.Utils;
+import com.mediaportal.ampdroid.lists.views.MoviePosterViewAdapterItem;
 import com.mediaportal.ampdroid.lists.views.PosterGalleryViewAdapterItem;
 import com.mediaportal.ampdroid.R;
+
 public class TabSeriesDetailsActivity extends Activity {
    private LazyLoadingGalleryAdapter mAdapter;
    private LinearLayout mSeasonLayout;
    private ImageView mSeriesPoster;
    private TextView mSeriesName;
    private TextView mSeriesOverview;
+   private TextView mSeriesReleaseDate;
+   private TextView mSeriesRuntime;
+   private TextView mSeriesCertification;
+   private TextView mSeriesActors;
+   private RatingBar mSeriesRating;
+   
    private Gallery mPosterGallery;
+   private int mSeriesId;
    private SeriesFull mSeries;
+   private ImageHandler mImageHandler;
+   private LoadSeriesDetailsTask mLoadSeriesTask;
+   private LoadSeasonsDetailsTask mLoadSeasonTask;
+   private DataHandler mService;
 
-   @Override
-   public void onCreate(Bundle _savedInstanceState) {
-      super.onCreate(_savedInstanceState);
-      setContentView(R.layout.tabseriesdetailsactivity);
-      mSeasonLayout = (LinearLayout) findViewById(R.id.LinearLayoutSeasons);
-      mSeriesPoster = (ImageView) findViewById(R.id.ImageViewSeriesPoster);
-      mSeriesName = (TextView) findViewById(R.id.TextViewSeriesName);
-      mSeriesOverview = (TextView) findViewById(R.id.TextViewOverview);
-      mPosterGallery = (Gallery) findViewById(R.id.GalleryAllMoviePosters);
+   private class LoadSeriesDetailsTask extends AsyncTask<Integer, List<Movie>, SeriesFull> {
+      Activity mContext;
 
-      Bundle extras = getIntent().getExtras();
-      if (extras != null) {
-         int seriesId = extras.getInt("series_id");
+      private LoadSeriesDetailsTask(Activity _context) {
+         mContext = _context;
+      }
 
-         DataHandler service = DataHandler.getCurrentRemoteInstance();
+      @Override
+      protected SeriesFull doInBackground(Integer... _params) {
+         mSeries = mService.getFullSeries(mSeriesId);
 
-         mSeries = service.getFullSeries(seriesId);
+         return mSeries;
+      }
 
-         String seriesPoster = mSeries.getCurrentPosterUrl();
+      @Override
+      protected void onPostExecute(SeriesFull _result) {
+         String seriesPoster = _result.getCurrentPosterUrl();
          if (seriesPoster != null && !seriesPoster.equals("")) {
-            Bitmap seriesPosterThumb = service.getImage(seriesPoster, 200, 400);
-            if (seriesPosterThumb != null) {
-               mSeriesPoster.setImageBitmap(seriesPosterThumb);
-            }
+            String fileName = Utils.getFileNameWithExtension(_result.getCurrentPosterUrl(), "\\");
+            String cacheName = "Series" + File.separator + mSeriesId + File.separator
+                  + "LargePoster" + File.separator + fileName;
+
+            LazyLoadingImage image = new LazyLoadingImage(seriesPoster, cacheName, 200, 400);
+            mSeriesPoster.setTag(seriesPoster);
+            mImageHandler.DisplayImage(image, R.drawable.listview_imageloading_poster, mContext,
+                  mSeriesPoster);
+
          }
 
-         mSeriesName.setText(mSeries.getPrettyName());
+         mSeriesName.setText(_result.getPrettyName());
 
-         mAdapter = new LazyLoadingGalleryAdapter(this, service);
+         Date firstAired = _result.getFirstAired();
+
+         if (firstAired != null) {
+            String date = (String) android.text.format.DateFormat.format("yyyy-MM-dd", firstAired);
+            mSeriesReleaseDate.setText(date);
+         }
+
+         int runtime = _result.getRuntime();
+         if (runtime != 0) {
+            mSeriesRuntime.setText(String.valueOf(runtime));
+         } else {
+            mSeriesRuntime.setText("-");
+         }
+
+         String[] actors = _result.getActors();
+         if (actors != null) {
+            String actorsString = "| ";
+            for(String a : actors){
+               actorsString += a + " | ";
+            }
+            mSeriesActors.setText(actorsString);
+         } else {
+            mSeriesActors.setText("-");
+         }
          
-         String[] posterUrls = mSeries.getPosterUrls();
-         if (posterUrls != null) {
-            for (int i = 0; i < posterUrls.length; i++) {
-               mAdapter.AddItem(new PosterGalleryViewAdapterItem(posterUrls[i]));
-            }
-         }
-/*
-         String[] fanartUrls = fullSeries.getFanartUrls();
-         if (fanartUrls != null) {
-            for (int i = 0; i < fanartUrls.length; i++) {
-               adapter.AddItem(new PosterGalleryViewAdapter(fanartUrls[i]));
-            }
-         }
+         int rating = (int) _result.getRating();
+         mSeriesRating.setRating(rating);
 
-         String[] bannerUrls = fullSeries.getBannerUrls();
-         if (bannerUrls != null) {
-            for (int i = 0; i < bannerUrls.length; i++) {
-               adapter.AddItem(new PosterGalleryViewAdapter(bannerUrls[i]));
-            }
-         }
-*/
-         //mPosterGallery.setSpacing(-10);
-         mPosterGallery.setAdapter(mAdapter);
+         mSeriesOverview.setText(_result.getSummary());
+      }
+   }
 
-         mSeriesOverview.setText(mSeries.getSummary());
+   private class LoadSeasonsDetailsTask extends
+         AsyncTask<Integer, List<Movie>, ArrayList<SeriesSeason>> {
+      Activity mContext;
 
-         ArrayList<SeriesSeason> seasons = service.getAllSeasons(seriesId);
+      private LoadSeasonsDetailsTask(Activity _context) {
+         mContext = _context;
+      }
 
-         for (int i = 0; i < seasons.size(); i++) {
-            View view = Button.inflate(this, R.layout.listitem_poster, null);
+      @Override
+      protected ArrayList<SeriesSeason> doInBackground(Integer... _params) {
+         ArrayList<SeriesSeason> seasons = mService.getAllSeasons(mSeriesId);
+
+         return seasons;
+      }
+
+      @Override
+      protected void onPostExecute(ArrayList<SeriesSeason> _result) {
+         for (int i = 0; i < _result.size(); i++) {
+            View view = Button.inflate(mContext, R.layout.listitem_poster, null);
             TextView text = (TextView) view.findViewById(R.id.TextViewTitle);
             ImageView image = (ImageView) view.findViewById(R.id.ImageViewEventImage);
             TextView subtext = (TextView) view.findViewById(R.id.TextViewText);
-            //ProgressBar progress = (ProgressBar) view.findViewById(R.id.ProgressBarLoading);
-            //progress.setVisibility(View.GONE);
 
-            SeriesSeason s = seasons.get(i);
+            SeriesSeason s = _result.get(i);
             String seasonBanner = s.getSeasonBanner();
             if (seasonBanner != null && !seasonBanner.equals("")) {
-               Bitmap seasonImage = service.getImage(seasonBanner, 150, 300);
+               String fileName = Utils.getFileNameWithExtension(seasonBanner, "\\");
+               String cacheName = "Series" + File.separator + mSeriesId + File.separator
+                     + "LargePoster" + File.separator + fileName;
 
-               image.setImageBitmap(seasonImage);
+               LazyLoadingImage bannerImage = new LazyLoadingImage(seasonBanner, cacheName, 100,
+                     150);
+               image.setTag(seasonBanner);
+               mImageHandler.DisplayImage(bannerImage, R.drawable.listview_imageloading_poster,
+                     mContext, image);
             }
 
             view.setOnTouchListener(new OnTouchListener() {
@@ -125,18 +174,6 @@ public class TabSeriesDetailsActivity extends Activity {
                }
             });
 
-            view.setOnFocusChangeListener(new OnFocusChangeListener() {
-
-               @Override
-               public void onFocusChange(View _view, boolean _hasFocus) {
-                  if (_hasFocus) {
-
-                  } else {
-
-                  }
-               }
-            });
-
             view.setOnClickListener(new OnClickListener() {
 
                @Override
@@ -150,8 +187,8 @@ public class TabSeriesDetailsActivity extends Activity {
                   myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
                   // Create the view using FirstGroup's LocalActivityManager
-                  View view = TabSeriesActivityGroup.getGroup().getLocalActivityManager().startActivity(
-                        "season_episodes", myIntent).getDecorView();
+                  View view = TabSeriesActivityGroup.getGroup().getLocalActivityManager()
+                        .startActivity("season_episodes", myIntent).getDecorView();
 
                   // Again, replace the view
                   TabSeriesActivityGroup.getGroup().replaceView(view);
@@ -164,31 +201,43 @@ public class TabSeriesDetailsActivity extends Activity {
 
             mSeasonLayout.addView(view);
          }
+      }
+   }
 
-         // m_listView.setAdapter(adapter);
+   @Override
+   public void onCreate(Bundle _savedInstanceState) {
+      super.onCreate(_savedInstanceState);
+      setContentView(R.layout.tabseriesdetailsactivity);
+      mSeasonLayout = (LinearLayout) findViewById(R.id.LinearLayoutSeasons);
+      mSeriesPoster = (ImageView) findViewById(R.id.ImageViewSeriesPoster);
+      mSeriesName = (TextView) findViewById(R.id.TextViewSeriesName);
+      mSeriesOverview = (TextView) findViewById(R.id.TextViewOverview);
+      mPosterGallery = (Gallery) findViewById(R.id.GalleryAllMoviePosters);
+      mSeriesReleaseDate = (TextView) findViewById(R.id.TextViewSeriesRelease);
+      mSeriesRuntime = (TextView) findViewById(R.id.TextViewSeriesRuntime);
+      mSeriesCertification = (TextView) findViewById(R.id.TextViewSeriesCertification);
+      mSeriesActors = (TextView) findViewById(R.id.TextViewSeriesActors);
+      mSeriesRating = (RatingBar) findViewById(R.id.RatingBarSeriesRating);
+      mSeriesRating.setNumStars(10);
 
+      Bundle extras = getIntent().getExtras();
+      if (extras != null) {
+         mSeriesId = extras.getInt("series_id");
+
+         mService = DataHandler.getCurrentRemoteInstance();
+         mImageHandler = new ImageHandler(this);
+
+         mLoadSeriesTask = new LoadSeriesDetailsTask(this);
+         mLoadSeriesTask.execute(mSeriesId);
+
+         // mPosterGallery.setSpacing(-10);
+         // mPosterGallery.setAdapter(mAdapter);
+
+         mLoadSeasonTask = new LoadSeasonsDetailsTask(this);
+         mLoadSeasonTask.execute(mSeriesId);
       } else {// activity called without movie id (shouldn't happen ;))
 
       }
-
-      /*
-       * m_listView.setOnItemClickListener(new OnItemClickListener() {
-       * 
-       * @Override public void onItemClick(AdapterView<?> a, View v, int
-       * position, long id) {
-       * 
-       * MPSeason selectedSeason = (MPSeason) m_listView
-       * .getItemAtPosition(position); // MPWebServiceProvider provider = new //
-       * MPWebServiceProvider("10.1.0.154", // 8090);
-       * 
-       * // ArrayList<MPSeason> seasons = //
-       * provider.getAllSeasons(selectedSeries.getId());
-       * 
-       * 
-       * 
-       * } });
-       */
-
    }
 
    @Override

@@ -10,6 +10,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -172,7 +173,7 @@ public class TabEpisodesActivity extends Activity {
    }
 
    private void refreshEpisodes() {
-      mAdapter.setLoadingText("Loading Series ...");
+      mAdapter.setLoadingText("Loading Episodes ...");
       mAdapter.showLoadingItem(true);
       mEpisodesLoaderTask = new LoadEpisodesTask();
       mEpisodesLoaderTask.execute(0);
@@ -184,5 +185,20 @@ public class TabEpisodesActivity extends Activity {
       mAdapter.mImageLoader.stopThread();
       mlistView.setAdapter(null);
       super.onDestroy();
+   }
+   
+   @Override
+   public void onBackPressed() {
+      TabSeriesActivityGroup.getGroup().back();
+      return;
+   }
+
+   @Override
+   public boolean onKeyDown(int _keyCode, KeyEvent _event) {
+      if (_keyCode == KeyEvent.KEYCODE_BACK) {
+         TabSeriesActivityGroup.getGroup().back();
+         return true;
+      }
+      return super.onKeyDown(_keyCode, _event);
    }
 }

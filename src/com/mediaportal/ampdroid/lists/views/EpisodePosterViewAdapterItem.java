@@ -28,7 +28,7 @@ public class EpisodePosterViewAdapterItem implements ILoadingAdapterItem {
       String ext = Utils.getExtension(mEpisode.getBannerUrl());
       String cacheName =  "Series" + File.separator + mSeriesId + File.separator + "Season." + mEpisode.getSeasonNumber()
             + File.separator + "Ep" + mEpisode.getEpisodeNumber() + "." + ext;
-      mImage = new LazyLoadingImage(mEpisode.getBannerUrl(), cacheName, 300, 100);
+      mImage = new LazyLoadingImage(mEpisode.getBannerUrl(), cacheName, 400, 200);
    }
 
    @Override
@@ -39,7 +39,7 @@ public class EpisodePosterViewAdapterItem implements ILoadingAdapterItem {
 
    @Override
    public int getType() {
-      return ViewTypes.PosterView.ordinal();
+      return ViewTypes.ThumbView.ordinal();
    }
 
    @Override
