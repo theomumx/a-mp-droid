@@ -17,8 +17,8 @@ import android.widget.ImageView;
 
 import com.mediaportal.ampdroid.api.DataHandler;
 import com.mediaportal.ampdroid.R;
-public class ImageHandler {
 
+public class ImageHandler {
    public static int ImagePrefferedWidth = 400;// width of loaded image ->
    // default = 400
    public static int ImagePrefferedHeight = 300;// height of loaded image ->
@@ -37,7 +37,7 @@ public class ImageHandler {
       // Make the background thead low priority. This way it will not affect
       // the UI performance
       mContext = context;
-      photoLoaderThread.setPriority(Thread.NORM_PRIORITY - 1);
+      photoLoaderThread.setPriority(Thread.MIN_PRIORITY);
 
       // Find the dir to save cached images
       if (android.os.Environment.getExternalStorageState().equals(
@@ -49,28 +49,33 @@ public class ImageHandler {
          cacheDir.mkdirs();
    }
 
-   final int stub_id = R.drawable.mp_logo_2;
-
-   public void DisplayImage(String url, String cache, Activity activity, ImageView imageView) {
+   public void DisplayImage(LazyLoadingImage _image, int _loadingImage, Activity activity,
+         ImageView imageView) {
       Bitmap bitmap = null;
-      //TODO: memory cache will always be empty -> at some point reintroduce memory caching
+      String url = _image.getImageUrl();
       if (memoryCache.containsKey(url)) {
          bitmap = memoryCache.get(url);
          imageView.setImageBitmap(bitmap);
       } else {
-         queuePhoto(url, cache, activity, imageView);
+         queuePhoto(_image, activity, imageView);
       }
 
       if (bitmap == null) {
-         imageView.setImageResource(stub_id);
+         // loading image
+         if (_loadingImage == 0) {
+            // show nothing as loading image
+            imageView.setImageBitmap(null);
+         } else {
+            imageView.setImageResource(_loadingImage);
+         }
       }
    }
 
-   private void queuePhoto(String url, String cache, Activity activity, ImageView imageView) {
+   private void queuePhoto(LazyLoadingImage _image, Activity activity, ImageView imageView) {
       // This ImageView may be used for other images before. So there may be
       // some old tasks in the queue. We need to discard them.
       photosQueue.Clean(imageView);
-      PhotoToLoad p = new PhotoToLoad(url, cache, imageView);
+      PhotoToLoad p = new PhotoToLoad(_image, imageView);
       synchronized (photosQueue.photosToLoad) {
          photosQueue.photosToLoad.push(p);
          photosQueue.photosToLoad.notifyAll();
@@ -85,10 +90,10 @@ public class ImageHandler {
       return String.valueOf(url.hashCode());
    }
 
-   public Bitmap getBitmap(String url, String cache, boolean thumb) {
-      if (url != null && !url.equals("")) {
+   public Bitmap getBitmap(LazyLoadingImage _image, boolean thumb) {
+      if (_image != null && _image.getImageUrl() != null && !_image.getImageUrl().equals("")) {
 
-         File file = new File(cacheDir + File.separator + cache);
+         File file = new File(cacheDir + File.separator + _image.getImageCacheName());
 
          // from SD cache
          Bitmap b = decodeFile(file, thumb);
@@ -99,7 +104,7 @@ public class ImageHandler {
          // from web
          try {
             DataHandler service = DataHandler.getCurrentRemoteInstance();
-            b = service.getImage(url, 200, 200);
+            b = service.getImage(_image.getImageUrl(), _image.getMaxWidth(), _image.getMaxHeight());
          } catch (Exception ex) {
             ex.printStackTrace();
             return null;
@@ -181,14 +186,12 @@ public class ImageHandler {
 
    // Task for the queue
    private class PhotoToLoad {
-      public String url;
-      public String cache;
+      public LazyLoadingImage image;
       public ImageView imageView;
 
-      public PhotoToLoad(String _url, String _cache, ImageView i) {
-         url = _url;
-         cache = _cache;
-         imageView = i;
+      public PhotoToLoad(LazyLoadingImage _image, ImageView _view) {
+         image = _image;
+         imageView = _view;
       }
    }
 
@@ -228,15 +231,15 @@ public class ImageHandler {
                   synchronized (photosQueue.photosToLoad) {
                      photoToLoad = photosQueue.photosToLoad.pop();
                   }
-                  Bitmap bmp = getBitmap(photoToLoad.url, photoToLoad.cache, false);
-                  
-                  //TODO: implement memory caching to further improve performance
-                  memoryCache.put(photoToLoad.url, bmp);
-                  //if (memoryCache.size() > MEMORY_CACHE_SIZE) {
-                   //  // cache.
-                  //}
+                  Bitmap bmp = getBitmap(photoToLoad.image, false);
 
-                  if (((String) photoToLoad.imageView.getTag()).equals(photoToLoad.url)) {
+                  memoryCache.put(photoToLoad.image.getImageUrl(), bmp);
+                  // if (memoryCache.size() > MEMORY_CACHE_SIZE) {
+                  // // cache.
+                  // }
+
+                  if (((String) photoToLoad.imageView.getTag()).equals(photoToLoad.image
+                        .getImageUrl())) {
                      BitmapDisplayer bd = new BitmapDisplayer(bmp, photoToLoad.imageView);
                      Activity a = (Activity) photoToLoad.imageView.getContext();
                      a.runOnUiThread(bd);
@@ -264,19 +267,25 @@ public class ImageHandler {
       }
 
       public void run() {
-         if (bitmap != null)
+         if (bitmap != null) {
             imageView.setImageBitmap(bitmap);
-         else
-            imageView.setImageResource(stub_id);
+         }
       }
    }
 
+   /**
+    * Clear memory cache
+    */
    public void clearCache() {
-      // clear memory cache
       memoryCache.clear();
    }
-   
 
+   /**
+    * Delete an image from the image cache
+    * 
+    * @param original
+    *           URL of the image
+    */
    public void deleteImage(String url) {
       String filename = getHashOfFileName(url);
       File fileToDelete = new File(filename);

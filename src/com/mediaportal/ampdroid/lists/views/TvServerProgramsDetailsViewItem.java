@@ -9,16 +9,17 @@ import android.widget.TextView;
 import com.mediaportal.ampdroid.R;
 import com.mediaportal.ampdroid.data.TvProgram;
 import com.mediaportal.ampdroid.lists.ILoadingAdapterItem;
+import com.mediaportal.ampdroid.lists.LazyLoadingImage;
 import com.mediaportal.ampdroid.lists.LazyLoadingAdapter.ViewHolder;
 import com.mediaportal.ampdroid.lists.SubtextViewHolder;
 
-public class TvServerProgramsDetailsView implements ILoadingAdapterItem {
+public class TvServerProgramsDetailsViewItem implements ILoadingAdapterItem {
 
    private TvProgram mProgram;
    private String mDateString;
    private String mOverviewString;
    
-   public TvServerProgramsDetailsView(TvProgram _program) {
+   public TvServerProgramsDetailsViewItem(TvProgram _program) {
       mProgram = _program;
 
       Date begin = mProgram.getStartTime();
@@ -49,12 +50,7 @@ public class TvServerProgramsDetailsView implements ILoadingAdapterItem {
    }
 
    @Override
-   public String getImage() {
-      return null;
-   }
-
-   @Override
-   public String getImageCacheName() {
+   public LazyLoadingImage getImage() {
       return null;
    }
 
@@ -106,5 +102,17 @@ public class TvServerProgramsDetailsView implements ILoadingAdapterItem {
             holder.image2.setImageBitmap(null);
          }
       }
+   }
+
+   @Override
+   public int getLoadingImageResource() {
+      // TODO Auto-generated method stub
+      return 0;
+   }
+
+   @Override
+   public int getDefaultImageResource() {
+      // TODO Auto-generated method stub
+      return 0;
    }
 }

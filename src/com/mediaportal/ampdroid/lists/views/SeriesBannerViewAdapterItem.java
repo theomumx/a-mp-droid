@@ -3,7 +3,6 @@ package com.mediaportal.ampdroid.lists.views;
 import java.io.File;
 
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -11,43 +10,45 @@ import android.widget.TextView;
 import com.mediaportal.ampdroid.R;
 import com.mediaportal.ampdroid.data.Series;
 import com.mediaportal.ampdroid.lists.ILoadingAdapterItem;
-import com.mediaportal.ampdroid.lists.SubtextViewHolder;
 import com.mediaportal.ampdroid.lists.LazyLoadingAdapter.ViewHolder;
+import com.mediaportal.ampdroid.lists.LazyLoadingImage;
+import com.mediaportal.ampdroid.lists.SubtextViewHolder;
 import com.mediaportal.ampdroid.lists.Utils;
 
-public class SeriesPosterViewAdapter implements ILoadingAdapterItem {
+public class SeriesBannerViewAdapterItem implements ILoadingAdapterItem {
    private Series mSeries;
+   private LazyLoadingImage mImage;
 
-   public SeriesPosterViewAdapter(Series _series) {
+   public SeriesBannerViewAdapterItem(Series _series) {
       super();
       this.mSeries = _series;
+      String fileName = Utils.getFileNameWithExtension(mSeries.getCurrentBannerUrl(), "\\");
+      String cacheName = "Series" + File.separator + mSeries.getId() + File.separator + "Banner" + File.separator + fileName;
+ 
+      mImage = new LazyLoadingImage(mSeries.getCurrentBannerUrl(), cacheName, 300, 100);
    }
 
    @Override
-   public String getImage() {
-      return mSeries.getCurrentPosterUrl();
-   }
-   
-   @Override
-   public String getImageCacheName() {
-      String fileName = Utils.getFileNameWithExtension(mSeries.getCurrentPosterUrl(), "\\");
-      return "Series" + File.separator + mSeries.getId() + File.separator + "Poster" + File.separator + fileName;
+   public LazyLoadingImage getImage() {
+      return mImage;
    }
 
    @Override
    public int getType() {
-      return ViewTypes.PosterView.ordinal();
+      return ViewTypes.BannerView.ordinal();
    }
 
    @Override
    public int getXml() {
-      return R.layout.listitem_poster;
+      return R.layout.listitem_banner;
    }
    
    @Override
    public Object getItem() {
       return mSeries;
    }
+
+
 
    @Override
    public ViewHolder createViewHolder(View _view) {
@@ -62,23 +63,23 @@ public class SeriesPosterViewAdapter implements ILoadingAdapterItem {
    @Override
    public void fillViewFromViewHolder(ViewHolder _holder) {
       SubtextViewHolder holder = (SubtextViewHolder)_holder;
-      if (holder.title != null) {
-         holder.title.setTypeface(null, Typeface.BOLD);
-
-         holder.title.setTextColor(Color.WHITE);
-         holder.title.setText(mSeries.getPrettyName());
-      }
 
       if (holder.text != null) {
-         holder.text.setText("");
+         holder.text.setText(mSeries.getPrettyName());
          holder.text.setTextColor(Color.WHITE);
-      }
-
-      if (holder.subtext != null) {
-         holder.subtext.setText(mSeries.getGenreString());
       }
    }
 
+   @Override
+   public int getLoadingImageResource() {
+      // TODO Auto-generated method stub
+      return 0;
+   }
 
+   @Override
+   public int getDefaultImageResource() {
+      // TODO Auto-generated method stub
+      return 0;
+   }
 
 }

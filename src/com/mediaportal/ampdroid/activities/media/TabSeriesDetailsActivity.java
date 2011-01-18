@@ -22,7 +22,7 @@ import com.mediaportal.ampdroid.api.DataHandler;
 import com.mediaportal.ampdroid.data.SeriesFull;
 import com.mediaportal.ampdroid.data.SeriesSeason;
 import com.mediaportal.ampdroid.lists.LazyLoadingGalleryAdapter;
-import com.mediaportal.ampdroid.lists.views.PosterGalleryViewAdapter;
+import com.mediaportal.ampdroid.lists.views.PosterGalleryViewAdapterItem;
 import com.mediaportal.ampdroid.R;
 public class TabSeriesDetailsActivity extends Activity {
    private LazyLoadingGalleryAdapter mAdapter;
@@ -66,7 +66,7 @@ public class TabSeriesDetailsActivity extends Activity {
          String[] posterUrls = mSeries.getPosterUrls();
          if (posterUrls != null) {
             for (int i = 0; i < posterUrls.length; i++) {
-               mAdapter.AddItem(new PosterGalleryViewAdapter(posterUrls[i]));
+               mAdapter.AddItem(new PosterGalleryViewAdapterItem(posterUrls[i]));
             }
          }
 /*

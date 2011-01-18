@@ -61,7 +61,7 @@ public class LazyLoadingGalleryAdapter extends BaseAdapter {
          imageView = (ImageView) convertView;
       }
 
-      Bitmap img = service.getImage(data.get(position).getImage(), 100, 200);
+      Bitmap img = service.getImage(data.get(position).getImage().getImageUrl(), 100, 200);
       imageView.setImageBitmap(img);
 
       return imageView;

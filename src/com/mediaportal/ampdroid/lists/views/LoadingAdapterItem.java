@@ -5,25 +5,22 @@ import android.widget.TextView;
 
 import com.mediaportal.ampdroid.R;
 import com.mediaportal.ampdroid.lists.ILoadingAdapterItem;
+import com.mediaportal.ampdroid.lists.LazyLoadingImage;
 import com.mediaportal.ampdroid.lists.LazyLoadingAdapter.ViewHolder;
 
-public class LoadingItemAdapter implements ILoadingAdapterItem {
+public class LoadingAdapterItem implements ILoadingAdapterItem {
 
    private String mLoadingText;
 
-   public LoadingItemAdapter(String _loadingText){
+   public LoadingAdapterItem(String _loadingText){
       setLoadingText(_loadingText);
    }
    
    @Override
-   public String getImage() {
+   public LazyLoadingImage getImage() {
       return null;
    }
 
-   @Override
-   public String getImageCacheName() {
-      return null;
-   }
 
    @Override
    public int getType() {
@@ -60,6 +57,18 @@ public class LoadingItemAdapter implements ILoadingAdapterItem {
 
    public String getLoadingText() {
       return mLoadingText;
+   }
+
+   @Override
+   public int getLoadingImageResource() {
+      // TODO Auto-generated method stub
+      return 0;
+   }
+
+   @Override
+   public int getDefaultImageResource() {
+      // TODO Auto-generated method stub
+      return 0;
    }
 
 }
