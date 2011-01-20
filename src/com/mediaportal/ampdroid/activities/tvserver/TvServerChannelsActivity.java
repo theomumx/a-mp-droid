@@ -113,6 +113,7 @@ public class TvServerChannelsActivity extends BaseActivity {
             
             Intent myIntent = new Intent(_view.getContext(), TvServerChannelDetailsActivity.class);
             myIntent.putExtra("channel_id", channel.getIdChannel());
+            myIntent.putExtra("channel_name", channel.getDisplayName());
             startActivity(myIntent);
          }
       });

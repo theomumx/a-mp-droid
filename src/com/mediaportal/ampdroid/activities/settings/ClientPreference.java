@@ -16,13 +16,13 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import com.mediaportal.ampdroid.R;
 import com.mediaportal.ampdroid.api.DataHandler;
 import com.mediaportal.ampdroid.api.database.RemoteClientFactory;
-import com.mediaportal.ampdroid.api.gmawebservice.GmaWebserviceApi;
-import com.mediaportal.ampdroid.api.tv4home.Tv4HomeApi;
+import com.mediaportal.ampdroid.api.gmawebservice.GmaJsonWebserviceApi;
+import com.mediaportal.ampdroid.api.tv4home.Tv4HomeJsonApi;
 import com.mediaportal.ampdroid.api.wifiremote.WifiRemoteMpController;
 import com.mediaportal.ampdroid.data.RemoteClient;
-import com.mediaportal.ampdroid.R;
 public class ClientPreference extends DialogPreference {
    private Context mContext;
    private RemoteClient mClient;
@@ -137,10 +137,10 @@ public class ClientPreference extends DialogPreference {
          }         
          mClient.setClientName(mNameView.getText().toString());
          String addr = mHostView.getText().toString();
-         GmaWebserviceApi api = new GmaWebserviceApi(addr, 4322);
+         GmaJsonWebserviceApi api = new GmaJsonWebserviceApi(addr, 4322);
          mClient.setRemoteAccessApi(api);
          
-         Tv4HomeApi tvApi = new Tv4HomeApi(addr, 4321);
+         Tv4HomeJsonApi tvApi = new Tv4HomeJsonApi(addr, 4321);
          mClient.setTvControlApi(tvApi);
          
          WifiRemoteMpController clientApi = new WifiRemoteMpController(addr, 8017);

@@ -10,13 +10,13 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.mediaportal.ampdroid.R;
 import com.mediaportal.ampdroid.activities.BaseActivity;
@@ -38,11 +38,14 @@ public class TvServerChannelDetailsActivity extends BaseActivity {
    private Button mNextDayButton;
    private ArrayAdapter<EpgDay> mDaysAdapter;
    private LazyLoadingAdapter mEpgAdapter;
+   private TextView mChannelNameText;
+   private TextView mCurrentDateTextView;
    private int mChannelId;
+   private String mChannelName;
 
    private AddScheduleTask mAddScheduleTask;
    private CancelScheduleTask mCancelScheduleTask;
-   
+
    private class CancelScheduleTask extends AsyncTask<TvProgram, Boolean, Boolean> {
       private Context mContext;
 
@@ -127,8 +130,10 @@ public class TvServerChannelDetailsActivity extends BaseActivity {
 
       @Override
       protected void onPostExecute(List<TvProgram> _result) {
-         for (TvProgram p : _result) {
-            mEpgAdapter.addItem(new TvServerProgramsDetailsViewItem(p));
+         if (_result != null) {
+            for (TvProgram p : _result) {
+               mEpgAdapter.addItem(new TvServerProgramsDetailsViewItem(p));
+            }
          }
          mEpgAdapter.showLoadingItem(false);
          mEpgAdapter.notifyDataSetChanged();
@@ -178,6 +183,7 @@ public class TvServerChannelDetailsActivity extends BaseActivity {
       Bundle extras = getIntent().getExtras();
       if (extras != null) {
          mChannelId = extras.getInt("channel_id");
+         mChannelName = extras.getString("channel_name");
          mEpgView = (ListView) findViewById(R.id.ListViewChannels);
          mEpgAdapter = new LazyLoadingAdapter(this);
          mEpgView.setAdapter(mEpgAdapter);
@@ -208,12 +214,17 @@ public class TvServerChannelDetailsActivity extends BaseActivity {
 
          mNextDayButton = (Button) findViewById(R.id.ButtonNextDay);
          mPrevDayButton = (Button) findViewById(R.id.ButtonPrevDay);
+         mChannelNameText = (TextView)findViewById(R.id.TextViewChannelName);
+         mCurrentDateTextView = (TextView)findViewById(R.id.TextViewCurrentDate);
+         
+         mChannelNameText.setText(mChannelName);
 
          mDaysSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
             @Override
-            public void onItemSelected(AdapterView<?> _adapter, View _view, int _position, long _id) {
-               refreshEpg(_position);
-               setPrevNextButtonEnabled(_position);
+            public void onItemSelected(AdapterView<?> _adapter, View _view, int _pos, long _id) {
+               refreshEpg(_pos);
+               mCurrentDateTextView.setText(mDaysAdapter.getItem(_pos).toString());
+               setPrevNextButtonEnabled(_pos);
             }
 
             @Override
@@ -248,11 +259,11 @@ public class TvServerChannelDetailsActivity extends BaseActivity {
          mEpgView.setOnItemLongClickListener(new OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> _item, View _view, final int _pos,
-                  long _id) {               ILoadingAdapterItem item = (ILoadingAdapterItem) mEpgView.getItemAtPosition(_pos);
+                  long _id) {
+               ILoadingAdapterItem item = (ILoadingAdapterItem) mEpgView.getItemAtPosition(_pos);
                final TvProgram program = (TvProgram) item.getItem();
 
                final QuickAction qa = new QuickAction(_view);
-               
 
                if (program.isIsRecordingOncePending() || program.isIsRecordingSeriesPending()) {
                   ActionItem addScheduleAction = new ActionItem();
@@ -271,7 +282,8 @@ public class TvServerChannelDetailsActivity extends BaseActivity {
                } else {
                   ActionItem addScheduleAction = new ActionItem();
                   addScheduleAction.setTitle("Record this");
-                  addScheduleAction.setIcon(getResources().getDrawable(R.drawable.quickaction_recording));
+                  addScheduleAction.setIcon(getResources().getDrawable(
+                        R.drawable.quickaction_recording));
                   addScheduleAction.setOnClickListener(new OnClickListener() {
                      @Override
                      public void onClick(View _view) {

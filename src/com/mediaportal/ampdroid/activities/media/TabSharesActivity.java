@@ -15,6 +15,7 @@ import com.mediaportal.ampdroid.R;
 import com.mediaportal.ampdroid.api.DataHandler;
 import com.mediaportal.ampdroid.data.VideoShare;
 import com.mediaportal.ampdroid.utils.Util;
+
 public class TabSharesActivity extends Activity {
    private ListView mListView;
    private ArrayAdapter<VideoShare> mListItems;
@@ -31,14 +32,16 @@ public class TabSharesActivity extends Activity {
 
       @Override
       protected void onPostExecute(List<VideoShare> _result) {
-         for(VideoShare s : _result){
-            mListItems.add(s);
+         if (_result != null) {
+            for (VideoShare s : _result) {
+               mListItems.add(s);
+            }
          }
-         
+
          mListItems.notifyDataSetChanged();
       }
    }
-   
+
    /** Called when the activity is first created. */
    @Override
    public void onCreate(Bundle _savedInstanceState) {
@@ -49,17 +52,17 @@ public class TabSharesActivity extends Activity {
       mListView.setOnItemClickListener(new OnItemClickListener() {
          @Override
          public void onItemClick(AdapterView<?> a, View v, int position, long id) {
-            VideoShare selected = (VideoShare)mListView.getItemAtPosition(position);
+            VideoShare selected = (VideoShare) mListView.getItemAtPosition(position);
             Util.showToast(v.getContext(), selected.Path);
-            //handleListClick(v, position, selected);
+            // handleListClick(v, position, selected);
          }
       });
-      
+
       mListItems = new ArrayAdapter<VideoShare>(this, android.R.layout.simple_list_item_1);
       mListView.setAdapter(mListItems);
-      
+
       mService = DataHandler.getCurrentRemoteInstance();
-      
+
       mSeriesLoaderTask = new LoadSharesTask();
       mSeriesLoaderTask.execute(0);
 

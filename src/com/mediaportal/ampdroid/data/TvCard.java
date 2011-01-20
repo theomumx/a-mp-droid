@@ -1,5 +1,7 @@
 package com.mediaportal.ampdroid.data;
 
+import org.codehaus.jackson.annotate.JsonProperty;
+
 public class TvCard {
    String CardName;
    TvChannel Channel;
@@ -18,6 +20,7 @@ public class TvCard {
       return CardName;
    }
 
+   @JsonProperty("CardName")
    public void setCardName(String cardName) {
       CardName = cardName;
    }
@@ -26,6 +29,7 @@ public class TvCard {
       return Channel;
    }
 
+   @JsonProperty("Channel")
    public void setChannel(TvChannel channel) {
       Channel = channel;
    }
@@ -34,6 +38,7 @@ public class TvCard {
       return IsTimeShifting;
    }
 
+   @JsonProperty("IsTimeShifting")
    public void setIsTimeShifting(boolean isTimeShifting) {
       IsTimeShifting = isTimeShifting;
    }
@@ -42,6 +47,7 @@ public class TvCard {
       return IsRecording;
    }
 
+   @JsonProperty("IsRecording")
    public void setIsRecording(boolean isRecording) {
       IsRecording = isRecording;
    }

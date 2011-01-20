@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -24,6 +25,7 @@ import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.mediaportal.ampdroid.activities.tvserver.TvServerChannelsActivity;
 import com.mediaportal.ampdroid.api.DataHandler;
 import com.mediaportal.ampdroid.data.Movie;
 import com.mediaportal.ampdroid.data.SeriesFull;
@@ -55,6 +57,7 @@ public class TabSeriesDetailsActivity extends Activity {
    private LoadSeriesDetailsTask mLoadSeriesTask;
    private LoadSeasonsDetailsTask mLoadSeasonTask;
    private DataHandler mService;
+   private ProgressDialog mLoadingDialog;
 
    private class LoadSeriesDetailsTask extends AsyncTask<Integer, List<Movie>, SeriesFull> {
       Activity mContext;
@@ -116,6 +119,8 @@ public class TabSeriesDetailsActivity extends Activity {
          mSeriesRating.setRating(rating);
 
          mSeriesOverview.setText(_result.getSummary());
+         
+         mLoadingDialog.cancel();
       }
    }
 
@@ -232,6 +237,10 @@ public class TabSeriesDetailsActivity extends Activity {
 
          // mPosterGallery.setSpacing(-10);
          // mPosterGallery.setAdapter(mAdapter);
+         
+         mLoadingDialog = ProgressDialog.show(getParent(), " Loading Series Details ",
+               " Loading. Please wait ... ", true);
+         mLoadingDialog.setCancelable(true);
 
          mLoadSeasonTask = new LoadSeasonsDetailsTask(this);
          mLoadSeasonTask.execute(mSeriesId);
