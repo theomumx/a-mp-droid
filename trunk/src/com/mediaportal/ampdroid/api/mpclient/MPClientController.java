@@ -110,4 +110,16 @@ public class MPClientController implements IClientControlApi {
       // TODO Auto-generated method stub
       
    }
+
+   @Override
+   public String getServer() {
+      // TODO Auto-generated method stub
+      return null;
+   }
+
+   @Override
+   public int getPort() {
+      // TODO Auto-generated method stub
+      return 0;
+   }
 }

@@ -84,6 +84,16 @@ public class Tv4HomeApi implements ITvServiceApi {
    public String getAddress() {
       return m_server;
    }
+   
+   @Override
+   public String getServer() {
+      return m_server;
+   }
+
+   @Override
+   public int getPort() {
+      return m_port;
+   }
 
    @Override
    public void AddSchedule(int _channelId, String _title, Date _startTime, Date _endTime,
@@ -448,5 +458,7 @@ public class Tv4HomeApi implements ITvServiceApi {
       }
       return false;
    }
+
+
 
 }

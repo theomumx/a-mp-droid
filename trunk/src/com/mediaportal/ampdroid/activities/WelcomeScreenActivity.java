@@ -1,6 +1,5 @@
 package com.mediaportal.ampdroid.activities;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
@@ -23,11 +22,8 @@ import android.widget.Spinner;
 import com.mediaportal.ampdroid.R;
 import com.mediaportal.ampdroid.activities.settings.SettingsActivity;
 import com.mediaportal.ampdroid.api.DataHandler;
-import com.mediaportal.ampdroid.api.database.RemoteClientFactory;
-import com.mediaportal.ampdroid.api.gmawebservice.GmaJsonWebserviceApi;
-import com.mediaportal.ampdroid.api.tv4home.Tv4HomeJsonApi;
-import com.mediaportal.ampdroid.api.wifiremote.WifiRemoteMpController;
 import com.mediaportal.ampdroid.data.RemoteClient;
+import com.mediaportal.ampdroid.database.RemoteClientsDatabaseHandler;
 import com.mediaportal.ampdroid.utils.Util;
 
 public class WelcomeScreenActivity extends Activity {
@@ -42,7 +38,7 @@ public class WelcomeScreenActivity extends Activity {
       @Override
       protected Boolean doInBackground(RemoteClient... _clients) {
 
-         DataHandler.setupRemoteHandler(_clients[0], false);
+         DataHandler.setupRemoteHandler(_clients[0], mContext, false);
 
          try {
             Thread.sleep(0);// for testing, show welcomescreen longer than
@@ -71,7 +67,7 @@ public class WelcomeScreenActivity extends Activity {
    public void onCreate(Bundle _savedInstanceState) {
       super.onCreate(_savedInstanceState);
       setContentView(R.layout.welcomescreen);
-
+      
       // RemoteClientFactory.openDatabase(this);
       // Client for diebagger -> until setting screen ready
       // final RemoteClient client = new RemoteClient(0, "Bagga Server");
@@ -101,9 +97,10 @@ public class WelcomeScreenActivity extends Activity {
 
       final Spinner spinner = (Spinner) findViewById(R.id.SpinnerSelectClients);
 
-      RemoteClientFactory.openDatabase(this);
-
-      List<RemoteClient> clients = RemoteClientFactory.getClients();
+      RemoteClientsDatabaseHandler remoteClientsDb = new RemoteClientsDatabaseHandler(this);
+      remoteClientsDb.open();
+      List<RemoteClient> clients = remoteClientsDb.getClients();
+      remoteClientsDb.close();
 
       connectButton.setOnClickListener(new OnClickListener() {
          @Override
@@ -121,7 +118,7 @@ public class WelcomeScreenActivity extends Activity {
          }
       });
 
-      RemoteClient client = new RemoteClient(0, "Bagga Server");
+      /*RemoteClient client = new RemoteClient(0, "Bagga Server");
 
       GmaJsonWebserviceApi api = new GmaJsonWebserviceApi("10.1.0.166", 4322);
       client.setRemoteAccessApi(api);
@@ -133,7 +130,7 @@ public class WelcomeScreenActivity extends Activity {
       client.setClientControlApi(clientApi);
       
       clients = new ArrayList<RemoteClient>();
-      clients.add(client);
+      clients.add(client);*/
 
       if (clients != null && clients.size() > 0) {
          ArrayAdapter<RemoteClient> adapter = new ArrayAdapter<RemoteClient>(this,

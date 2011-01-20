@@ -4,15 +4,23 @@ import com.mediaportal.ampdroid.api.IApiInterface;
 import com.mediaportal.ampdroid.api.IClientControlApi;
 import com.mediaportal.ampdroid.api.IMediaAccessApi;
 import com.mediaportal.ampdroid.api.ITvServiceApi;
+import com.mediaportal.ampdroid.database.ColumnProperty;
+import com.mediaportal.ampdroid.database.TableProperty;
+
 
 public class RemoteClient {
    private int mClientId;
    private String mClientName;
    private String mClientDescription;
+   private int mRemoteAccessApiId;
+   private int mTvControlApiId;
+   private int mClientControlApiId;
+   
    private IMediaAccessApi mRemoteAccessApi;
    private ITvServiceApi mTvControlApi;
    private IClientControlApi mClientControlApi;
 
+   
    public RemoteClient(int _clientId) {
       mClientId = _clientId;
    }
@@ -36,6 +44,46 @@ public class RemoteClient {
 
    public void setClientId(int clientId) {
       this.mClientId = clientId;
+   }
+
+   public void setClientName(String clientName) {
+      this.mClientName = clientName;
+   }
+
+   public String getClientName() {
+      return mClientName;
+   }
+
+   public String getClientDescription() {
+      return mClientDescription;
+   }
+
+   public void setClientDescription(String clientDescription) {
+      this.mClientDescription = clientDescription;
+   }
+   
+   public int getmRemoteAccessApiId() {
+      return mRemoteAccessApiId;
+   }
+   
+   public void setmRemoteAccessApiId(int mRemoteAccessApiId) {
+      this.mRemoteAccessApiId = mRemoteAccessApiId;
+   }
+   
+   public int getmTvControlApiId() {
+      return mTvControlApiId;
+   }
+   
+   public void setmTvControlApiId(int mTvControlApiId) {
+      this.mTvControlApiId = mTvControlApiId;
+   }
+   
+   public int getmClientControlApiId() {
+      return mClientControlApiId;
+   }
+   
+   public void setmClientControlApiId(int mClientControlApiId) {
+      this.mClientControlApiId = mClientControlApiId;
    }
 
    public String getClientAddress() {
@@ -95,7 +143,7 @@ public class RemoteClient {
          return "Client" + mClientId;
       }
    }
-
+   
    public IMediaAccessApi getRemoteAccessApi() {
       return mRemoteAccessApi;
    }
@@ -120,20 +168,6 @@ public class RemoteClient {
       this.mClientControlApi = clientControlApi;
    }
 
-   public void setClientName(String clientName) {
-      this.mClientName = clientName;
-   }
 
-   public String getClientName() {
-      return mClientName;
-   }
-
-   public String getClientDescription() {
-      return mClientDescription;
-   }
-
-   public void setClientDescription(String clientDescription) {
-      this.mClientDescription = clientDescription;
-   }
 
 }

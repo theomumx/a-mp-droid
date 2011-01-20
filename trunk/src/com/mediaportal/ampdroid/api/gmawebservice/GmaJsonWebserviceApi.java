@@ -48,8 +48,8 @@ public class GmaJsonWebserviceApi implements IMediaAccessApi {
    private GmaJsonWebserviceSeriesApi m_seriesAPI;
    private GmaWebserviceMusicApi m_musicAPI;
 
-   private String m_server;
-   private int m_port;
+   private String mServer;
+   private int mPort;
    private WcfAccessHandler m_wcfService;
 
    private final String WCF_NAMESPACE = "http://tempuri.org/";
@@ -66,10 +66,10 @@ public class GmaJsonWebserviceApi implements IMediaAccessApi {
    private ObjectMapper mJsonObjectMapper;
 
    public GmaJsonWebserviceApi(String _server, int _port) {
-      m_server = _server;
-      m_port = _port;
+      mServer = _server;
+      mPort = _port;
 
-      mJsonClient = new JsonClient(JSON_PREFIX + m_server + ":" + m_port + JSON_SUFFIX);
+      mJsonClient = new JsonClient(JSON_PREFIX + mServer + ":" + mPort + JSON_SUFFIX);
       mJsonObjectMapper = new ObjectMapper();
       mJsonObjectMapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
@@ -80,6 +80,16 @@ public class GmaJsonWebserviceApi implements IMediaAccessApi {
       m_moviesAPI = new GmaJsonWebserviceMovieApi(mJsonClient, mJsonObjectMapper);
       m_seriesAPI = new GmaJsonWebserviceSeriesApi(mJsonClient, mJsonObjectMapper);
       //m_musicAPI = new GmaWebserviceMusicApi(m_wcfService, mJsonObjectMapper);
+   }
+   
+   @Override
+   public String getServer() {
+      return mServer;
+   }
+
+   @Override
+   public int getPort() {
+      return mPort;
    }
 
    @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -100,7 +110,7 @@ public class GmaJsonWebserviceApi implements IMediaAccessApi {
 
    @Override
    public String getAddress() {
-      return m_server;
+      return mServer;
    }
 
    public SupportedFunctions getSupportedFunctions() {
@@ -218,7 +228,7 @@ public class GmaJsonWebserviceApi implements IMediaAccessApi {
       URL myFileUrl = null;
       Bitmap bmImg = null;
       try {
-         myFileUrl = new URL(JSON_PREFIX + m_server + ":" + m_port + JSON_SUFFIX
+         myFileUrl = new URL(JSON_PREFIX + mServer + ":" + mPort + JSON_SUFFIX
                + "/FS_GetImage/?path=" + URLEncoder.encode(_url, "UTF-8"));
          HttpURLConnection conn = (HttpURLConnection) myFileUrl.openConnection();
          conn.setDoInput(true);
@@ -242,7 +252,7 @@ public class GmaJsonWebserviceApi implements IMediaAccessApi {
       URL myFileUrl = null;
       Bitmap bmImg = null;
       try {
-         myFileUrl = new URL(JSON_PREFIX + m_server + ":" + m_port + JSON_SUFFIX
+         myFileUrl = new URL(JSON_PREFIX + mServer + ":" + mPort + JSON_SUFFIX
                + "/FS_GetImageResized/?path=" + URLEncoder.encode(_url, "UTF-8") + "&maxWidth="
                + _maxWidth + "&maxHeight=" + _maxHeight);
          HttpURLConnection conn = (HttpURLConnection) myFileUrl.openConnection();
@@ -266,7 +276,7 @@ public class GmaJsonWebserviceApi implements IMediaAccessApi {
    public String getDownloadUri(String _filePath) {
       String fileUrl = null;
       try {
-         fileUrl = JSON_PREFIX + m_server + ":" + m_port + JSON_SUFFIX + "/FS_GetMediaItem/?path="
+         fileUrl = JSON_PREFIX + mServer + ":" + mPort + JSON_SUFFIX + "/FS_GetMediaItem/?path="
                + URLEncoder.encode(_filePath, "UTF-8");
       } catch (UnsupportedEncodingException e) {
          e.printStackTrace();
@@ -284,4 +294,6 @@ public class GmaJsonWebserviceApi implements IMediaAccessApi {
    public ArrayList<MusicAlbum> getAlbums(int _start, int _end) {
       return m_musicAPI.getAlbums(_start, _end);
    }
+
+
 }
