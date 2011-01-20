@@ -6,10 +6,12 @@
 		android:id="@+id/actionbar" style="@style/ActionBar" />
 	<FrameLayout android:layout_width="fill_parent"
 		android:layout_height="fill_parent" android:layout_marginBottom="60dip">
-		<LinearLayout android:id="@+id/LinearLayout01" android:orientation="vertical"
-			android:layout_height="fill_parent" android:layout_width="fill_parent">
+		<LinearLayout android:id="@+id/LinearLayout01"
+			android:orientation="vertical" android:layout_height="fill_parent"
+			android:layout_width="fill_parent" android:background="@color/details_view_header_background">
 			<LinearLayout android:id="@+id/LinearLayout01"
-				android:layout_height="wrap_content" android:layout_width="fill_parent" android:layout_marginTop="5dip">
+				android:layout_height="wrap_content" android:layout_width="fill_parent"
+				android:layout_marginTop="5dip">
 				<Button android:layout_height="wrap_content" android:id="@+id/ButtonPrevDay"
 					android:text="@string/button_prev" android:layout_width="0dip"
 					android:layout_weight="1"></Button>
@@ -19,12 +21,25 @@
 					android:text="@string/button_next" android:layout_width="0dip"
 					android:layout_weight="1"></Button>
 			</LinearLayout>
+			<FrameLayout android:layout_width="fill_parent" android:id="@+id/FrameLayout02" android:layout_height="20dip">
+				<TextView android:layout_height="wrap_content" android:id="@+id/TextViewChannelName"
+					android:layout_gravity="center" android:gravity="center"
+					android:textStyle="bold" android:layout_width="wrap_content"
+					android:textSize="20dip"
+					android:text="ATV"></TextView>
+				<TextView android:layout_height="wrap_content"
+					android:layout_width="fill_parent" android:gravity="right"
+					android:layout_marginRight="10dip" android:id="@+id/TextViewCurrentDate"
+					android:text="Today"></TextView>
+			</FrameLayout>
 			<ListView android:layout_height="fill_parent"
 				android:layout_width="fill_parent" android:id="@+id/ListViewChannels"
-				android:cacheColorHint="#00477D" android:layout_marginTop="5dip">
+				android:cacheColorHint="#00477D" android:layout_marginTop="5dip"
+				android:background="@color/listview_background">
 			</ListView>
-		</LinearLayout>
-		<!-- <include layout="@layout/include_sliding_drawer" />  -->
+		
+</LinearLayout>
+		<!-- <include layout="@layout/include_sliding_drawer" /> -->
 	</FrameLayout>
 	<include layout="@layout/include_bottom_bar" />
 </LinearLayout>

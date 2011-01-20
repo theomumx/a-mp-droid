@@ -1,5 +1,6 @@
 package com.mediaportal.ampdroid.activities;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
@@ -19,12 +20,16 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 
+import com.mediaportal.ampdroid.R;
 import com.mediaportal.ampdroid.activities.settings.SettingsActivity;
 import com.mediaportal.ampdroid.api.DataHandler;
 import com.mediaportal.ampdroid.api.database.RemoteClientFactory;
+import com.mediaportal.ampdroid.api.gmawebservice.GmaJsonWebserviceApi;
+import com.mediaportal.ampdroid.api.tv4home.Tv4HomeJsonApi;
+import com.mediaportal.ampdroid.api.wifiremote.WifiRemoteMpController;
 import com.mediaportal.ampdroid.data.RemoteClient;
 import com.mediaportal.ampdroid.utils.Util;
-import com.mediaportal.ampdroid.R;
+
 public class WelcomeScreenActivity extends Activity {
    private class StartupTask extends AsyncTask<RemoteClient, String, Boolean> {
 
@@ -38,7 +43,7 @@ public class WelcomeScreenActivity extends Activity {
       protected Boolean doInBackground(RemoteClient... _clients) {
 
          DataHandler.setupRemoteHandler(_clients[0], false);
-         
+
          try {
             Thread.sleep(0);// for testing, show welcomescreen longer than
             // necessary
@@ -83,30 +88,23 @@ public class WelcomeScreenActivity extends Activity {
       // RemoteClientFactory.createRemoteClient(client);
       // RemoteClientFactory.closeDatabase();
 
-     
-      //RemoteClientFactory.closeDatabase();
-
-
-
-
+      // RemoteClientFactory.closeDatabase();
 
    }
-   
-   
-   
+
    @Override
    protected void onStart() {
       final ProgressBar progress = (ProgressBar) findViewById(R.id.ProgressBarWelcomeScreen);
       progress.setVisibility(View.INVISIBLE);
       final Button connectButton = (Button) findViewById(R.id.ButtonConnect);
       connectButton.setEnabled(true);
-      
+
       final Spinner spinner = (Spinner) findViewById(R.id.SpinnerSelectClients);
-      
+
       RemoteClientFactory.openDatabase(this);
 
       List<RemoteClient> clients = RemoteClientFactory.getClients();
-      
+
       connectButton.setOnClickListener(new OnClickListener() {
          @Override
          public void onClick(View _view) {
@@ -117,24 +115,35 @@ public class WelcomeScreenActivity extends Activity {
                progress.setVisibility(View.VISIBLE);
                progress.setIndeterminate(true);
                connectButton.setEnabled(false);
-            }
-            else{
+            } else {
                Util.showToast(_view.getContext(), "Please select client");
             }
          }
       });
+
+      RemoteClient client = new RemoteClient(0, "Bagga Server");
+
+      GmaJsonWebserviceApi api = new GmaJsonWebserviceApi("10.1.0.166", 4322);
+      client.setRemoteAccessApi(api);
+
+      Tv4HomeJsonApi tvApi = new Tv4HomeJsonApi("10.1.0.166", 4321);
+      client.setTvControlApi(tvApi);
+
+      WifiRemoteMpController clientApi = new WifiRemoteMpController("10.1.0.247", 8017);
+      client.setClientControlApi(clientApi);
       
+      clients = new ArrayList<RemoteClient>();
+      clients.add(client);
+
       if (clients != null && clients.size() > 0) {
          ArrayAdapter<RemoteClient> adapter = new ArrayAdapter<RemoteClient>(this,
                android.R.layout.simple_spinner_item, clients);
          adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
          spinner.setAdapter(adapter);
       }
-      
+
       super.onStart();
    }
-
-
 
    @Override
    public boolean onCreateOptionsMenu(Menu _menu) {
@@ -149,11 +158,11 @@ public class WelcomeScreenActivity extends Activity {
 
       return true;
    }
-   
+
    private void startSettings() {
       Intent settingsIntent = new Intent(this, SettingsActivity.class);
       startActivity(settingsIntent);
-      //startActivityForResult(settingsIntent, 0);
+      // startActivityForResult(settingsIntent, 0);
    }
 
    @Override

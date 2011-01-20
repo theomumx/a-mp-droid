@@ -9,14 +9,26 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 
+import org.apache.http.message.BasicNameValuePair;
+import org.codehaus.jackson.JsonParseException;
+import org.codehaus.jackson.map.DeserializationConfig;
+import org.codehaus.jackson.map.JsonMappingException;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.deser.CustomDeserializerFactory;
+import org.codehaus.jackson.map.deser.StdDeserializerProvider;
+import org.kobjects.isodate.IsoDate;
 import org.ksoap2.serialization.SoapObject;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
 
+import com.mediaportal.ampdroid.api.CustomDateDeserializer;
 import com.mediaportal.ampdroid.api.IMediaAccessApi;
+import com.mediaportal.ampdroid.api.JsonClient;
 import com.mediaportal.ampdroid.api.gmawebservice.soap.WcfAccessHandler;
 import com.mediaportal.ampdroid.api.soap.Ksoap2ResultParser;
 import com.mediaportal.ampdroid.data.EpisodeDetails;
@@ -28,11 +40,12 @@ import com.mediaportal.ampdroid.data.SeriesEpisode;
 import com.mediaportal.ampdroid.data.SeriesFull;
 import com.mediaportal.ampdroid.data.SeriesSeason;
 import com.mediaportal.ampdroid.data.SupportedFunctions;
+import com.mediaportal.ampdroid.data.TvVirtualCard;
 import com.mediaportal.ampdroid.data.VideoShare;
 
-public class GmaWebserviceApi implements IMediaAccessApi {
+public class GmaJsonWebserviceApi implements IMediaAccessApi {
    private GmaJsonWebserviceMovieApi m_moviesAPI;
-   private GmaWebserviceSeriesApi m_seriesAPI;
+   private GmaJsonWebserviceSeriesApi m_seriesAPI;
    private GmaWebserviceMusicApi m_musicAPI;
 
    private String m_server;
@@ -49,19 +62,42 @@ public class GmaWebserviceApi implements IMediaAccessApi {
    private final String JSON_PREFIX = "http://";
    private final String JSON_SUFFIX = "/json";
 
-   // Method constants
+   private JsonClient mJsonClient;
+   private ObjectMapper mJsonObjectMapper;
 
-   public GmaWebserviceApi(String _server, int _port) {
+   public GmaJsonWebserviceApi(String _server, int _port) {
       m_server = _server;
       m_port = _port;
 
-      m_wcfService = new WcfAccessHandler(WCF_PREFIX + m_server + ":" + m_port + WCF_SUFFIX,
-            WCF_NAMESPACE, WCF_METHOD_PREFIX);
-      //m_moviesAPI = new GmaWebserviceMovieApi(m_wcfService);
-      m_seriesAPI = new GmaWebserviceSeriesApi(m_wcfService);
-      m_musicAPI = new GmaWebserviceMusicApi(m_wcfService);
+      mJsonClient = new JsonClient(JSON_PREFIX + m_server + ":" + m_port + JSON_SUFFIX);
+      mJsonObjectMapper = new ObjectMapper();
+      mJsonObjectMapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+      CustomDeserializerFactory sf = new CustomDeserializerFactory();
+      mJsonObjectMapper.setDeserializerProvider(new StdDeserializerProvider(sf));
+      sf.addSpecificMapping(Date.class, new CustomDateDeserializer());
+      
+      m_moviesAPI = new GmaJsonWebserviceMovieApi(mJsonClient, mJsonObjectMapper);
+      m_seriesAPI = new GmaJsonWebserviceSeriesApi(mJsonClient, mJsonObjectMapper);
+      //m_musicAPI = new GmaWebserviceMusicApi(m_wcfService, mJsonObjectMapper);
    }
-   
+
+   @SuppressWarnings({ "rawtypes", "unchecked" })
+   private Object getObjectsFromJson(String _jsonString, Class _class) {
+      try {
+         Object returnObjects = mJsonObjectMapper.readValue(_jsonString, _class);
+
+         return returnObjects;
+      } catch (JsonParseException e) {
+         Log.e("aMPed JSON", e.toString());
+      } catch (JsonMappingException e) {
+         Log.e("aMPed JSON", e.toString());
+      } catch (IOException e) {
+         Log.e("aMPed JSON", e.toString());
+      }
+      return null;
+   }
+
    @Override
    public String getAddress() {
       return m_server;
@@ -69,38 +105,39 @@ public class GmaWebserviceApi implements IMediaAccessApi {
 
    public SupportedFunctions getSupportedFunctions() {
       String methodName = GET_SUPPORTED_FUNCTIONS;
-      SoapObject result = (SoapObject) m_wcfService.MakeSoapCall(methodName);
+      String response = mJsonClient.Execute(methodName);
 
-      if (result != null) {
-         SupportedFunctions groups = (SupportedFunctions) Ksoap2ResultParser.createObject(result,
+      if (response != null) {
+         SupportedFunctions returnObject = (SupportedFunctions) getObjectsFromJson(response,
                SupportedFunctions.class);
 
-         if (groups != null) {
-            return groups;
+         if (returnObject != null) {
+            return returnObject;
          } else {
-            Log.d("Soap", "Error parsing result from soap method " + methodName);
+            Log.d("aMPdroid JSON", "Error parsing result from JSON method " + methodName);
          }
       } else {
-         Log.d("Soap", "Error calling soap method " + methodName);
+         Log.d("aMPdroid JSON", "Error retrieving data for method" + methodName);
       }
       return null;
    }
-   
-   @Override
-   public ArrayList<VideoShare> getVideoShares(){
-      SoapObject result = (SoapObject) m_wcfService.MakeSoapCall("MP_GetVideoShares");
 
-      if (result != null) {
-         VideoShare[] albums = (VideoShare[]) Ksoap2ResultParser.createObject(result,
+   @Override
+   public ArrayList<VideoShare> getVideoShares() {
+      String methodName = "MP_GetVideoShares";
+      String response = mJsonClient.Execute(methodName);
+
+      if (response != null) {
+         VideoShare[] returnObject = (VideoShare[]) getObjectsFromJson(response,
                VideoShare[].class);
 
-         if (albums != null) {
-            return new ArrayList<VideoShare>(Arrays.asList(albums));
+         if (returnObject != null) {
+            return new ArrayList<VideoShare>(Arrays.asList(returnObject));
          } else {
-            Log.d("Soap", "Error parsing result from soap method " + "MP_GetVideoShares");
+            Log.d("aMPdroid JSON", "Error parsing result from JSON method " + methodName);
          }
       } else {
-         Log.d("Soap", "Error calling soap method " + "MP_GetVideoShares");
+         Log.d("aMPdroid JSON", "Error retrieving data for method" + methodName);
       }
       return null;
    }
@@ -159,17 +196,18 @@ public class GmaWebserviceApi implements IMediaAccessApi {
    public ArrayList<SeriesEpisode> getAllEpisodesForSeason(int _seriesId, int _seasonNumber) {
       return m_seriesAPI.getAllEpisodesForSeason(_seriesId, _seasonNumber);
    }
-   
+
    @Override
-   public ArrayList<SeriesEpisode> getEpisodesForSeason(int _seriesId, int _seasonNumber, int _begin, int _end) {
+   public ArrayList<SeriesEpisode> getEpisodesForSeason(int _seriesId, int _seasonNumber,
+         int _begin, int _end) {
       return m_seriesAPI.getEpisodesForSeason(_seriesId, _seasonNumber, _begin, _end);
    }
-   
+
    @Override
    public int getEpisodesCountForSeason(int _seriesId, int _seasonNumber) {
       return m_seriesAPI.getEpisodesCountForSeason(_seriesId, _seasonNumber);
    }
-   
+
    @Override
    public EpisodeDetails getEpisode(int _episodeId) {
       return m_seriesAPI.getFullEpisode(_episodeId);
@@ -198,15 +236,15 @@ public class GmaWebserviceApi implements IMediaAccessApi {
 
       return bmImg;
    }
-   
+
    @Override
    public Bitmap getBitmap(String _url, int _maxWidth, int _maxHeight) {
       URL myFileUrl = null;
       Bitmap bmImg = null;
       try {
          myFileUrl = new URL(JSON_PREFIX + m_server + ":" + m_port + JSON_SUFFIX
-               + "/FS_GetImageResized/?path=" + URLEncoder.encode(_url, "UTF-8") 
-               + "&maxWidth=" + _maxWidth + "&maxHeight=" + _maxHeight);
+               + "/FS_GetImageResized/?path=" + URLEncoder.encode(_url, "UTF-8") + "&maxWidth="
+               + _maxWidth + "&maxHeight=" + _maxHeight);
          HttpURLConnection conn = (HttpURLConnection) myFileUrl.openConnection();
          conn.setDoInput(true);
          conn.connect();
@@ -223,18 +261,18 @@ public class GmaWebserviceApi implements IMediaAccessApi {
 
       return bmImg;
    }
-   
+
    @Override
-   public String getDownloadUri(String _filePath){
+   public String getDownloadUri(String _filePath) {
       String fileUrl = null;
       try {
-         fileUrl = JSON_PREFIX + m_server + ":" + m_port + JSON_SUFFIX
-                  + "/FS_GetMediaItem/?path=" + URLEncoder.encode(_filePath, "UTF-8");
+         fileUrl = JSON_PREFIX + m_server + ":" + m_port + JSON_SUFFIX + "/FS_GetMediaItem/?path="
+               + URLEncoder.encode(_filePath, "UTF-8");
       } catch (UnsupportedEncodingException e) {
          e.printStackTrace();
       }
       return fileUrl;
-      
+
    }
 
    @Override
@@ -246,6 +284,4 @@ public class GmaWebserviceApi implements IMediaAccessApi {
    public ArrayList<MusicAlbum> getAlbums(int _start, int _end) {
       return m_musicAPI.getAlbums(_start, _end);
    }
-
-
 }
