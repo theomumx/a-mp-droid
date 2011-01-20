@@ -8,39 +8,49 @@ import android.preference.PreferenceScreen;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.mediaportal.ampdroid.api.database.RemoteClientFactory;
 import com.mediaportal.ampdroid.data.RemoteClient;
+import com.mediaportal.ampdroid.database.RemoteClientsDatabaseHandler;
 
 public class ClientSettingsActivity extends PreferenceActivity {
    public static final int MENU_ADD_HOST = 1;
    public static final int MENU_EXIT = 2;
    public static final int MENU_ADD_HOST_WIZARD = 3;
+   private RemoteClientsDatabaseHandler mDbHandler;
 
    @Override
    protected void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
       setTitle("MediaPortal Clients");
+
+   }
+
+   @Override
+   protected void onResume() {
       PreferenceScreen root = getPreferenceManager().createPreferenceScreen(this);
 
-      //RemoteClientFactory.openDatabase(this);
+      mDbHandler = new RemoteClientsDatabaseHandler(this);
+      mDbHandler.open();
+      List<RemoteClient> clients = mDbHandler.getClients();
 
-      List<RemoteClient> clients = RemoteClientFactory.getClients();
+      if (clients != null) {
+         for (RemoteClient c : clients) {
+            ClientPreference pref = new ClientPreference(this);
+            pref.setTitle(c.getClientName());
+            pref.setSummary("Id: " + c.getClientId());
+            pref.setClient(c);
+            pref.setDbHandler(mDbHandler);
 
-      for (RemoteClient c : clients) {
-         ClientPreference pref = new ClientPreference(this);
-         pref.setTitle(c.getClientName());
-         pref.setSummary("Id: " + c.getClientId());
-         pref.setClient(c);
-
-         root.addPreference(pref);
+            root.addPreference(pref);
+         }
       }
 
       setPreferenceScreen(root);
+      super.onResume();
    }
 
    @Override
    protected void onPause() {
-      //RemoteClientFactory.closeDatabase();
+      mDbHandler.close();
       super.onPause();
    }
 
@@ -58,9 +68,10 @@ public class ClientSettingsActivity extends PreferenceActivity {
       switch (item.getItemId()) {
       case MENU_ADD_HOST:
          ClientPreference pref = new ClientPreference(this);
-         pref.setTitle("New MediaPortal Client");
+         pref.setTitle("New Client");
          pref.create(getPreferenceManager());
          getPreferenceScreen().addPreference(pref);
+         pref.setDbHandler(mDbHandler);
          break;
       /*
        * case MENU_ADD_HOST_WIZARD: Intent i = new Intent(mPreferenceActivity,

@@ -18,14 +18,15 @@ import android.widget.ImageView;
 
 import com.mediaportal.ampdroid.R;
 import com.mediaportal.ampdroid.api.DataHandler;
-import com.mediaportal.ampdroid.api.database.RemoteClientFactory;
 import com.mediaportal.ampdroid.api.gmawebservice.GmaJsonWebserviceApi;
 import com.mediaportal.ampdroid.api.tv4home.Tv4HomeJsonApi;
 import com.mediaportal.ampdroid.api.wifiremote.WifiRemoteMpController;
 import com.mediaportal.ampdroid.data.RemoteClient;
+import com.mediaportal.ampdroid.database.RemoteClientsDatabaseHandler;
 public class ClientPreference extends DialogPreference {
    private Context mContext;
    private RemoteClient mClient;
+   private RemoteClientsDatabaseHandler mDbHandler;
 
    private EditText mNameView;
    private EditText mHostView;
@@ -65,6 +66,10 @@ public class ClientPreference extends DialogPreference {
    public RemoteClient getHost() {
       return mClient;
    }
+   
+   public void setDbHandler(RemoteClientsDatabaseHandler _dbHandler) {
+      mDbHandler = _dbHandler;
+   }
 
    @Override
    protected View onCreateView(final ViewGroup parent) {
@@ -79,7 +84,7 @@ public class ClientPreference extends DialogPreference {
                   + "\"?");
             builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                public void onClick(DialogInterface dialog, int which) {
-                   RemoteClientFactory.removeRemoteClient(mClient);
+                   mDbHandler.removeRemoteClient(mClient);
                    ((PreferenceActivity)view.getContext()).getPreferenceScreen().removePreference(ClientPreference.this);
                }
             });
@@ -130,10 +135,11 @@ public class ClientPreference extends DialogPreference {
    protected void onDialogClosed(boolean positiveResult) {
       super.onDialogClosed(positiveResult);
       if (positiveResult) {
+         boolean create = false;
          if (mClient == null) {
             Random rnd = new Random();
             mClient = new RemoteClient(rnd.nextInt());
-            RemoteClientFactory.createRemoteClient(mClient);
+            create = true;
          }         
          mClient.setClientName(mNameView.getText().toString());
          String addr = mHostView.getText().toString();
@@ -145,9 +151,14 @@ public class ClientPreference extends DialogPreference {
          
          WifiRemoteMpController clientApi = new WifiRemoteMpController(addr, 8017);
          mClient.setClientControlApi(clientApi);
-
-         RemoteClientFactory.updateRemoteClient(mClient);
          
+         if(create){
+            mDbHandler.addRemoteClient(mClient);
+         }
+         else{
+            mDbHandler.updateRemoteClient(mClient);
+         }
+
          DataHandler.updateRemoteClient(mClient);
          //host.user = mUserView.getText().toString();
          //host.pass = mPassView.getText().toString();
@@ -160,5 +171,7 @@ public class ClientPreference extends DialogPreference {
          
       }
    }
+
+
 
 }

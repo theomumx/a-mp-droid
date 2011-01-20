@@ -42,6 +42,7 @@ public class WifiRemoteMpController implements IClientControlApi {
       public TcpListenerTask(List<IClientControlListener> _listeners) {
          listeners = _listeners;
       }
+    
 
       @Override
       protected String doInBackground(DataInputStream... params) {
@@ -104,6 +105,16 @@ public class WifiRemoteMpController implements IClientControlApi {
       this.server = _server;
       this.port = _port;
       this.listeners = new ArrayList<IClientControlListener>();
+   }
+   
+   @Override
+   public String getServer() {
+      return server;
+   }
+
+   @Override
+   public int getPort() {
+      return port;
    }
    
    @Override
@@ -227,5 +238,7 @@ public class WifiRemoteMpController implements IClientControlApi {
       // TODO Auto-generated method stub
       
    }
+
+
 
 }

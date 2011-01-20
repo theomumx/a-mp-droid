@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 
 import com.mediaportal.ampdroid.data.EpisodeDetails;
@@ -25,6 +26,7 @@ import com.mediaportal.ampdroid.data.TvSchedule;
 import com.mediaportal.ampdroid.data.TvVirtualCard;
 import com.mediaportal.ampdroid.data.VideoShare;
 import com.mediaportal.ampdroid.data.commands.RemoteKey;
+import com.mediaportal.ampdroid.database.MediaAccessDatabaseHandler;
 
 public class DataHandler {
    private RemoteClient client;
@@ -34,18 +36,21 @@ public class DataHandler {
    private static DataHandler dataHandler;
    private IMediaAccessDatabase mediaDatabase;
 
-   private DataHandler(RemoteClient _client) {
+   private DataHandler(RemoteClient _client, Context _context) {
       client = _client;
+
+      mediaDatabase = new MediaAccessDatabaseHandler(_context);
    }
 
-   public static boolean setupRemoteHandler(RemoteClient _client, boolean _checkConnection) {
-      dataHandler = new DataHandler(_client);
+   public static boolean setupRemoteHandler(RemoteClient _client, Context _context,
+         boolean _checkConnection) {
+      dataHandler = new DataHandler(_client, _context);
       setFunctions(_client, false);
 
       return true;
    }
-   
-   private static void setFunctions(RemoteClient _client, boolean _checkConnection){
+
+   private static void setFunctions(RemoteClient _client, boolean _checkConnection) {
       dataHandler.functions = new RemoteFunctions();
 
       ITvServiceApi tvApi = _client.getTvControlApi();
@@ -115,20 +120,70 @@ public class DataHandler {
    public List<VideoShare> getAllVideoShares() {
       return client.getRemoteAccessApi().getVideoShares();
    }
+   
+   public Date getMovieDatabaseLastUpdated(){
+      return new Date();
+   }
+   
+   public void forceMovieListUpdate(){
+      
+   }
+   
+   public void forceMovieDetailsUpdate(int _movieId){
+      
+   }
 
    public List<Movie> getAllMovies() {
       IMediaAccessApi remoteAccess = client.getRemoteAccessApi();
-      return remoteAccess.getAllMovies();
+
+      mediaDatabase.open();
+      List<Movie> movies = mediaDatabase.getAllMovies();
+
+      if (movies == null || movies.size() == 0) {
+         movies = remoteAccess.getAllMovies();
+         if (movies != null) {
+            for (Movie m : movies) {
+               mediaDatabase.saveMovie(m);
+            }
+         }
+      }
+
+      mediaDatabase.close();
+      return movies;
    }
-   
+
    public int getMovieCount() {
       IMediaAccessApi remoteAccess = client.getRemoteAccessApi();
-      return remoteAccess.getMovieCount();
+
+      mediaDatabase.open();
+      int movieCount = mediaDatabase.getMovieCount();
+
+      if (movieCount == -99) {
+         movieCount = remoteAccess.getMovieCount();
+      }
+
+      mediaDatabase.close();
+      return movieCount;
    }
    
+
    public List<Movie> getMovies(int _start, int _end) {
       IMediaAccessApi remoteAccess = client.getRemoteAccessApi();
-      return remoteAccess.getMovies(_start, _end);
+
+      mediaDatabase.open();
+      List<Movie> movies = mediaDatabase.getMovies(_start, _end);
+     
+      if (movies == null || movies.size() == 0) {
+         movies = remoteAccess.getMovies(_start, _end);
+         if (movies != null) {
+            for (Movie m : movies) {
+               mediaDatabase.saveMovie(m);
+            }
+         }
+      }
+
+      mediaDatabase.close();
+      return movies;
    }
 
    public MovieFull getMovieDetails(int _movieId) {
@@ -175,13 +230,14 @@ public class DataHandler {
       IMediaAccessApi remoteAccess = client.getRemoteAccessApi();
       return remoteAccess.getAllEpisodesForSeason(_seriesId, _seasonNumber);
    }
-   
+
    public int getEpisodesCountForSeason(int _seriesId, Integer _seasonNumber) {
       IMediaAccessApi remoteAccess = client.getRemoteAccessApi();
       return remoteAccess.getEpisodesCountForSeason(_seriesId, _seasonNumber);
    }
-   
-   public ArrayList<SeriesEpisode> getEpisodesForSeason(int _seriesId, int _seasonNumber, int _begin, int _end) {
+
+   public ArrayList<SeriesEpisode> getEpisodesForSeason(int _seriesId, int _seasonNumber,
+         int _begin, int _end) {
       IMediaAccessApi remoteAccess = client.getRemoteAccessApi();
       return remoteAccess.getEpisodesForSeason(_seriesId, _seasonNumber, _begin, _end);
    }
@@ -235,7 +291,7 @@ public class DataHandler {
       ITvServiceApi tvApi = client.getTvControlApi();
       return tvApi.GetChannelsCount(_groupId);
    }
-   
+
    public TvChannel getTvChannel(int _channelId) {
       ITvServiceApi tvApi = client.getTvControlApi();
       return tvApi.GetChannelById(_channelId);
@@ -250,7 +306,7 @@ public class DataHandler {
       ITvServiceApi tvApi = client.getTvControlApi();
       return tvApi.GetActiveCards();
    }
-   
+
    public String startTimeshift(int _channelId, String _clientName) {
       ITvServiceApi tvApi = client.getTvControlApi();
       return tvApi.SwitchTVServerToChannelAndGetStreamingUrl(_clientName, _channelId);
@@ -260,39 +316,37 @@ public class DataHandler {
       ITvServiceApi tvApi = client.getTvControlApi();
       return tvApi.TestConnectionToTVService();
    }
-   
 
    public boolean stopTimeshift(String _user) {
       ITvServiceApi tvApi = client.getTvControlApi();
       return tvApi.CancelCurrentTimeShifting(_user);
    }
-   
+
    public List<TvRecording> getTvRecordings() {
       ITvServiceApi tvApi = client.getTvControlApi();
       return tvApi.GetRecordings();
    }
-   
 
    public List<TvSchedule> getTvSchedules() {
       ITvServiceApi tvApi = client.getTvControlApi();
       return tvApi.GetSchedules();
    }
-   
+
    public List<TvProgram> getTvEpgForChannel(int _channelId, Date _begin, Date _end) {
       ITvServiceApi tvApi = client.getTvControlApi();
       return tvApi.GetProgramsForChannel(_channelId, _begin, _end);
    }
-   
+
    public void addTvSchedule(int _channelId, String _title, Date _startTime, Date _endTime) {
       ITvServiceApi tvApi = client.getTvControlApi();
       tvApi.AddSchedule(_channelId, _title, _startTime, _endTime, 0);
    }
-   
+
    public void cancelTvScheduleByProgramId(int _programId) {
       ITvServiceApi tvApi = client.getTvControlApi();
       tvApi.cancelScheduleByProgramId(_programId);
    }
-   
+
    public void cancelTvScheduleByScheduleId(int _scheduleId) {
       ITvServiceApi tvApi = client.getTvControlApi();
       tvApi.cancelScheduleByScheduleId(_scheduleId);
@@ -337,8 +391,5 @@ public class DataHandler {
    public String getDownloadUri(String _filePath) {
       return client.getRemoteAccessApi().getDownloadUri(_filePath);
    }
-
-
-
 
 }

@@ -82,6 +82,17 @@ public class Tv4HomeJsonApi implements ITvServiceApi {
       mJsonObjectMapper.setDeserializerProvider(new StdDeserializerProvider(sf));
       sf.addSpecificMapping(Date.class, new CustomDateDeserializer());
    }
+   
+
+   @Override
+   public String getServer() {
+      return m_server;
+   }
+
+   @Override
+   public int getPort() {
+      return m_port;
+   }
 
    @SuppressWarnings({ "rawtypes", "unchecked" })
    private Object getObjectsFromJson(String _jsonString, Class _class) {
@@ -551,4 +562,5 @@ public class Tv4HomeJsonApi implements ITvServiceApi {
       }
       return false;
    }
+
 }
