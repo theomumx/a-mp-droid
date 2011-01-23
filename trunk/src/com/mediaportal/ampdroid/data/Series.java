@@ -7,6 +7,8 @@ import com.mediaportal.ampdroid.database.TableProperty;
 
 @TableProperty("Series")
 public class Series {
+   public static final int CACHE_ID = 1;
+   
    private int Id;
    private String PrettyName;
    private int EpisodeCount;
@@ -61,19 +63,19 @@ public class Series {
       return ImdbId;
    }
    
-   @ColumnProperty(value="ImdbId", type="float")
+   @ColumnProperty(value="ImdbId", type="text")
    @JsonProperty("ImdbId")
    public void setImdbId(String imdbId) {
       ImdbId = imdbId;
    }
    
-   @ColumnProperty(value="Rating", type="float")
+   @ColumnProperty(value="Rating", type="double")
    @JsonProperty("Rating")
    public double getRating() {
       return Rating;
    }
    
-   @ColumnProperty(value="Rating", type="integer")
+   @ColumnProperty(value="Rating", type="double")
    @JsonProperty("Rating")
    public void setRating(double rating) {
       Rating = rating;
@@ -139,13 +141,13 @@ public class Series {
       GenreString = genreString;
    }
    
-   @ColumnProperty(value="Genres", type="text")
+   @ColumnProperty(value="Genres", type="textarray")
    @JsonProperty("Genres")
    public String[] getGenres() {
       return Genres;
    }
    
-   @ColumnProperty(value="Genres", type="text")
+   @ColumnProperty(value="Genres", type="textarray")
    @JsonProperty("Genres")
    public void setGenres(String[] genres) {
       Genres = genres;
