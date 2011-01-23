@@ -7,6 +7,7 @@ import java.util.List;
 import android.content.Context;
 import android.graphics.Bitmap;
 
+import com.mediaportal.ampdroid.data.CacheItemsSetting;
 import com.mediaportal.ampdroid.data.EpisodeDetails;
 import com.mediaportal.ampdroid.data.Movie;
 import com.mediaportal.ampdroid.data.MovieFull;
@@ -120,17 +121,17 @@ public class DataHandler {
    public List<VideoShare> getAllVideoShares() {
       return client.getRemoteAccessApi().getVideoShares();
    }
-   
-   public Date getMovieDatabaseLastUpdated(){
+
+   public Date getMovieDatabaseLastUpdated() {
       return new Date();
    }
-   
-   public void forceMovieListUpdate(){
-      
+
+   public void forceMovieListUpdate() {
+
    }
-   
-   public void forceMovieDetailsUpdate(int _movieId){
-      
+
+   public void forceMovieDetailsUpdate(int _movieId) {
+
    }
 
    public List<Movie> getAllMovies() {
@@ -156,23 +157,27 @@ public class DataHandler {
       IMediaAccessApi remoteAccess = client.getRemoteAccessApi();
 
       mediaDatabase.open();
-      int movieCount = mediaDatabase.getMovieCount();
+      CacheItemsSetting setting = mediaDatabase.getMovieCount();
 
-      if (movieCount == -99) {
-         movieCount = remoteAccess.getMovieCount();
+      if (setting == null) {
+         int movieCount = remoteAccess.getMovieCount();
+         setting = mediaDatabase.setMovieCount(movieCount);
       }
 
       mediaDatabase.close();
-      return movieCount;
+      if (setting != null) {
+         return setting.getCacheCount();
+      } else {
+         return 0;
+      }
    }
-   
 
    public List<Movie> getMovies(int _start, int _end) {
       IMediaAccessApi remoteAccess = client.getRemoteAccessApi();
 
       mediaDatabase.open();
       List<Movie> movies = mediaDatabase.getMovies(_start, _end);
-     
+
       if (movies == null || movies.size() == 0) {
          movies = remoteAccess.getMovies(_start, _end);
          if (movies != null) {
@@ -188,7 +193,17 @@ public class DataHandler {
 
    public MovieFull getMovieDetails(int _movieId) {
       IMediaAccessApi remoteAccess = client.getRemoteAccessApi();
-      return remoteAccess.getMovieDetails(_movieId);
+
+      mediaDatabase.open();
+      MovieFull movie = mediaDatabase.getMovieDetails(_movieId);
+
+      if (movie == null) {
+         movie = remoteAccess.getMovieDetails(_movieId);
+         mediaDatabase.saveMovieDetails(movie);
+      }
+
+      mediaDatabase.close();
+      return movie;
    }
 
    public Bitmap getBitmap(String _id) {
@@ -196,24 +211,74 @@ public class DataHandler {
       return remoteAccess.getBitmap(_id);
    }
 
-   public ArrayList<Series> getAllSeries() {
+   public List<Series> getAllSeries() {
       IMediaAccessApi remoteAccess = client.getRemoteAccessApi();
-      return remoteAccess.getAllSeries();
+      mediaDatabase.open();
+      List<Series> series = mediaDatabase.getAllSeries();
+
+      if (series == null || series.size() == 0) {
+         series = remoteAccess.getAllSeries();
+         if (series != null) {
+            for (Series s : series) {
+               mediaDatabase.saveSeries(s);
+            }
+         }
+      }
+
+      mediaDatabase.close();
+      return series;
    }
 
-   public ArrayList<Series> getSeries(int _start, int _end) {
+   public List<Series> getSeries(int _start, int _end) {
       IMediaAccessApi remoteAccess = client.getRemoteAccessApi();
-      return remoteAccess.getSeries(_start, _end);
+      mediaDatabase.open();
+      List<Series> series = mediaDatabase.getSeries(_start, _end);
+
+      if (series == null || series.size() == 0) {
+         series = remoteAccess.getSeries(_start, _end);
+         if (series != null) {
+            for (Series s : series) {
+               mediaDatabase.saveSeries(s);
+            }
+         }
+      }
+
+      mediaDatabase.close();
+      return series;
    }
 
    public SeriesFull getFullSeries(int _seriesId) {
       IMediaAccessApi remoteAccess = client.getRemoteAccessApi();
-      return remoteAccess.getFullSeries(_seriesId);
+
+      mediaDatabase.open();
+      SeriesFull series = mediaDatabase.getFullSeries(_seriesId);
+
+      if (series == null) {
+         series = remoteAccess.getFullSeries(_seriesId);
+         mediaDatabase.saveSeriesDetails(series);
+      }
+
+      mediaDatabase.close();
+      return series;
    }
 
    public int getSeriesCount() {
       IMediaAccessApi remoteAccess = client.getRemoteAccessApi();
-      return remoteAccess.getSeriesCount();
+
+      mediaDatabase.open();
+      CacheItemsSetting setting = mediaDatabase.getSeriesCount();
+
+      if (setting == null) {
+         int seriesCount = remoteAccess.getSeriesCount();
+         setting = mediaDatabase.setSeriesCount(seriesCount);
+      }
+
+      mediaDatabase.close();
+      if (setting != null) {
+         return setting.getCacheCount();
+      } else {
+         return 0;
+      }
    }
 
    public ArrayList<SeriesSeason> getAllSeasons(int _seriesId) {

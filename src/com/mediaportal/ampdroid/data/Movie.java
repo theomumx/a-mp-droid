@@ -7,6 +7,9 @@ import com.mediaportal.ampdroid.database.TableProperty;
 
 @TableProperty("Movies")
 public class Movie {
+   public static final int CACHE_ID = 0;
+   public static final String TABLE_NAME = "Movies";
+   
 	private int Id;
 	private String Title;
 	private String TagLine;

@@ -4,8 +4,6 @@ import com.mediaportal.ampdroid.api.IApiInterface;
 import com.mediaportal.ampdroid.api.IClientControlApi;
 import com.mediaportal.ampdroid.api.IMediaAccessApi;
 import com.mediaportal.ampdroid.api.ITvServiceApi;
-import com.mediaportal.ampdroid.database.ColumnProperty;
-import com.mediaportal.ampdroid.database.TableProperty;
 
 
 public class RemoteClient {
@@ -62,27 +60,27 @@ public class RemoteClient {
       this.mClientDescription = clientDescription;
    }
    
-   public int getmRemoteAccessApiId() {
+   public int getRemoteAccessApiId() {
       return mRemoteAccessApiId;
    }
    
-   public void setmRemoteAccessApiId(int mRemoteAccessApiId) {
+   public void setRemoteAccessApiId(int mRemoteAccessApiId) {
       this.mRemoteAccessApiId = mRemoteAccessApiId;
    }
    
-   public int getmTvControlApiId() {
+   public int getTvControlApiId() {
       return mTvControlApiId;
    }
    
-   public void setmTvControlApiId(int mTvControlApiId) {
+   public void setTvControlApiId(int mTvControlApiId) {
       this.mTvControlApiId = mTvControlApiId;
    }
    
-   public int getmClientControlApiId() {
+   public int getClientControlApiId() {
       return mClientControlApiId;
    }
    
-   public void setmClientControlApiId(int mClientControlApiId) {
+   public void setClientControlApiId(int mClientControlApiId) {
       this.mClientControlApiId = mClientControlApiId;
    }
 
