@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="wrap_content">
+	<LinearLayout android:layout_width="0dip" android:layout_marginTop="5dip" android:layout_marginBottom="5dip"
+		android:layout_height="wrap_content" android:layout_gravity="center" android:gravity="center" android:layout_weight="2">
+		<ImageView android:id="@+id/ImageViewEventImage"
+			android:layout_gravity="center" android:layout_width="wrap_content"
+			android:layout_height="75dip" android:src="@drawable/dexter_150_300" android:scaleType="fitCenter"></ImageView>
+	</LinearLayout>
+	
+	<LinearLayout android:layout_height="wrap_content"
+		android:orientation="vertical" android:id="@+id/LinearLayoutWeeklyItemText"
+		android:layout_width="0dip" android:layout_weight="5" android:layout_gravity="center" android:layout_marginRight="-10dip" android:fadeScrollbars="true" android:fadingEdge="horizontal" android:fadingEdgeLength="10dip">
+		<TextView android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:id="@+id/TextViewTitle"
+			android:text="Title" android:textStyle="bold" android:textSize="18dip" android:scrollHorizontally="true"></TextView>
+		<TextView android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:id="@+id/TextViewText"
+			android:text="Text"></TextView>
+		
+	</LinearLayout>
+	<ImageView android:id="@+id/ImageViewArrow"
+		android:background="@drawable/arrow_right_normal"
+		android:layout_width="30dip" android:layout_height="30dip"
+		android:layout_gravity="center_vertical"></ImageView>
+
+
+
+
+
+</LinearLayout>
