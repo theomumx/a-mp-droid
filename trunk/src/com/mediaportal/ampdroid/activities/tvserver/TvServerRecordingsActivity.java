@@ -12,27 +12,35 @@ import android.widget.ListView;
 
 import com.mediaportal.ampdroid.R;
 import com.mediaportal.ampdroid.activities.BaseActivity;
+import com.mediaportal.ampdroid.activities.StatusBarActivityHandler;
 import com.mediaportal.ampdroid.api.DataHandler;
 import com.mediaportal.ampdroid.data.TvChannel;
 import com.mediaportal.ampdroid.data.TvRecording;
 import com.mediaportal.ampdroid.lists.LazyLoadingAdapter;
 import com.mediaportal.ampdroid.lists.views.TvServerRecordingsThumbsViewItem;
+
 public class TvServerRecordingsActivity extends BaseActivity {
    private DataHandler mService;
    private ListView mListView;
    private LazyLoadingAdapter mAdapter;
    private UpdateRecordingsTask mRecordingsUpdater;
-   
+   private StatusBarActivityHandler mStatusBarHandler;
+
    private class UpdateRecordingsTask extends AsyncTask<Integer, Integer, List<TvRecording>> {
       private HashMap<Integer, TvChannel> mChannels;
+
       @Override
       protected List<TvRecording> doInBackground(Integer... _params) {
          List<TvRecording> recordings = mService.getTvRecordings();
-         mChannels = new HashMap<Integer, TvChannel>();
-         for (TvRecording s : recordings) {
-            if(!mChannels.containsKey(s.getIdChannel())){
-               TvChannel channel = mService.getTvChannel(s.getIdChannel());
-               mChannels.put(s.getIdChannel(), channel);
+         if (recordings != null) {
+            mChannels = new HashMap<Integer, TvChannel>();
+            for (TvRecording s : recordings) {
+               if (!mChannels.containsKey(s.getIdChannel())) {
+                  TvChannel channel = mService.getTvChannel(s.getIdChannel());
+                  if(channel != null){
+                     mChannels.put(s.getIdChannel(), channel);
+                  }
+               }
             }
          }
          return recordings;
@@ -41,7 +49,7 @@ public class TvServerRecordingsActivity extends BaseActivity {
       @Override
       protected void onPostExecute(List<TvRecording> _result) {
          if (_result != null) {
-            for(TvRecording r : _result){
+            for (TvRecording r : _result) {
                TvChannel channel = mChannels.get(r.getIdChannel());
                mAdapter.addItem(new TvServerRecordingsThumbsViewItem(r, channel));
             }
@@ -51,11 +59,10 @@ public class TvServerRecordingsActivity extends BaseActivity {
          mAdapter.showLoadingItem(false);
       }
    }
-   
+
    @Override
    public void onCreate(Bundle _savedInstanceState) {
       setTitle(R.string.title_tvserver_recordings);
-      setHome(false);
       super.onCreate(_savedInstanceState);
       setContentView(R.layout.tvserverrecordingsactivity);
       mListView = (ListView) findViewById(R.id.ListViewRecordings);
@@ -64,17 +71,19 @@ public class TvServerRecordingsActivity extends BaseActivity {
          public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
             mAdapter.showLoadingItem(false);
             mAdapter.notifyDataSetChanged();
-            
+
          }
       });
       mAdapter = new LazyLoadingAdapter(this);
       mListView.setAdapter(mAdapter);
       mService = DataHandler.getCurrentRemoteInstance();
-      
+      mStatusBarHandler = new StatusBarActivityHandler(this, mService);
+      mStatusBarHandler.setHome(false);
+
       refreshRecordings();
    }
-   
-   private void refreshRecordings(){
+
+   private void refreshRecordings() {
       mAdapter.showLoadingItem(true);
       mAdapter.setLoadingText("Loading Recordings ...");
       mRecordingsUpdater = new UpdateRecordingsTask();

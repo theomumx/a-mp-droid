@@ -2,8 +2,6 @@ package com.mediaportal.ampdroid.lists.views;
 
 import java.io.File;
 
-import android.graphics.Color;
-import android.graphics.Typeface;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -11,9 +9,9 @@ import android.widget.TextView;
 import com.mediaportal.ampdroid.R;
 import com.mediaportal.ampdroid.data.Series;
 import com.mediaportal.ampdroid.lists.ILoadingAdapterItem;
+import com.mediaportal.ampdroid.lists.LazyLoadingAdapter.ViewHolder;
 import com.mediaportal.ampdroid.lists.LazyLoadingImage;
 import com.mediaportal.ampdroid.lists.SubtextViewHolder;
-import com.mediaportal.ampdroid.lists.LazyLoadingAdapter.ViewHolder;
 import com.mediaportal.ampdroid.lists.Utils;
 
 public class SeriesPosterViewAdapterItem implements ILoadingAdapterItem {
@@ -63,15 +61,11 @@ public class SeriesPosterViewAdapterItem implements ILoadingAdapterItem {
    public void fillViewFromViewHolder(ViewHolder _holder) {
       SubtextViewHolder holder = (SubtextViewHolder)_holder;
       if (holder.title != null) {
-         holder.title.setTypeface(null, Typeface.BOLD);
-
-         holder.title.setTextColor(Color.WHITE);
-         holder.title.setText(mSeries.getPrettyName());
+         holder.title.setText(mSeries.getPrettyName());// + " (" + "2010" + ")");
       }
 
       if (holder.text != null) {
-         holder.text.setText("");
-         holder.text.setTextColor(Color.WHITE);
+         holder.text.setText(mSeries.getGenreString());
       }
 
       if (holder.subtext != null) {

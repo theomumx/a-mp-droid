@@ -5,7 +5,9 @@ import java.util.List;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -25,6 +27,7 @@ import android.widget.Spinner;
 
 import com.mediaportal.ampdroid.R;
 import com.mediaportal.ampdroid.activities.BaseActivity;
+import com.mediaportal.ampdroid.activities.StatusBarActivityHandler;
 import com.mediaportal.ampdroid.api.DataHandler;
 import com.mediaportal.ampdroid.data.TvChannel;
 import com.mediaportal.ampdroid.data.TvChannelGroup;
@@ -54,6 +57,7 @@ public class TvServerStateActivity extends BaseActivity {
    ProgressDialog mLoadingDialog;
 
    boolean mShowAllGroup = false;
+   private StatusBarActivityHandler mStatusBarHandler;
 
    private class UpdateGroupsTask extends AsyncTask<Integer, Integer, List<TvChannelGroup>> {
       @Override
@@ -175,7 +179,6 @@ public class TvServerStateActivity extends BaseActivity {
 
    @Override
    public void onCreate(Bundle _savedInstanceState) {
-      setHome(false);
       setTitle(R.string.title_tvserver_state);
       super.onCreate(_savedInstanceState);
       setContentView(R.layout.tvserverstateactivity);
@@ -227,6 +230,27 @@ public class TvServerStateActivity extends BaseActivity {
                }
             });
             qa.addActionItem(sdCardAction);
+            
+            ActionItem playOnDeviceAction = new ActionItem();
+            playOnDeviceAction.setTitle("Play on Device");
+            playOnDeviceAction
+                  .setIcon(getResources().getDrawable(R.drawable.quickaction_play));
+            playOnDeviceAction.setOnClickListener(new OnClickListener() {
+               @Override
+               public void onClick(View _view) {
+                  String playingUrl = card.getRTSPUrl();
+                  playingUrl = playingUrl.replace("bagga-server", "10.1.0.166");
+
+                  Intent i = new Intent(Intent.ACTION_VIEW);
+                  i.setDataAndType(Uri.parse(playingUrl), "video/*");
+                  i.setPackage("me.abitno.vplayer");
+                  startActivityForResult(i, 1);
+
+                  qa.dismiss();
+               }
+            });
+            qa.addActionItem(playOnDeviceAction);
+            
             qa.setAnimStyle(QuickAction.ANIM_AUTO);
 
             qa.show();
@@ -249,6 +273,8 @@ public class TvServerStateActivity extends BaseActivity {
       });
 
       mService = DataHandler.getCurrentRemoteInstance();
+      mStatusBarHandler = new StatusBarActivityHandler(this, mService);
+      mStatusBarHandler.setHome(false);
 
       mListItems = new LazyLoadingAdapter(this);
       mListView.setAdapter(mListItems);

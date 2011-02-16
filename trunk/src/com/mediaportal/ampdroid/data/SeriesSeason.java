@@ -3,8 +3,9 @@ package com.mediaportal.ampdroid.data;
 import org.codehaus.jackson.annotate.JsonProperty;
 
 import com.mediaportal.ampdroid.database.ColumnProperty;
+import com.mediaportal.ampdroid.database.TableProperty;
 
-
+@TableProperty("SeriesSeason")
 public class SeriesSeason{
 	private String Id;
 	private int SeriesId;

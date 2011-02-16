@@ -58,7 +58,7 @@ public interface IMediaAccessApi extends IApiInterface {
 
    ArrayList<VideoShare> getVideoShares();
 
-   EpisodeDetails getEpisode(int id);
+   EpisodeDetails getEpisode(int _seriesId, int _episodeId);
 
 
 

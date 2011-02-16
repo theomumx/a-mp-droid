@@ -16,23 +16,19 @@
 
 package com.mediaportal.ampdroid.activities.actionbar;
 
-import java.util.LinkedList;
-
-import android.app.Activity;
-import android.content.ActivityNotFoundException;
 import android.content.Context;
-import android.content.Intent;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
+
 import com.mediaportal.ampdroid.R;
+
 public class ActionBar extends RelativeLayout implements OnClickListener {
 
    private LayoutInflater mInflater;
@@ -40,11 +36,27 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
    private ImageView mLogoView;
    // private View mHomeView;
    private TextView mTitleView;
-   private LinearLayout mActionsView;
    private ImageButton mHomeBtn;
    private RelativeLayout mHomeLayout;
-   
+
+   private ProgressBar mProgressBar;
+   private ImageButton mChangeClientBtn;
+   private ImageButton mSearchBtn;
+
+   public ProgressBar getProgressBar() {
+      return mProgressBar;
+   }
+
+   public ImageButton getChangeClientButton() {
+      return mChangeClientBtn;
+   }
+
+   public ImageButton getSearchButton() {
+      return mSearchBtn;
+   }
+
    private boolean mIsInitialised = false;
+   private boolean mLoading;
 
    public ActionBar(Context _context, AttributeSet _attrs) {
       super(_context, _attrs);
@@ -54,27 +66,38 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
       mBarView = (RelativeLayout) mInflater.inflate(R.layout.actionbar, null);
       addView(mBarView);
 
-      mLogoView = (ImageView) mBarView.findViewById(R.id.actionbar_home_logo);
+      //mLogoView = (ImageView) mBarView.findViewById(R.id.actionbar_home_logo);
       mHomeLayout = (RelativeLayout) mBarView.findViewById(R.id.actionbar_home_bg);
       mHomeBtn = (ImageButton) mBarView.findViewById(R.id.actionbar_home_btn);
 
       mTitleView = (TextView) mBarView.findViewById(R.id.actionbar_title);
-      mActionsView = (LinearLayout) mBarView.findViewById(R.id.actionbar_actions);
+
+      mChangeClientBtn = (ImageButton) mBarView.findViewById(R.id.actionbar_item_clients);
+      mSearchBtn = (ImageButton) mBarView.findViewById(R.id.actionbar_item_search);
+      mProgressBar = (ProgressBar) mBarView.findViewById(R.id.actionbar_item_progress);
+
+      if (mLoading) {
+         mProgressBar.setVisibility(View.VISIBLE);
+      } else {
+         mProgressBar.setVisibility(View.INVISIBLE);
+      }
    }
-   
+
+   public void setHome(boolean _home) {
+      if (!_home) {
+         mHomeBtn.setVisibility(View.VISIBLE);
+      } else {
+         mHomeBtn.setVisibility(View.GONE);
+      }
+
+   }
+
    public void setInitialised(boolean isInitialised) {
       this.mIsInitialised = isInitialised;
    }
 
    public boolean isInitialised() {
       return mIsInitialised;
-   }
-
-   public void setHomeAction(IntentAction action) {
-      mHomeBtn.setOnClickListener(this);
-      mHomeBtn.setTag(action);
-      mHomeBtn.setImageResource(action.getDrawable());
-      mHomeLayout.setVisibility(View.VISIBLE);
    }
 
    /**
@@ -102,125 +125,23 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
    }
 
    @Override
-   public void onClick(View _view) {
-      final Object tag = _view.getTag();
-      if (tag instanceof Action) {
-         final Action action = (Action) tag;
-         action.performAction();
-      }
+   public void onClick(View v) {
+
    }
 
-   /**
-    * Adds a list of {@link Action}s.
-    * 
-    * @param _actionList
-    */
-   public void addActions(ActionList _actionList) {
-      int actions = _actionList.size();
-      for (int i = 0; i < actions; i++) {
-         addAction(_actionList.get(i));
-      }
+   public boolean getLoading() {
+      return mProgressBar.getVisibility() == View.VISIBLE;
    }
 
-   /**
-    * Adds a new {@link Action}.
-    * 
-    * @param _action
-    *           the action to add
-    */
-   public void addAction(Action _action) {
-      final int index = mActionsView.getChildCount();
-      addAction(_action, index);
-   }
+   public void setLoading(boolean _loading) {
+      mLoading = _loading;
 
-   /**
-    * Adds a new {@link Action} at the specified index.
-    * 
-    * @param _action
-    *           the action to add
-    */
-   public void addAction(Action _action, int _index) {
-      mActionsView.addView(inflateAction(_action), _index);
-   }
-
-   /**
-    * Inflates a {@link View} with the given {@link Action}.
-    * 
-    * @param _action
-    *           the action to inflate
-    * @return a view
-    */
-   private View inflateAction(Action _action) {
-      View view = mInflater.inflate(R.layout.actionbar_item, mActionsView, false);
-
-      ImageButton labelView = (ImageButton) view.findViewById(R.id.actionbar_item);
-      labelView.setImageResource(_action.getDrawable());
-
-      view.setTag(_action);
-      view.setOnClickListener(this);
-      return view;
-   }
-
-
-
-   /**
-    * A {@link LinkedList} that holds a list of {@link Action}s.
-    */
-   public static class ActionList extends LinkedList<Action> {
-      private static final long serialVersionUID = -2733421682894137420L;
-   }
-
-   /**
-    * Definition of an action that could be performed, along with a icon to
-    * show.
-    */
-   public interface Action {
-      public int getDrawable();
-
-      public void performAction();
-   }
-
-   public static abstract class AbstractAction implements Action {
-      final private int mDrawable;
-
-      public AbstractAction(int _drawable) {
-         mDrawable = _drawable;
-      }
-
-      @Override
-      public int getDrawable() {
-         return mDrawable;
-      }
-   }
-
-   public static class IntentAction extends AbstractAction {
-      private Context mContext;
-      private Intent mIntent;
-
-      public IntentAction(Context _context, Intent _intent, int _drawable) {
-         super(_drawable);
-         mContext = _context;
-         mIntent = _intent;
-      }
-
-      @Override
-      public void performAction() {
-         try {
-            if (mIntent != null) {
-               mContext.startActivity(mIntent);
-            }
-            else{
-               ((Activity)mContext).finish();
-            }
-         } catch (ActivityNotFoundException e) {
-            Toast.makeText(mContext, mContext.getText(R.string.actionbar_activity_not_found),
-                  Toast.LENGTH_SHORT).show();
+      if (mProgressBar != null) {
+         if (_loading) {
+            mProgressBar.setVisibility(View.VISIBLE);
+         } else {
+            mProgressBar.setVisibility(View.INVISIBLE);
          }
       }
    }
-
-   /*
-    * public static abstract class SearchAction extends AbstractAction { public
-    * SearchAction() { super(R.drawable.actionbar_search); } }
-    */
 }

@@ -1,17 +1,12 @@
 package com.mediaportal.ampdroid.database;
 
-import java.lang.annotation.Annotation;
-
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.mediaportal.ampdroid.data.Movie;
 import com.mediaportal.ampdroid.data.RemoteClientSetting;
 import com.mediaportal.ampdroid.data.RemoteFunction;
-import com.mediaportal.ampdroid.data.Series;
-import com.mediaportal.ampdroid.data.TvChannelDetails;
 
 public class SettingsDatabaseHelper extends SQLiteOpenHelper  {
    private String mRemoteClientTableString;
@@ -19,8 +14,8 @@ public class SettingsDatabaseHelper extends SQLiteOpenHelper  {
    public SettingsDatabaseHelper(Context context, String name, CursorFactory factory, int version) {
       super(context, name, factory, version);
 
-      mRemoteClientTableString = SqliteAnnotationsHelper.getCreateTableStringFromClass(RemoteClientSetting.class);
-      mFunctionsTableString = SqliteAnnotationsHelper.getCreateTableStringFromClass(RemoteFunction.class);
+      mRemoteClientTableString = SqliteAnnotationsHelper.getCreateTableStringFromClass(RemoteClientSetting.class, false);
+      mFunctionsTableString = SqliteAnnotationsHelper.getCreateTableStringFromClass(RemoteFunction.class, false);
 
    }
 

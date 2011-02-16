@@ -25,6 +25,8 @@
 	<string name="settings_preference_vibrate_desc">Screen vibrates on user interaction</string>
 	<string name="settings_tvserver_showall_title">Show "All Channel" Group</string>
 	<string name="settings_tvserver_showall_desc">Show the "All Channel" Group which contains all channels of the tv server</string>
+	<string name="settings_tvserver_clientname_title">Client Name</string>
+	<string name="settings_tvserver_clientname_desc">The Name of this client when interacting with the MediaPortal Tv Server</string>
 	<string name="settings_media_cachemedia_title">Cache information locally</string>
 	<string name="settings_media_cachemedia_desc">Cache media information ()</string>
 	<string name="settings_media_loaddetails_title">Load details automatically</string>

@@ -5,7 +5,7 @@
 	<com.mediaportal.ampdroid.activities.actionbar.ActionBar
 		android:id="@+id/actionbar" style="@style/ActionBar" />
 	<FrameLayout android:layout_width="fill_parent"
-		android:layout_height="fill_parent" android:layout_marginBottom="60dip" android:background="@color/listview_background">
+		android:layout_height="fill_parent" android:layout_marginBottom="60dip" android:background="@drawable/background">
 		<LinearLayout android:id="@+id/LinearLayout02"
 			android:layout_height="fill_parent" android:layout_width="fill_parent"
 			android:orientation="vertical">
@@ -32,7 +32,7 @@
 			<TextView android:id="@+id/TextView02" android:layout_width="wrap_content"
 				android:layout_height="wrap_content" android:text="Active Cards" android:layout_marginBottom="5dip" android:layout_marginTop="5dip" android:textSize="18dip" android:textStyle="bold"></TextView>
 			<ListView android:id="@+id/ListViewCards"
-				android:layout_height="fill_parent" android:layout_width="fill_parent" android:cacheColorHint="@color/listview_background">
+				android:layout_height="fill_parent" android:layout_width="fill_parent" android:cacheColorHint="#00000000">
 			</ListView>
 		</LinearLayout>
 		<include layout="@layout/include_sliding_drawer" />

@@ -10,9 +10,6 @@ import java.util.List;
 import android.content.ContentValues;
 import android.database.Cursor;
 
-import com.mediaportal.ampdroid.data.MovieFull;
-import com.mediaportal.ampdroid.utils.DateTimeHelper;
-
 public class SqliteAnnotationsHelper {
    private static class AccessHolder {
       private Method method;
@@ -24,7 +21,7 @@ public class SqliteAnnotationsHelper {
    public static HashMap<Integer, List<AccessHolder>> cachedSetterValues = new HashMap<Integer, List<AccessHolder>>();
    public static HashMap<Integer, List<AccessHolder>> contentValues = new HashMap<Integer, List<AccessHolder>>();
 
-   public static <T> String getCreateTableStringFromClass(Class<T> _class) {
+   public static <T> String getCreateTableStringFromClass(Class<T> _class, boolean _hasClientId) {
 
       TableProperty tableProp = _class.getAnnotation(TableProperty.class);
       String tableName = tableProp.value();
@@ -33,6 +30,9 @@ public class SqliteAnnotationsHelper {
 
       String createString = "create table " + tableName
             + " ( RowId integer primary key autoincrement";
+      if(_hasClientId){
+         createString += ", ClientId integer";
+      }
       for (Method m : methods) {
          if (!m.getReturnType().equals(Void.TYPE)) {
             ColumnProperty column = m.getAnnotation(ColumnProperty.class);
@@ -89,14 +89,15 @@ public class SqliteAnnotationsHelper {
 
          List<T> returnList = new ArrayList<T>();
 
-         int count = 0;
-         do {
-            T returnObject = _class.newInstance();
-            fillObjectFromAccessHolders(returnObject, _cursor, setters);
-            count++;
-            returnList.add(returnObject);
-         } while (_cursor.moveToNext() && (count < _limit && _limit != 0));
-
+         if (_cursor.getCount() > 0) {
+            int count = 0;
+            do {
+               T returnObject = _class.newInstance();
+               fillObjectFromAccessHolders(returnObject, _cursor, setters);
+               count++;
+               returnList.add(returnObject);
+            } while (_cursor.moveToNext() && (count < _limit || _limit == 0));
+         }
          return returnList;
       } catch (IllegalAccessException e) {
          e.printStackTrace();
@@ -120,10 +121,14 @@ public class SqliteAnnotationsHelper {
             setters = cachedSetterValues.get(hashCode);
          }
 
-         Object returnObject = _class.newInstance();
-         fillObjectFromAccessHolders(returnObject, _cursor, setters);
+         if (_cursor.getCount() > 0) {
+            Object returnObject = _class.newInstance();
+            fillObjectFromAccessHolders(returnObject, _cursor, setters);
 
-         return returnObject;
+            return returnObject;
+         } else {
+            return null;
+         }
       } catch (IllegalAccessException e) {
          e.printStackTrace();
       } catch (InstantiationException e) {
@@ -164,7 +169,6 @@ public class SqliteAnnotationsHelper {
                String[] array = (String[]) a.method.invoke(_object);
                if (array != null) {
                   StringBuilder arrayBuilder = new StringBuilder();
-                  arrayBuilder.append('|');
                   for (String t : array) {
                      arrayBuilder.append(t);
                      arrayBuilder.append('|');
@@ -252,8 +256,8 @@ public class SqliteAnnotationsHelper {
             } else if (h.columnType.equals("textarray")) {
                String arrayString = _cursor.getString(h.columnIndex);
                if (arrayString != null) {
-                  String[] array = arrayString.split("|");
-                  h.method.invoke(_object, (Object[]) array);
+                  String[] array = arrayString.split("\\|");
+                  h.method.invoke(_object, (Object)array);
                }
             }
          } catch (IllegalArgumentException e) {

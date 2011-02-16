@@ -67,11 +67,11 @@ public class MoviePosterViewAdapterItem implements ILoadingAdapterItem {
          holder.title.setTypeface(null, Typeface.BOLD);
 
          holder.title.setTextColor(Color.WHITE);
-         holder.title.setText(mMovie.getName());
+         holder.title.setText(mMovie.getName() + " (" + mMovie.getYear() + ")");
       }
 
       if (holder.text != null) {
-         holder.text.setText("");
+         holder.text.setText(mMovie.getGenreString());
          holder.text.setTextColor(Color.WHITE);
       }
 

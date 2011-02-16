@@ -13,15 +13,18 @@ import android.widget.ListView;
 
 import com.mediaportal.ampdroid.R;
 import com.mediaportal.ampdroid.activities.BaseActivity;
+import com.mediaportal.ampdroid.activities.StatusBarActivityHandler;
 import com.mediaportal.ampdroid.api.DataHandler;
 import com.mediaportal.ampdroid.data.TvChannel;
 import com.mediaportal.ampdroid.data.TvProgram;
+import com.mediaportal.ampdroid.data.TvProgramBase;
 import com.mediaportal.ampdroid.utils.Util;
 
 public class TvServerEpgActivity extends BaseActivity {
    private DataHandler mService;
    private LinearLayout mEpgView;
    private LoadEpgTask mEpgLoaderTask;
+   private StatusBarActivityHandler mStatusBarHandler;
 
    private class LoadEpgTask extends AsyncTask<Integer, LinearLayout, Boolean> {
       private Context mContext;
@@ -40,10 +43,10 @@ public class TvServerEpgActivity extends BaseActivity {
          
          
          for(TvChannel c : channels){
-            List<TvProgram> programs = mService.getTvEpgForChannel(c.getIdChannel(), begin, end);
+            List<TvProgramBase> programs = mService.getTvBaseEpgForChannel(c.getIdChannel(), begin, end);
             LinearLayout layout = new LinearLayout(mContext);
             
-            for (TvProgram p : programs) {
+            for (TvProgramBase p : programs) {
                Button epgButton = new Button(mContext);
                epgButton.setText(p.getTitle());
                layout.addView(epgButton);
@@ -72,13 +75,14 @@ public class TvServerEpgActivity extends BaseActivity {
    
    @Override
    public void onCreate(Bundle _savedInstanceState) {
-      setHome(false);
       setTitle(R.string.title_tvserver_epg);
       super.onCreate(_savedInstanceState);
       setContentView(R.layout.tvserverepgactivity);
       mEpgView = (LinearLayout) findViewById(R.id.LinearLayoutEpgView);
       
       mService = DataHandler.getCurrentRemoteInstance();
+      mStatusBarHandler = new StatusBarActivityHandler(this, mService);
+      mStatusBarHandler.setHome(false);
       
       Util.showToast(this, "not implemented yet");
       

@@ -122,4 +122,34 @@ public class MPClientController implements IClientControlApi {
       // TODO Auto-generated method stub
       return 0;
    }
+
+   @Override
+   public void startVideo(String _path) {
+      // TODO Auto-generated method stub
+      
+   }
+
+   @Override
+   public void sendPlayFileCommand(String _file) {
+      // TODO Auto-generated method stub
+      
+   }
+
+   @Override
+   public void sendKeyDownCommand(RemoteKey _key, int _timeout) {
+      // TODO Auto-generated method stub
+      
+   }
+
+   @Override
+   public void sendKeyUpCommand() {
+      // TODO Auto-generated method stub
+      
+   }
+
+   @Override
+   public void playChannelOnClient(int _channel) {
+      // TODO Auto-generated method stub
+      
+   }
 }

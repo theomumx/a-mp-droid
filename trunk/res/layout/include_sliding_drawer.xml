@@ -13,17 +13,12 @@
 				android:layout_marginLeft="10dip" />
 			<TextView android:layout_width="wrap_content"
 				android:layout_height="wrap_content" android:layout_gravity="center"
-				android:id="@+id/TextViewSliderSatusText" android:text="[Artist] - [Song]"
+				android:id="@+id/TextViewSliderSatusText"
 				android:layout_marginLeft="20dip" android:textColor="#FFFFFF"
 				android:textStyle="bold" android:clickable="false" android:editable="false"></TextView>
 		</LinearLayout>
 
-		<LinearLayout android:id="@id/content"
-			android:layout_width="fill_parent" android:layout_height="fill_parent"
-			android:orientation="vertical" android:background="@drawable/background"
-			android:clickable="true">
-
-		</LinearLayout>
+		<include layout="@layout/include_sliding_drawer_content" />
 	</SlidingDrawer>
 </merge>
 

@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.mediaportal.ampdroid.R;
 import com.mediaportal.ampdroid.data.TvProgram;
+import com.mediaportal.ampdroid.data.TvProgramBase;
 import com.mediaportal.ampdroid.lists.ILoadingAdapterItem;
 import com.mediaportal.ampdroid.lists.LazyLoadingImage;
 import com.mediaportal.ampdroid.lists.LazyLoadingAdapter.ViewHolder;
@@ -15,11 +16,11 @@ import com.mediaportal.ampdroid.lists.SubtextViewHolder;
 
 public class TvServerProgramsDetailsViewItem implements ILoadingAdapterItem {
 
-   private TvProgram mProgram;
+   private TvProgramBase mProgram;
    private String mDateString;
    private String mOverviewString;
    
-   public TvServerProgramsDetailsViewItem(TvProgram _program) {
+   public TvServerProgramsDetailsViewItem(TvProgramBase _program) {
       mProgram = _program;
 
       Date begin = mProgram.getStartTime();
@@ -83,7 +84,7 @@ public class TvServerProgramsDetailsViewItem implements ILoadingAdapterItem {
    public void fillViewFromViewHolder(ViewHolder _holder) {
       SubtextViewHolder holder = (SubtextViewHolder) _holder;
       if (holder.title != null) {
-         holder.title.setText(mProgram.getTitle() + (mProgram.isIsRecordingOncePending() ? " - Rec" : ""));
+         holder.title.setText(mProgram.getTitle() + (mProgram.isIsScheduled() ? " - Rec" : ""));
       }
 
       if (holder.text != null) {
@@ -95,7 +96,7 @@ public class TvServerProgramsDetailsViewItem implements ILoadingAdapterItem {
       }
       
       if(holder.image2 != null){
-         if(mProgram.isIsRecordingOncePending()){
+         if(mProgram.isIsScheduled()){
             holder.image2.setImageResource(R.drawable.tvserver_record_button);
          }
          else{

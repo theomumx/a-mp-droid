@@ -1,15 +1,19 @@
 package com.mediaportal.ampdroid.activities.tvserver;
 
+import java.nio.channels.Channel;
 import java.util.ArrayList;
 import java.util.List;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -17,9 +21,14 @@ import android.widget.Spinner;
 
 import com.mediaportal.ampdroid.R;
 import com.mediaportal.ampdroid.activities.BaseActivity;
+import com.mediaportal.ampdroid.activities.StatusBarActivityHandler;
 import com.mediaportal.ampdroid.api.DataHandler;
 import com.mediaportal.ampdroid.data.TvChannel;
 import com.mediaportal.ampdroid.data.TvChannelGroup;
+import com.mediaportal.ampdroid.lists.ILoadingAdapterItem;
+import com.mediaportal.ampdroid.quickactions.ActionItem;
+import com.mediaportal.ampdroid.quickactions.QuickAction;
+import com.mediaportal.ampdroid.utils.Util;
 
 public class TvServerChannelsActivity extends BaseActivity {
    private DataHandler mService;
@@ -31,8 +40,11 @@ public class TvServerChannelsActivity extends BaseActivity {
    UpdateGroupsTask mGroupsUpdater;
    UpdateChannelsTask mChannelUpdater;
    ProgressDialog mLoadingDialog;
+   TvChannel mSelectedChannel;
+   String mPlayingUrl;
 
    boolean mShowAllGroup = false;
+   private StatusBarActivityHandler mStatusBarHandler;
 
    private class UpdateGroupsTask extends AsyncTask<Integer, Integer, List<TvChannelGroup>> {
       @Override
@@ -77,20 +89,21 @@ public class TvServerChannelsActivity extends BaseActivity {
    @Override
    public void onCreate(Bundle _savedInstanceState) {
       super.onCreate(_savedInstanceState);
-      setHome(false);
       setTitle(R.string.title_tvserver_channels);
 
       setContentView(R.layout.tvserverchannelsactivity);
       mListView = (ListView) findViewById(R.id.ListViewChannels);
       mChannelItems = new ArrayAdapter<TvChannel>(this, android.R.layout.simple_list_item_1);
       mListView.setAdapter(mChannelItems);
-      
+
       mGroupsSpinner = (Spinner) findViewById(R.id.SpinnerGroups);
       mGroupsItems = new ArrayAdapter<TvChannelGroup>(this, android.R.layout.simple_spinner_item);
       mGroupsItems.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
       mGroupsSpinner.setAdapter(mGroupsItems);
 
       mService = DataHandler.getCurrentRemoteInstance();
+      mStatusBarHandler = new StatusBarActivityHandler(this, mService);
+      mStatusBarHandler.setHome(false);
 
       mGroupsSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
          @Override
@@ -105,19 +118,73 @@ public class TvServerChannelsActivity extends BaseActivity {
             // TODO Auto-generated method stub
          }
       });
-      
-      mListView.setOnItemClickListener(new OnItemClickListener(){
+
+      mListView.setOnItemClickListener(new OnItemClickListener() {
          @Override
          public void onItemClick(AdapterView<?> _adapter, View _view, int _pos, long _id) {
             TvChannel channel = mChannelItems.getItem(_pos);
-            
+
             Intent myIntent = new Intent(_view.getContext(), TvServerChannelDetailsActivity.class);
             myIntent.putExtra("channel_id", channel.getIdChannel());
             myIntent.putExtra("channel_name", channel.getDisplayName());
             startActivity(myIntent);
+
          }
       });
-      
+
+      mListView.setOnItemLongClickListener(new OnItemLongClickListener() {
+         @Override
+         public boolean onItemLongClick(AdapterView<?> _item, View _view, int _pos, long _id) {
+            // ILoadingAdapterItem item = (ILoadingAdapterItem) mListView
+            // .getItemAtPosition(_pos);
+            final QuickAction qa = new QuickAction(_view);
+            mSelectedChannel = (TvChannel) mListView.getItemAtPosition(_pos);
+
+            //start channel on device -> not working yet on plugin-side
+            /*
+            ActionItem playOnClientAction = new ActionItem();
+            playOnClientAction.setTitle("Play on Client");
+            playOnClientAction
+                  .setIcon(getResources().getDrawable(R.drawable.quickaction_play));
+            playOnClientAction.setOnClickListener(new OnClickListener() {
+               @Override
+               public void onClick(View _view) {
+                  TvChannel channel = mSelectedChannel;
+                  mService.playChannelOnClient(channel.getIdChannel());
+
+                  qa.dismiss();
+               }
+            });
+            qa.addActionItem(playOnClientAction);
+            */
+
+            ActionItem playOnDeviceAction = new ActionItem();
+            playOnDeviceAction.setTitle("Play on Device");
+            playOnDeviceAction
+                  .setIcon(getResources().getDrawable(R.drawable.quickaction_play));
+            playOnDeviceAction.setOnClickListener(new OnClickListener() {
+               @Override
+               public void onClick(View _view) {
+                  TvChannel channel = mSelectedChannel;
+
+                  mPlayingUrl = mService.startTimeshift(channel.getIdChannel(), "aMPdroid");
+                  mPlayingUrl = mPlayingUrl.replace("bagga-server", "10.1.0.166");
+
+                  Intent i = new Intent(Intent.ACTION_VIEW);
+                  i.setDataAndType(Uri.parse(mPlayingUrl), "video/*");
+                  i.setPackage("me.abitno.vplayer");
+                  startActivityForResult(i, 1);
+
+                  qa.dismiss();
+               }
+            });
+            qa.addActionItem(playOnDeviceAction);
+
+            qa.show();
+            return true;
+         }
+      });
+
       refreshGroups();
    }
 
@@ -139,4 +206,20 @@ public class TvServerChannelsActivity extends BaseActivity {
       mChannelUpdater = new UpdateChannelsTask();
       mChannelUpdater.execute(_group);
    }
+
+   @Override
+   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+      if (requestCode == 1) {
+         if (resultCode < 0) {
+            Util.showToast(this, "Error playing " + mPlayingUrl + ", ResultCode: " + resultCode);
+         }
+         else{
+            Util.showToast(this, "Finished playing " + mPlayingUrl);
+         }
+         mService.stopTimeshift("aMPdroid");
+      }
+
+      super.onActivityResult(requestCode, resultCode, data);
+   }
+
 }

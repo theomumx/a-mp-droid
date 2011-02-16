@@ -1,7 +1,6 @@
 package com.mediaportal.ampdroid.api;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.codehaus.jackson.JsonParser;
@@ -9,8 +8,7 @@ import org.codehaus.jackson.JsonProcessingException;
 import org.codehaus.jackson.map.DeserializationContext;
 import org.codehaus.jackson.map.JsonDeserializer;
 
-import android.util.Log;
-
+@SuppressWarnings("rawtypes")
 public class CustomDateDeserializer extends JsonDeserializer {
 
    @Override
