@@ -121,7 +121,8 @@ public class GmaJsonWebserviceSeriesApi {
       String response = mJsonClient.Execute(methodName, JsonUtils.newPair("seriesId", _seriesId));
 
       if (response != null) {
-         SeriesSeason[] returnObject = (SeriesSeason[]) getObjectsFromJson(response, SeriesSeason[].class);
+         SeriesSeason[] returnObject = (SeriesSeason[]) getObjectsFromJson(response,
+               SeriesSeason[].class);
 
          if (returnObject != null) {
             return new ArrayList<SeriesSeason>(Arrays.asList(returnObject));
@@ -158,7 +159,8 @@ public class GmaJsonWebserviceSeriesApi {
       String response = mJsonClient.Execute(methodName, JsonUtils.newPair("seriesId", _seriesId));
 
       if (response != null) {
-         SeriesEpisode[] returnObject = (SeriesEpisode[]) getObjectsFromJson(response, SeriesEpisode[].class);
+         SeriesEpisode[] returnObject = (SeriesEpisode[]) getObjectsFromJson(response,
+               SeriesEpisode[].class);
 
          if (returnObject != null) {
             return new ArrayList<SeriesEpisode>(Arrays.asList(returnObject));
@@ -177,7 +179,8 @@ public class GmaJsonWebserviceSeriesApi {
             JsonUtils.newPair("startIndex", _start), JsonUtils.newPair("endIndex", _end));
 
       if (response != null) {
-         SeriesEpisode[] returnObject = (SeriesEpisode[]) getObjectsFromJson(response, SeriesEpisode[].class);
+         SeriesEpisode[] returnObject = (SeriesEpisode[]) getObjectsFromJson(response,
+               SeriesEpisode[].class);
 
          if (returnObject != null) {
             return new ArrayList<SeriesEpisode>(Arrays.asList(returnObject));
@@ -214,7 +217,8 @@ public class GmaJsonWebserviceSeriesApi {
             JsonUtils.newPair("season", _seasonNumber));
 
       if (response != null) {
-         SeriesEpisode[] returnObject = (SeriesEpisode[]) getObjectsFromJson(response, SeriesEpisode[].class);
+         SeriesEpisode[] returnObject = (SeriesEpisode[]) getObjectsFromJson(response,
+               SeriesEpisode[].class);
 
          if (returnObject != null) {
             return new ArrayList<SeriesEpisode>(Arrays.asList(returnObject));
@@ -254,7 +258,8 @@ public class GmaJsonWebserviceSeriesApi {
             JsonUtils.newPair("endIndex", _end));
 
       if (response != null) {
-         SeriesEpisode[] returnObject = (SeriesEpisode[]) getObjectsFromJson(response, SeriesEpisode[].class);
+         SeriesEpisode[] returnObject = (SeriesEpisode[]) getObjectsFromJson(response,
+               SeriesEpisode[].class);
 
          if (returnObject != null) {
             return new ArrayList<SeriesEpisode>(Arrays.asList(returnObject));
@@ -267,12 +272,14 @@ public class GmaJsonWebserviceSeriesApi {
       return null;
    }
 
-   public EpisodeDetails getFullEpisode(int _episodeId) {
+   public EpisodeDetails getFullEpisode(int _seriesId, int _episodeId) {
       String methodName = GET_FULL_EPISODE;
-      String response = mJsonClient.Execute(methodName, JsonUtils.newPair("episodeId", _episodeId));
+      String response = mJsonClient.Execute(methodName, JsonUtils.newPair("seriesId", _seriesId),
+            JsonUtils.newPair("episodeId", _episodeId));
 
       if (response != null) {
-         EpisodeDetails returnObject = (EpisodeDetails) getObjectsFromJson(response, EpisodeDetails.class);
+         EpisodeDetails returnObject = (EpisodeDetails) getObjectsFromJson(response,
+               EpisodeDetails.class);
 
          if (returnObject != null) {
             return returnObject;

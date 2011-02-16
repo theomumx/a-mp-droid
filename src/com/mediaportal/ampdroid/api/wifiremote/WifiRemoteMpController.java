@@ -2,6 +2,7 @@ package com.mediaportal.ampdroid.api.wifiremote;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
@@ -9,6 +10,9 @@ import java.net.SocketAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
+import org.codehaus.jackson.map.ObjectMapper;
 
 import android.os.AsyncTask;
 
@@ -50,7 +54,7 @@ public class WifiRemoteMpController implements IClientControlApi {
          while (listening) {
             try {
                String response = instream.readLine();
-
+               
                publishProgress(response);
             } catch (IOException e) {
                e.printStackTrace();
@@ -121,6 +125,18 @@ public class WifiRemoteMpController implements IClientControlApi {
    public String getAddress() {
       return server;
    }
+   
+   @Override
+   public int getTimeOut() {
+      // TODO Auto-generated method stub
+      return 0;
+   }
+
+   @Override
+   public void setTimeOut(int timeout) {
+      // TODO Auto-generated method stub
+      
+   }
 
    /**
     * Connect to client
@@ -142,12 +158,6 @@ public class WifiRemoteMpController implements IClientControlApi {
 
          publishState("State: " + socket.isConnected());
 
-         GsonBuilder gsonb = new GsonBuilder();
-         Gson gson = gsonb.create();
-         String msgString = gson.toJson(new WifiRemoteMessage("command", "remoteOn"));
-
-         writeLine(msgString);
-         
          return true;
 
       } catch (UnknownHostException e) {
@@ -185,7 +195,34 @@ public class WifiRemoteMpController implements IClientControlApi {
    public void sendKeyCommand(RemoteKey _key) {
       GsonBuilder gsonb = new GsonBuilder();
       Gson gson = gsonb.create();
-      String msgString = gson.toJson(new WifiRemoteMessage("command", _key.getAction()));
+      //String msgString = gson.toJson(new WifiRemoteMessage("command","", _key.getAction()));
+      String msgString = gson.toJson(new WifiRemoteMessageKey(_key));
+      writeLine(msgString);
+   }
+   
+   @Override
+   public void sendKeyDownCommand(RemoteKey _key, int _timeout) {
+      GsonBuilder gsonb = new GsonBuilder();
+      Gson gson = gsonb.create();
+      //String msgString = gson.toJson(new WifiRemoteMessage("command","", _key.getAction()));
+      String msgString = gson.toJson(new WifiRemoteKeyDownMessage(_key, _timeout));
+      writeLine(msgString);
+   }
+   
+   @Override
+   public void sendKeyUpCommand() {
+      GsonBuilder gsonb = new GsonBuilder();
+      Gson gson = gsonb.create();
+      //String msgString = gson.toJson(new WifiRemoteMessage("command","", _key.getAction()));
+      String msgString = gson.toJson(new WifiRemoteKeyUpMessage());
+      writeLine(msgString);
+   }
+   
+   @Override
+   public void sendPlayFileCommand(String _file) {
+      GsonBuilder gsonb = new GsonBuilder();
+      Gson gson = gsonb.create();
+      String msgString = gson.toJson(new WifiRemotePlayFileMessage(_file));
 
       writeLine(msgString);
    }
@@ -222,21 +259,27 @@ public class WifiRemoteMpController implements IClientControlApi {
    public void setVolume(int level) {
       GsonBuilder gsonb = new GsonBuilder();
       Gson gson = gsonb.create();
-      String msgString = gson.toJson(new WifiRemoteMessage("volume", level));
+      String msgString = gson.toJson(new WifiRemoteMessageSetVolume(level));
 
       writeLine(msgString);
    }
 
    @Override
-   public int getTimeOut() {
-      // TODO Auto-generated method stub
-      return 0;
+   public void startVideo(String _path){
+      GsonBuilder gsonb = new GsonBuilder();
+      Gson gson = gsonb.create();
+      String msgString = gson.toJson(new WifiRemotePlayFileMessage(_path));
+
+      writeLine(msgString);
    }
 
    @Override
-   public void setTimeOut(int timeout) {
-      // TODO Auto-generated method stub
-      
+   public void playChannelOnClient(int _channel) {
+      GsonBuilder gsonb = new GsonBuilder();
+      Gson gson = gsonb.create();
+      String msgString = gson.toJson(new WifiRemoteStartTvMessage(_channel));
+
+      writeLine(msgString);      
    }
 
 

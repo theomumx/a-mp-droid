@@ -1,7 +1,6 @@
 package com.mediaportal.ampdroid.api.tv4home;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -15,7 +14,6 @@ import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.deser.CustomDeserializerFactory;
 import org.codehaus.jackson.map.deser.StdDeserializerProvider;
-import org.kobjects.isodate.IsoDate;
 
 import android.util.Log;
 
@@ -27,11 +25,13 @@ import com.mediaportal.ampdroid.data.TvChannel;
 import com.mediaportal.ampdroid.data.TvChannelDetails;
 import com.mediaportal.ampdroid.data.TvChannelGroup;
 import com.mediaportal.ampdroid.data.TvProgram;
+import com.mediaportal.ampdroid.data.TvProgramBase;
 import com.mediaportal.ampdroid.data.TvRecording;
 import com.mediaportal.ampdroid.data.TvRtspClient;
 import com.mediaportal.ampdroid.data.TvSchedule;
 import com.mediaportal.ampdroid.data.TvUser;
 import com.mediaportal.ampdroid.data.TvVirtualCard;
+import com.mediaportal.ampdroid.utils.IsoDate;
 
 public class Tv4HomeJsonApi implements ITvServiceApi {
    private final String TEST_SERVICE = "TestConnectionToTVService";
@@ -53,7 +53,8 @@ public class Tv4HomeJsonApi implements ITvServiceApi {
    private final String GET_CURRENT_PROGRAM_CHANNEL = "GetCurrentProgramOnChannel";
    private final String GET_PROGRAM = "GetProgramById";
    private final String GET_PROGRAM_IS_SCHEDULED_CHANNEL = "GetProgramIsScheduledOnChannel";
-   private final String GET_PROGRAMS_FOR_CHANNEL = "GetProgramsForChannel";
+   private final String GET_PROGRAMS_DETAILED_FOR_CHANNEL = "GetProgramsDetailedForChannel";
+   private final String GET_PROGRAMS_BASIC_FOR_CHANNEL = "GetProgramsBasicForChannel";
    private final String GET_RECORDINGS = "GetRecordings";
    private final String GET_SCHEDULES = "GetSchedules";
    private final String GET_STREAMING_CLIENTS = "GetStreamingClients";
@@ -125,7 +126,7 @@ public class Tv4HomeJsonApi implements ITvServiceApi {
 
       cal.add(Calendar.MINUTE, offset); 
       String dateString = IsoDate.dateToString(cal.getTime(), IsoDate.DATE_TIME);
-      
+  
       return new BasicNameValuePair(_name, dateString);
    }
 
@@ -408,8 +409,26 @@ public class Tv4HomeJsonApi implements ITvServiceApi {
    }
 
    @Override
-   public List<TvProgram> GetProgramsForChannel(int _channelId, Date _startTime, Date _endTime) {
-      String response = mJsonClient.Execute(GET_PROGRAMS_FOR_CHANNEL,
+   public List<TvProgramBase> GetProgramsForChannel(int _channelId, Date _startTime, Date _endTime) {
+      String response = mJsonClient.Execute(GET_PROGRAMS_BASIC_FOR_CHANNEL,
+            newPair("channelId", (_channelId)), newPair("startTime", (_startTime)),
+            newPair("endTime", (_endTime)));
+
+      if (response != null) {
+         TvProgramBase[] returnArray = (TvProgramBase[]) getObjectsFromJson(response, TvProgramBase[].class);
+
+         if (returnArray != null) {
+            return new ArrayList<TvProgramBase>(Arrays.asList(returnArray));
+         } else {
+            Log.d("Soap", "Error parsing result from soap method " + GET_PROGRAMS_BASIC_FOR_CHANNEL);
+         }
+      }
+      return null;
+   }
+   
+   @Override
+   public List<TvProgram> GetProgramsDetailsForChannel(int _channelId, Date _startTime, Date _endTime) {
+      String response = mJsonClient.Execute(GET_PROGRAMS_DETAILED_FOR_CHANNEL,
             newPair("channelId", (_channelId)), newPair("startTime", (_startTime)),
             newPair("endTime", (_endTime)));
 
@@ -419,7 +438,7 @@ public class Tv4HomeJsonApi implements ITvServiceApi {
          if (returnArray != null) {
             return new ArrayList<TvProgram>(Arrays.asList(returnArray));
          } else {
-            Log.d("Soap", "Error parsing result from soap method " + GET_PROGRAMS_FOR_CHANNEL);
+            Log.d("Soap", "Error parsing result from soap method " + GET_PROGRAMS_DETAILED_FOR_CHANNEL);
          }
       }
       return null;

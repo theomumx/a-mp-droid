@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.SubMenu;
 import android.view.View;
 import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.View.OnClickListener;
@@ -18,6 +19,9 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.mediaportal.ampdroid.R;
+import com.mediaportal.ampdroid.activities.BaseActivity;
+import com.mediaportal.ampdroid.activities.BaseTabActivity;
+import com.mediaportal.ampdroid.activities.StatusBarActivityHandler;
 import com.mediaportal.ampdroid.api.DataHandler;
 import com.mediaportal.ampdroid.data.Series;
 import com.mediaportal.ampdroid.lists.ILoadingAdapterItem;
@@ -36,6 +40,8 @@ public class TabSeriesActivity extends Activity implements ILoadingListener {
    DataHandler mService;
    private LoadSeriesTask mSeriesLoaderTask;
    private int mSeriesLoaded = 0;
+   private BaseTabActivity mBaseActivity;
+   private StatusBarActivityHandler mStatusBarHandler;
 
    private class LoadSeriesTask extends AsyncTask<Integer, List<Series>, Boolean> {
       @Override
@@ -45,6 +51,9 @@ public class TabSeriesActivity extends Activity implements ILoadingListener {
 
          while (mSeriesLoaded < loadItems) {
             List<Series> series = mService.getSeries(mSeriesLoaded, mSeriesLoaded + 4);
+            if(series == null){
+               return false;
+            }
             publishProgress(series);
             mSeriesLoaded += 5;
          }
@@ -75,6 +84,7 @@ public class TabSeriesActivity extends Activity implements ILoadingListener {
          if (_result) {
             mAdapter.showLoadingItem(false);
          }
+         mStatusBarHandler.setLoading(false);
          mSeriesLoaderTask = null;
       }
 
@@ -91,7 +101,12 @@ public class TabSeriesActivity extends Activity implements ILoadingListener {
       super.onCreate(_savedInstanceState);
       setContentView(R.layout.tabseriesactivity);
 
+      mBaseActivity = (BaseTabActivity) getParent().getParent();
+
       mService = DataHandler.getCurrentRemoteInstance();
+      mStatusBarHandler = new StatusBarActivityHandler(mBaseActivity, mService);
+      mStatusBarHandler.setHome(false);
+
       mAdapter = new LazyLoadingAdapter(this);
       mAdapter.addView(ViewTypes.PosterView.ordinal());
       mAdapter.addView(ViewTypes.ThumbView.ordinal());
@@ -111,17 +126,19 @@ public class TabSeriesActivity extends Activity implements ILoadingListener {
             // .getTitle(), Toast.LENGTH_SHORT);
             // toast.show();
             Series selectedSeries = (Series) selectedItem.getItem();
-            Intent myIntent = new Intent(_view.getContext(), TabSeriesDetailsActivity.class);
-            myIntent.putExtra("series_id", selectedSeries.getId());
-            myIntent.putExtra("series_name", selectedSeries.getPrettyName());
-            myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            if (selectedSeries != null) {
+               Intent myIntent = new Intent(_view.getContext(), TabSeriesDetailsActivity.class);
+               myIntent.putExtra("series_id", selectedSeries.getId());
+               myIntent.putExtra("series_name", selectedSeries.getPrettyName());
+               myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
-            // Create the view using FirstGroup's LocalActivityManager
-            View view = TabSeriesActivityGroup.getGroup().getLocalActivityManager()
-                  .startActivity("series_details", myIntent).getDecorView();
+               // Create the view using FirstGroup's LocalActivityManager
+               View view = TabSeriesActivityGroup.getGroup().getLocalActivityManager()
+                     .startActivity("series_details", myIntent).getDecorView();
 
-            // Again, replace the view
-            TabSeriesActivityGroup.getGroup().replaceView(view);
+               // Again, replace the view
+               TabSeriesActivityGroup.getGroup().replaceView(view);
+            }
          }
       });
 
@@ -169,15 +186,20 @@ public class TabSeriesActivity extends Activity implements ILoadingListener {
    private void loadFurtherSeriesItems() {
       if (mSeriesLoaderTask == null) {
          mSeriesLoaderTask = new LoadSeriesTask();
+         mStatusBarHandler.setLoading(true);
          mSeriesLoaderTask.execute(20);
       }
    }
 
    @Override
    public boolean onCreateOptionsMenu(Menu _menu) {
-      MenuItem posterSettingsItem = _menu.add(0, Menu.FIRST, Menu.NONE, "Poster");
-      MenuItem thumbsSettingsItem = _menu.add(0, Menu.FIRST, Menu.NONE, "Thumbs");
-      MenuItem bannerSettingsItem = _menu.add(0, Menu.FIRST, Menu.NONE, "Banner");
+      super.onCreateOptionsMenu(_menu);
+      SubMenu viewItem = _menu.addSubMenu(0, Menu.FIRST + 1, Menu.NONE, "Views");
+
+      MenuItem posterSettingsItem = viewItem.add(0, Menu.FIRST + 1, Menu.NONE, "Poster");
+      MenuItem thumbsSettingsItem = viewItem.add(0, Menu.FIRST + 2, Menu.NONE, "Thumbs");
+      MenuItem bannerSettingsItem = viewItem.add(0, Menu.FIRST + 3, Menu.NONE, "Banner");
+
       posterSettingsItem.setOnMenuItemClickListener(new OnMenuItemClickListener() {
          @Override
          public boolean onMenuItemClick(MenuItem item) {

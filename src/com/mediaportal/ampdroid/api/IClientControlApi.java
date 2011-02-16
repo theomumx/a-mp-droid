@@ -15,5 +15,10 @@ public interface IClientControlApi extends IApiInterface {
    void sendKeyCommand(RemoteKey _key);
    void setVolume(int level);
    int getVolume();
+   void startVideo(String _path);
+   void sendPlayFileCommand(String _file);
+   void sendKeyDownCommand(RemoteKey _key, int _timeout);
+   void sendKeyUpCommand();
+   void playChannelOnClient(int _channel);
    
 }

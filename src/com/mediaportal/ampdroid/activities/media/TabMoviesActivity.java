@@ -12,13 +12,14 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
 import com.mediaportal.ampdroid.R;
+import com.mediaportal.ampdroid.activities.BaseTabActivity;
+import com.mediaportal.ampdroid.activities.StatusBarActivityHandler;
 import com.mediaportal.ampdroid.api.DataHandler;
 import com.mediaportal.ampdroid.data.Movie;
 import com.mediaportal.ampdroid.lists.ILoadingAdapterItem;
 import com.mediaportal.ampdroid.lists.LazyLoadingAdapter;
 import com.mediaportal.ampdroid.lists.LazyLoadingAdapter.ILoadingListener;
 import com.mediaportal.ampdroid.lists.views.MoviePosterViewAdapterItem;
-import com.mediaportal.ampdroid.lists.views.ViewTypes;
 
 public class TabMoviesActivity extends Activity implements ILoadingListener {
    private ListView mListView;
@@ -26,6 +27,8 @@ public class TabMoviesActivity extends Activity implements ILoadingListener {
    DataHandler mService;
    private LoadMoviesTask mSeriesLoaderTask;
    private int mSeriesLoaded = 0;
+   private BaseTabActivity mBaseActivity;
+   private StatusBarActivityHandler mStatusBarHandler;
 
    private class LoadMoviesTask extends AsyncTask<Integer, List<Movie>, Boolean> {
       @Override
@@ -72,8 +75,13 @@ public class TabMoviesActivity extends Activity implements ILoadingListener {
    public void onCreate(Bundle _savedInstanceState) {
       super.onCreate(_savedInstanceState);
       setContentView(R.layout.tabmoviesactivity);
+      
+      mBaseActivity = (BaseTabActivity) getParent().getParent();
 
       mService = DataHandler.getCurrentRemoteInstance();
+      mStatusBarHandler = new StatusBarActivityHandler(mBaseActivity, mService);
+      mStatusBarHandler.setHome(false);
+      
       mAdapter = new LazyLoadingAdapter(this);
       mAdapter.setLoadingListener(this);
 

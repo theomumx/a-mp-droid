@@ -20,8 +20,10 @@ import android.widget.TextView;
 
 import com.mediaportal.ampdroid.R;
 import com.mediaportal.ampdroid.activities.BaseActivity;
+import com.mediaportal.ampdroid.activities.StatusBarActivityHandler;
 import com.mediaportal.ampdroid.api.DataHandler;
 import com.mediaportal.ampdroid.data.TvProgram;
+import com.mediaportal.ampdroid.data.TvProgramBase;
 import com.mediaportal.ampdroid.lists.ILoadingAdapterItem;
 import com.mediaportal.ampdroid.lists.LazyLoadingAdapter;
 import com.mediaportal.ampdroid.lists.views.TvServerProgramsDetailsViewItem;
@@ -45,8 +47,9 @@ public class TvServerChannelDetailsActivity extends BaseActivity {
 
    private AddScheduleTask mAddScheduleTask;
    private CancelScheduleTask mCancelScheduleTask;
+   private StatusBarActivityHandler mStatusBarHandler;
 
-   private class CancelScheduleTask extends AsyncTask<TvProgram, Boolean, Boolean> {
+   private class CancelScheduleTask extends AsyncTask<TvProgramBase, Boolean, Boolean> {
       private Context mContext;
 
       private CancelScheduleTask(Context _context) {
@@ -54,11 +57,11 @@ public class TvServerChannelDetailsActivity extends BaseActivity {
       }
 
       @Override
-      protected Boolean doInBackground(TvProgram... _params) {
-         TvProgram program = _params[0];
+      protected Boolean doInBackground(TvProgramBase... _params) {
+         TvProgramBase program = _params[0];
          mService.cancelTvScheduleByProgramId(program.getIdProgram());
 
-         program.setIsRecordingOncePending(false);
+         program.setIsScheduled(false);
 
          return true;
       }
@@ -75,7 +78,7 @@ public class TvServerChannelDetailsActivity extends BaseActivity {
       }
    }
 
-   private class AddScheduleTask extends AsyncTask<TvProgram, Boolean, Boolean> {
+   private class AddScheduleTask extends AsyncTask<TvProgramBase, Boolean, Boolean> {
       private Context mContext;
 
       private AddScheduleTask(Context _context) {
@@ -83,12 +86,12 @@ public class TvServerChannelDetailsActivity extends BaseActivity {
       }
 
       @Override
-      protected Boolean doInBackground(TvProgram... _params) {
-         TvProgram program = _params[0];
+      protected Boolean doInBackground(TvProgramBase... _params) {
+         TvProgramBase program = _params[0];
          mService.addTvSchedule(program.getIdChannel(), program.getTitle(), program.getStartTime(),
                program.getEndTime());
 
-         program.setIsRecordingOncePending(true);
+         program.setIsScheduled(true);
 
          return true;
       }
@@ -105,7 +108,7 @@ public class TvServerChannelDetailsActivity extends BaseActivity {
       }
    }
 
-   private class LoadEpgTask extends AsyncTask<Integer, Integer, List<TvProgram>> {
+   private class LoadEpgTask extends AsyncTask<Integer, Integer, List<TvProgramBase>> {
       private Context mContext;
 
       private LoadEpgTask(Context _context) {
@@ -113,12 +116,12 @@ public class TvServerChannelDetailsActivity extends BaseActivity {
       }
 
       @Override
-      protected List<TvProgram> doInBackground(Integer... _params) {
+      protected List<TvProgramBase> doInBackground(Integer... _params) {
          EpgDay day = mDaysAdapter.getItem(_params[0]);
          Date begin = day.getDayBegin();
          Date end = day.getDayEnd();
 
-         List<TvProgram> programs = mService.getTvEpgForChannel(mChannelId, begin, end);
+         List<TvProgramBase> programs = mService.getTvBaseEpgForChannel(mChannelId, begin, end);
 
          return programs;
       }
@@ -129,9 +132,9 @@ public class TvServerChannelDetailsActivity extends BaseActivity {
       }
 
       @Override
-      protected void onPostExecute(List<TvProgram> _result) {
+      protected void onPostExecute(List<TvProgramBase> _result) {
          if (_result != null) {
-            for (TvProgram p : _result) {
+            for (TvProgramBase p : _result) {
                mEpgAdapter.addItem(new TvServerProgramsDetailsViewItem(p));
             }
          }
@@ -175,7 +178,6 @@ public class TvServerChannelDetailsActivity extends BaseActivity {
 
    @Override
    public void onCreate(Bundle _savedInstanceState) {
-      setHome(false);
       setTitle(R.string.title_tvserver_epg);
       super.onCreate(_savedInstanceState);
       setContentView(R.layout.tvserverchanneldetailsactivity);
@@ -188,6 +190,8 @@ public class TvServerChannelDetailsActivity extends BaseActivity {
          mEpgAdapter = new LazyLoadingAdapter(this);
          mEpgView.setAdapter(mEpgAdapter);
          mService = DataHandler.getCurrentRemoteInstance();
+         mStatusBarHandler = new StatusBarActivityHandler(this, mService);
+         mStatusBarHandler.setHome(false);
 
          mDaysSpinner = (Spinner) findViewById(R.id.SpinnerDay);
          mDaysAdapter = new ArrayAdapter<EpgDay>(this, android.R.layout.simple_spinner_item);
@@ -261,11 +265,11 @@ public class TvServerChannelDetailsActivity extends BaseActivity {
             public boolean onItemLongClick(AdapterView<?> _item, View _view, final int _pos,
                   long _id) {
                ILoadingAdapterItem item = (ILoadingAdapterItem) mEpgView.getItemAtPosition(_pos);
-               final TvProgram program = (TvProgram) item.getItem();
+               final TvProgramBase program = (TvProgramBase) item.getItem();
 
                final QuickAction qa = new QuickAction(_view);
 
-               if (program.isIsRecordingOncePending() || program.isIsRecordingSeriesPending()) {
+               if (program.isIsScheduled()) {
                   ActionItem addScheduleAction = new ActionItem();
                   addScheduleAction.setTitle("Cancel Recording");
                   addScheduleAction.setIcon(getResources().getDrawable(R.drawable.bubble_del));

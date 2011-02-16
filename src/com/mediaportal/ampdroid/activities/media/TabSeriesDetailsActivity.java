@@ -125,7 +125,7 @@ public class TabSeriesDetailsActivity extends Activity {
    }
 
    private class LoadSeasonsDetailsTask extends
-         AsyncTask<Integer, List<Movie>, ArrayList<SeriesSeason>> {
+         AsyncTask<Integer, List<Movie>, List<SeriesSeason>> {
       Activity mContext;
 
       private LoadSeasonsDetailsTask(Activity _context) {
@@ -133,14 +133,14 @@ public class TabSeriesDetailsActivity extends Activity {
       }
 
       @Override
-      protected ArrayList<SeriesSeason> doInBackground(Integer... _params) {
-         ArrayList<SeriesSeason> seasons = mService.getAllSeasons(mSeriesId);
+      protected List<SeriesSeason> doInBackground(Integer... _params) {
+         List<SeriesSeason> seasons = mService.getAllSeasons(mSeriesId);
 
          return seasons;
       }
 
       @Override
-      protected void onPostExecute(ArrayList<SeriesSeason> _result) {
+      protected void onPostExecute(List<SeriesSeason> _result) {
          for (int i = 0; i < _result.size(); i++) {
             View view = Button.inflate(mContext, R.layout.listitem_poster, null);
             TextView text = (TextView) view.findViewById(R.id.TextViewTitle);

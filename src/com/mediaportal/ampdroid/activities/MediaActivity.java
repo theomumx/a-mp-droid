@@ -1,6 +1,5 @@
 package com.mediaportal.ampdroid.activities;
 
-import android.app.TabActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,17 +11,16 @@ import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mediaportal.ampdroid.R;
 import com.mediaportal.ampdroid.activities.actionbar.ActionBar;
-import com.mediaportal.ampdroid.activities.actionbar.ActionBar.IntentAction;
-import com.mediaportal.ampdroid.activities.media.TabMoviesActivity;
 import com.mediaportal.ampdroid.activities.media.TabMoviesActivityGroup;
 import com.mediaportal.ampdroid.activities.media.TabSeriesActivityGroup;
 import com.mediaportal.ampdroid.activities.media.TabSharesActivity;
 import com.mediaportal.ampdroid.activities.media.TabVideosActivity;
 import com.mediaportal.ampdroid.api.DataHandler;
 import com.mediaportal.ampdroid.data.SupportedFunctions;
-import com.mediaportal.ampdroid.R;
-public class MediaActivity extends TabActivity {
+
+public class MediaActivity extends BaseTabActivity {
    TabHost mTabHost;
 
    /** Called when the activity is first created. */
@@ -33,13 +31,13 @@ public class MediaActivity extends TabActivity {
       
       ActionBar actionBar = (ActionBar) findViewById(R.id.actionbar);
       actionBar.setTitle("Media Browsing");
-      actionBar.setHomeAction(new IntentAction(this, null, R.drawable.actionbar_home));
-      
-      actionBar.addAction(new IntentAction(this, null, R.drawable.actionbar_remote));
-      actionBar.addAction(new IntentAction(this, null, R.drawable.actionbar_search));
 
       DataHandler service = DataHandler.getCurrentRemoteInstance();
-      SupportedFunctions functions = service.getSupportedFunctions();
+      //SupportedFunctions functions = service.getSupportedFunctions();
+      SupportedFunctions functions = new SupportedFunctions();
+      functions.setSupportsMovies(true);
+      functions.setSupportsTvSeries(true);
+      functions.setSupportsVideo(true);
 
       
       

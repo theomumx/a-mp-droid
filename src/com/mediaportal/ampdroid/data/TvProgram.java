@@ -22,10 +22,104 @@ public class TvProgram extends TvProgramBase {
 	int ParentalRating;
 	int StarRating;
 	
+   String SeriesNum;
+   boolean IsChanged;
+   String EpisodeName;
+   String EpisodeNum;
+   String EpisodeNumber;
+   String EpisodePart;
+   String Genre;
+   
+   
+	
 	@Override
 	public String toString(){
 	   return Title;
 	}
+	
+   @ColumnProperty(value="IsChanged", type="boolean")
+   @JsonProperty("IsChanged")
+   public boolean isIsChanged() {
+      return IsChanged;
+   }   
+   
+   @ColumnProperty(value="IsChanged", type="boolean")
+   @JsonProperty("IsChanged")
+   public void setIsChanged(boolean isChanged) {
+      IsChanged = isChanged;
+   }
+   
+   @ColumnProperty(value="EpisodeName", type="text")
+   @JsonProperty("EpisodeName")
+   public String getEpisodeName() {
+      return EpisodeName;
+   }   
+   
+   @ColumnProperty(value="EpisodeName", type="text")
+   @JsonProperty("EpisodeName")
+   public void setEpisodeName(String episodeName) {
+      EpisodeName = episodeName;
+   }   
+   
+   @ColumnProperty(value="EpisodeNum", type="integer")
+   @JsonProperty("EpisodeNum")
+   public String getEpisodeNum() {
+      return EpisodeNum;
+   }   
+   
+   @ColumnProperty(value="EpisodeNum", type="integer")
+   @JsonProperty("EpisodeNum")
+   public void setEpisodeNum(String episodeNum) {
+      EpisodeNum = episodeNum;
+   }   
+   
+   @ColumnProperty(value="EpisodeNumber", type="text")
+   @JsonProperty("EpisodeNumber")
+   public String getEpisodeNumber() {
+      return EpisodeNumber;
+   }   
+   
+   @ColumnProperty(value="EpisodeNumber", type="text")
+   @JsonProperty("EpisodeNumber")
+   public void setEpisodeNumber(String episodeNumber) {
+      EpisodeNumber = episodeNumber;
+   }   
+   
+   @ColumnProperty(value="EpisodePart", type="text")
+   @JsonProperty("EpisodePart")
+   public String getEpisodePart() {
+      return EpisodePart;
+   }   
+   
+   @ColumnProperty(value="EpisodePart", type="text")
+   @JsonProperty("EpisodePart")
+   public void setEpisodePart(String episodePart) {
+      EpisodePart = episodePart;
+   }   
+   
+   @ColumnProperty(value="Genre", type="text")
+   @JsonProperty("Genre")
+   public String getGenre() {
+      return Genre;
+   }   
+   
+   @ColumnProperty(value="Genre", type="text")
+   @JsonProperty("Genre")
+   public void setGenre(String genre) {
+      Genre = genre;
+   } 
+   
+   @ColumnProperty(value="SeriesNum", type="text")
+   @JsonProperty("SeriesNum")
+   public String getSeriesNum() {
+      return SeriesNum;
+   }   
+   
+   @ColumnProperty(value="SeriesNum", type="text")
+   @JsonProperty("SeriesNum")
+   public void setSeriesNum(String seriesNum) {
+      SeriesNum = seriesNum;
+   }
    
    @ColumnProperty(value="Classification", type="text")
 	@JsonProperty("Classification")

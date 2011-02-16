@@ -2,7 +2,7 @@ package com.mediaportal.ampdroid.activities;
 
 import java.util.List;
 
-import android.app.Activity;
+import android.app.TabActivity;
 import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
@@ -18,7 +18,7 @@ import com.mediaportal.ampdroid.activities.settings.SettingsActivity;
 import com.mediaportal.ampdroid.data.RemoteClient;
 import com.mediaportal.ampdroid.database.RemoteClientsDatabaseHandler;
 
-public class BaseActivity extends Activity {
+public class BaseTabActivity extends TabActivity {
    /** Called when the activity is first created. */
    @Override
    public void onCreate(Bundle _savedInstanceState) {

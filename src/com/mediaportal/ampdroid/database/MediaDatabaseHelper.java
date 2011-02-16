@@ -20,15 +20,15 @@ public class MediaDatabaseHelper extends SQLiteOpenHelper {
 
    public MediaDatabaseHelper(Context context, String name, CursorFactory factory, int version) {
       super(context, name, factory, version);
-      mSeriesTableString = SqliteAnnotationsHelper.getCreateTableStringFromClass(Series.class);
+      mSeriesTableString = SqliteAnnotationsHelper.getCreateTableStringFromClass(Series.class, true);
       mSeriesDetailsTableString = SqliteAnnotationsHelper
-            .getCreateTableStringFromClass(SeriesFull.class);
+            .getCreateTableStringFromClass(SeriesFull.class, true);
 
-      mMovieTableString = SqliteAnnotationsHelper.getCreateTableStringFromClass(Movie.class);
+      mMovieTableString = SqliteAnnotationsHelper.getCreateTableStringFromClass(Movie.class, true);
       mMovieDetailsTableString = SqliteAnnotationsHelper
-            .getCreateTableStringFromClass(MovieFull.class);
+            .getCreateTableStringFromClass(MovieFull.class, true);
       mCacheSettingsString = SqliteAnnotationsHelper
-            .getCreateTableStringFromClass(CacheItemsSetting.class);
+            .getCreateTableStringFromClass(CacheItemsSetting.class, true);
    }
 
    @Override

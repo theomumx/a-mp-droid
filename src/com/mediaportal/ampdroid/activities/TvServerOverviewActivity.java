@@ -12,18 +12,24 @@ import com.mediaportal.ampdroid.activities.tvserver.TvServerEpgActivity;
 import com.mediaportal.ampdroid.activities.tvserver.TvServerRecordingsActivity;
 import com.mediaportal.ampdroid.activities.tvserver.TvServerSchedulesActivity;
 import com.mediaportal.ampdroid.activities.tvserver.TvServerStateActivity;
+import com.mediaportal.ampdroid.api.DataHandler;
 import com.mediaportal.ampdroid.lists.TvServerFeature;
 import com.mediaportal.ampdroid.lists.TvServerFeaturesAdapter;
 import com.mediaportal.ampdroid.R;
 public class TvServerOverviewActivity extends BaseActivity {
    private ListView mListView;
    private TvServerFeaturesAdapter mFeaturesAdapter;
+   private DataHandler mService;
+   private StatusBarActivityHandler statusBarHandler;
 
    @Override
    public void onCreate(Bundle _savedInstanceState) {
-      setHome(false);
       super.onCreate(_savedInstanceState);
       setContentView(R.layout.tvserveractivity);
+      
+      mService = DataHandler.getCurrentRemoteInstance();
+      statusBarHandler = new StatusBarActivityHandler(this, mService);
+      statusBarHandler.setHome(false);
       
       mListView = (ListView) findViewById(R.id.ListViewItems);
       mListView.setOnItemClickListener(new OnItemClickListener() {

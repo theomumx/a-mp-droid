@@ -15,6 +15,7 @@ import android.widget.ListView;
 
 import com.mediaportal.ampdroid.R;
 import com.mediaportal.ampdroid.activities.BaseActivity;
+import com.mediaportal.ampdroid.activities.StatusBarActivityHandler;
 import com.mediaportal.ampdroid.api.DataHandler;
 import com.mediaportal.ampdroid.data.TvChannel;
 import com.mediaportal.ampdroid.data.TvSchedule;
@@ -31,6 +32,7 @@ public class TvServerSchedulesActivity extends BaseActivity {
    private LazyLoadingAdapter mAdapter;
    private UpdateSchedulesTask mRecordingsUpdater;
    private CancelScheduleTask mCancelScheduleTask;
+   private StatusBarActivityHandler mStatusBarHandler;
 
    private class CancelScheduleTask extends AsyncTask<ILoadingAdapterItem, Boolean, Boolean> {
       private Context mContext;
@@ -93,7 +95,6 @@ public class TvServerSchedulesActivity extends BaseActivity {
 
    @Override
    public void onCreate(Bundle _savedInstanceState) {
-      setHome(false);
       setTitle(R.string.title_tvserver_schedules);
       super.onCreate(_savedInstanceState);
       setContentView(R.layout.tvserverschedulesactivity);
@@ -103,7 +104,10 @@ public class TvServerSchedulesActivity extends BaseActivity {
       mService = DataHandler.getCurrentRemoteInstance();
       mAdapter = new LazyLoadingAdapter(this);
       mListView.setAdapter(mAdapter);
+      
       mService = DataHandler.getCurrentRemoteInstance();
+      mStatusBarHandler = new StatusBarActivityHandler(this, mService);
+      mStatusBarHandler.setHome(false);
 
       mListView.setOnItemLongClickListener(new OnItemLongClickListener() {
          @Override

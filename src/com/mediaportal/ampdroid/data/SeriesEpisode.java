@@ -5,7 +5,9 @@ import java.util.Date;
 import org.codehaus.jackson.annotate.JsonProperty;
 
 import com.mediaportal.ampdroid.database.ColumnProperty;
+import com.mediaportal.ampdroid.database.TableProperty;
 
+@TableProperty("SeriesEpisode")
 public class SeriesEpisode {
 	private int Id;
 	private String Name;

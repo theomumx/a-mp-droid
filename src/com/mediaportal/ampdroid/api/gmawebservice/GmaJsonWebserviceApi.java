@@ -9,18 +9,15 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
-import org.apache.http.message.BasicNameValuePair;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.DeserializationConfig;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.deser.CustomDeserializerFactory;
 import org.codehaus.jackson.map.deser.StdDeserializerProvider;
-import org.kobjects.isodate.IsoDate;
-import org.ksoap2.serialization.SoapObject;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -29,8 +26,6 @@ import android.util.Log;
 import com.mediaportal.ampdroid.api.CustomDateDeserializer;
 import com.mediaportal.ampdroid.api.IMediaAccessApi;
 import com.mediaportal.ampdroid.api.JsonClient;
-import com.mediaportal.ampdroid.api.gmawebservice.soap.WcfAccessHandler;
-import com.mediaportal.ampdroid.api.soap.Ksoap2ResultParser;
 import com.mediaportal.ampdroid.data.EpisodeDetails;
 import com.mediaportal.ampdroid.data.Movie;
 import com.mediaportal.ampdroid.data.MovieFull;
@@ -40,22 +35,14 @@ import com.mediaportal.ampdroid.data.SeriesEpisode;
 import com.mediaportal.ampdroid.data.SeriesFull;
 import com.mediaportal.ampdroid.data.SeriesSeason;
 import com.mediaportal.ampdroid.data.SupportedFunctions;
-import com.mediaportal.ampdroid.data.TvVirtualCard;
 import com.mediaportal.ampdroid.data.VideoShare;
 
 public class GmaJsonWebserviceApi implements IMediaAccessApi {
    private GmaJsonWebserviceMovieApi m_moviesAPI;
    private GmaJsonWebserviceSeriesApi m_seriesAPI;
-   private GmaWebserviceMusicApi m_musicAPI;
 
    private String mServer;
    private int mPort;
-   private WcfAccessHandler m_wcfService;
-
-   private final String WCF_NAMESPACE = "http://tempuri.org/";
-   private final String WCF_PREFIX = "http://";
-   private final String WCF_SUFFIX = "/basic";
-   private final String WCF_METHOD_PREFIX = "http://tempuri.org/IMediaAccessService/";
 
    private final String GET_SUPPORTED_FUNCTIONS = "MP_GetSupportedFunctions";
 
@@ -65,6 +52,7 @@ public class GmaJsonWebserviceApi implements IMediaAccessApi {
    private JsonClient mJsonClient;
    private ObjectMapper mJsonObjectMapper;
 
+   @SuppressWarnings("unchecked")
    public GmaJsonWebserviceApi(String _server, int _port) {
       mServer = _server;
       mPort = _port;
@@ -219,8 +207,8 @@ public class GmaJsonWebserviceApi implements IMediaAccessApi {
    }
 
    @Override
-   public EpisodeDetails getEpisode(int _episodeId) {
-      return m_seriesAPI.getFullEpisode(_episodeId);
+   public EpisodeDetails getEpisode(int _seriesId, int _episodeId) {
+      return m_seriesAPI.getFullEpisode(_seriesId, _episodeId);
    }
 
    @Override
@@ -287,12 +275,14 @@ public class GmaJsonWebserviceApi implements IMediaAccessApi {
 
    @Override
    public ArrayList<MusicAlbum> getAllAlbums() {
-      return m_musicAPI.getAllAlbums();
+      // TODO Auto-generated method stub
+      return null;
    }
 
    @Override
-   public ArrayList<MusicAlbum> getAlbums(int _start, int _end) {
-      return m_musicAPI.getAlbums(_start, _end);
+   public List<MusicAlbum> getAlbums(int _start, int _end) {
+      // TODO Auto-generated method stub
+      return null;
    }
 
 

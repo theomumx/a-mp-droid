@@ -16,7 +16,6 @@ import android.graphics.BitmapFactory;
 import android.widget.ImageView;
 
 import com.mediaportal.ampdroid.api.DataHandler;
-import com.mediaportal.ampdroid.R;
 
 public class ImageHandler {
    public static int ImagePrefferedWidth = 400;// width of loaded image ->

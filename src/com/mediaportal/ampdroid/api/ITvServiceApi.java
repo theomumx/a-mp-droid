@@ -9,6 +9,7 @@ import com.mediaportal.ampdroid.data.TvChannel;
 import com.mediaportal.ampdroid.data.TvChannelDetails;
 import com.mediaportal.ampdroid.data.TvChannelGroup;
 import com.mediaportal.ampdroid.data.TvProgram;
+import com.mediaportal.ampdroid.data.TvProgramBase;
 import com.mediaportal.ampdroid.data.TvRecording;
 import com.mediaportal.ampdroid.data.TvRtspClient;
 import com.mediaportal.ampdroid.data.TvSchedule;
@@ -36,7 +37,7 @@ public interface ITvServiceApi extends IApiInterface {
 
    TvProgram GetProgramById(int programId);
 
-   List<TvProgram> GetProgramsForChannel(int channelId, Date startTime, Date endTime);
+   List<TvProgramBase> GetProgramsForChannel(int channelId, Date startTime, Date endTime);
 
    boolean GetProgramIsScheduledOnChannel(int channelId, int programId);
 
@@ -71,6 +72,8 @@ public interface ITvServiceApi extends IApiInterface {
    List<TvChannelDetails> GetChannelsDetails(int groupId, int startIndex, int endIndex);
 
    TvChannelDetails GetChannelDetailedById(int channelId);
+
+   List<TvProgram> GetProgramsDetailsForChannel(int _channelId, Date _startTime, Date _endTime);
 
    
 

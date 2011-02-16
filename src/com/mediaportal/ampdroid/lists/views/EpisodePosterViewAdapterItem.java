@@ -44,7 +44,7 @@ public class EpisodePosterViewAdapterItem implements ILoadingAdapterItem {
 
    @Override
    public int getXml() {
-      return R.layout.listitem_poster;
+      return R.layout.listitem_thumb;
    }
 
    @Override

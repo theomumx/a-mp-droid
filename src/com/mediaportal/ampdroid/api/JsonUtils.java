@@ -8,9 +8,10 @@ import org.apache.http.message.BasicNameValuePair;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
-import org.kobjects.isodate.IsoDate;
 
 import android.util.Log;
+
+import com.mediaportal.ampdroid.utils.IsoDate;
 
 public class JsonUtils {
    @SuppressWarnings({ "rawtypes", "unchecked" })

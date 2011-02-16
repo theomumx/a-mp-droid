@@ -22,6 +22,7 @@ import com.mediaportal.ampdroid.data.TvCardDetails;
 import com.mediaportal.ampdroid.data.TvChannel;
 import com.mediaportal.ampdroid.data.TvChannelGroup;
 import com.mediaportal.ampdroid.data.TvProgram;
+import com.mediaportal.ampdroid.data.TvProgramBase;
 import com.mediaportal.ampdroid.data.TvRecording;
 import com.mediaportal.ampdroid.data.TvSchedule;
 import com.mediaportal.ampdroid.data.TvVirtualCard;
@@ -40,7 +41,7 @@ public class DataHandler {
    private DataHandler(RemoteClient _client, Context _context) {
       client = _client;
 
-      mediaDatabase = new MediaAccessDatabaseHandler(_context);
+      mediaDatabase = new MediaAccessDatabaseHandler(_context, _client.getClientId());
    }
 
    public static boolean setupRemoteHandler(RemoteClient _client, Context _context,
@@ -281,19 +282,60 @@ public class DataHandler {
       }
    }
 
-   public ArrayList<SeriesSeason> getAllSeasons(int _seriesId) {
+   public List<SeriesSeason> getAllSeasons(int _seriesId) {
       IMediaAccessApi remoteAccess = client.getRemoteAccessApi();
-      return remoteAccess.getAllSeasons(_seriesId);
+      mediaDatabase.open();
+      List<SeriesSeason> seasons = mediaDatabase.getAllSeasons(_seriesId);
+
+      if (seasons == null || seasons.size() == 0) {
+         seasons = remoteAccess.getAllSeasons(_seriesId);
+         if (seasons != null) {
+            for (SeriesSeason s : seasons) {
+               mediaDatabase.saveSeason(s);
+            }
+         }
+      }
+
+      mediaDatabase.close();
+      return seasons;
    }
 
-   public ArrayList<SeriesEpisode> getAllEpisodes(int _seriesId) {
+   public List<SeriesEpisode> getAllEpisodes(int _seriesId) {
       IMediaAccessApi remoteAccess = client.getRemoteAccessApi();
-      return remoteAccess.getAllEpisodes(_seriesId);
+      mediaDatabase.open();
+      List<SeriesEpisode> episodes = mediaDatabase.getAllEpisodes(_seriesId);
+
+      if (episodes == null || episodes.size() == 0) {
+         episodes = remoteAccess.getAllEpisodes(_seriesId);
+         ;
+         if (episodes != null) {
+            for (SeriesEpisode e : episodes) {
+               mediaDatabase.saveEpisode(e);
+            }
+         }
+      }
+
+      mediaDatabase.close();
+      return episodes;
    }
 
-   public ArrayList<SeriesEpisode> getAllEpisodesForSeason(int _seriesId, int _seasonNumber) {
+   public List<SeriesEpisode> getAllEpisodesForSeason(int _seriesId, int _seasonNumber) {
       IMediaAccessApi remoteAccess = client.getRemoteAccessApi();
-      return remoteAccess.getAllEpisodesForSeason(_seriesId, _seasonNumber);
+      mediaDatabase.open();
+      List<SeriesEpisode> episodes = mediaDatabase
+            .getAllEpisodesForSeason(_seriesId, _seasonNumber);
+
+      if (episodes == null || episodes.size() == 0) {
+         episodes = remoteAccess.getAllEpisodesForSeason(_seriesId, _seasonNumber);
+         if (episodes != null) {
+            for (SeriesEpisode e : episodes) {
+               mediaDatabase.saveEpisode(e);
+            }
+         }
+      }
+
+      mediaDatabase.close();
+      return episodes;
    }
 
    public int getEpisodesCountForSeason(int _seriesId, Integer _seasonNumber) {
@@ -307,9 +349,9 @@ public class DataHandler {
       return remoteAccess.getEpisodesForSeason(_seriesId, _seasonNumber, _begin, _end);
    }
 
-   public EpisodeDetails getEpisode(int _id) {
+   public EpisodeDetails getEpisode(int _seriesId, int _episodeId) {
       IMediaAccessApi remoteAccess = client.getRemoteAccessApi();
-      return remoteAccess.getEpisode(_id);
+      return remoteAccess.getEpisode(_seriesId, _episodeId);
    }
 
    public ArrayList<MusicAlbum> getAllAlbums() {
@@ -397,7 +439,7 @@ public class DataHandler {
       return tvApi.GetSchedules();
    }
 
-   public List<TvProgram> getTvEpgForChannel(int _channelId, Date _begin, Date _end) {
+   public List<TvProgramBase> getTvBaseEpgForChannel(int _channelId, Date _begin, Date _end) {
       ITvServiceApi tvApi = client.getTvControlApi();
       return tvApi.GetProgramsForChannel(_channelId, _begin, _end);
    }
@@ -455,6 +497,24 @@ public class DataHandler {
 
    public String getDownloadUri(String _filePath) {
       return client.getRemoteAccessApi().getDownloadUri(_filePath);
+   }
+
+   public void playFileOnClient(String _fileName) {
+      client.getClientControlApi().startVideo(_fileName);
+
+   }
+
+   public void sendRemoteButtonDown(RemoteKey _remoteKey, int _pause) {
+      client.getClientControlApi().sendKeyDownCommand(_remoteKey, _pause);
+
+   }
+
+   public void sendRemoteButtonUp() {
+      client.getClientControlApi().sendKeyUpCommand();
+   }
+
+   public void playChannelOnClient(int _channel) {
+      client.getClientControlApi().playChannelOnClient(_channel);
    }
 
 }

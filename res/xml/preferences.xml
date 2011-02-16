@@ -25,7 +25,8 @@
 		android:key="cat_tvserver">
 		<CheckBoxPreference android:summary="@string/settings_tvserver_showall_desc"
 			android:title="@string/settings_tvserver_showall_title" android:key="tvserver_showall"></CheckBoxPreference>
-	</PreferenceCategory>
+	<EditTextPreference android:title="@string/settings_tvserver_clientname_title" android:key="tvserver_clientname" android:summary="@string/settings_tvserver_clientname_desc" android:dialogTitle="@string/settings_tvserver_clientname_title" android:defaultValue="android2"></EditTextPreference>
+</PreferenceCategory>
 	<PreferenceCategory android:title="@string/settings_category_media" android:key="cat_media"><EditTextPreference android:title="@string/settings_media_cachevalid_title" android:key="media_cache_valid" android:summary="@string/settings_media_cachevalid_desc"></EditTextPreference>
 <CheckBoxPreference android:key="media_load_details" android:summary="@string/settings_media_loaddetails_desc" android:title="@string/settings_media_loaddetails_title"></CheckBoxPreference>
 </PreferenceCategory>
