@@ -155,7 +155,7 @@ public class LazyLoadingAdapter extends BaseAdapter {
                   holder.image.setTag(image.getImageUrl());
                   mImageLoader.DisplayImage(image, loadingImage, mActivity, holder.image);
                } else {
-                  if (defaultImage != 0) {// show nothing as default image
+                  if (defaultImage == 0) {// show nothing as default image
                      holder.image.setImageBitmap(null);
                   }
                   else{

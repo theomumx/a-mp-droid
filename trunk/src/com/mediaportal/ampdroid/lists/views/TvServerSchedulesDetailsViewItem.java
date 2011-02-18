@@ -102,13 +102,11 @@ public class TvServerSchedulesDetailsViewItem implements ILoadingAdapterItem {
 
    @Override
    public int getLoadingImageResource() {
-      // TODO Auto-generated method stub
-      return 0;
+      return R.drawable.mp_logo_2;
    }
 
    @Override
    public int getDefaultImageResource() {
-      // TODO Auto-generated method stub
-      return 0;
+      return R.drawable.mp_logo_2;
    }
 }
