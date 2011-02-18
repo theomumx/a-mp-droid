@@ -7,20 +7,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mediaportal.ampdroid.R;
-import com.mediaportal.ampdroid.data.TvProgram;
 import com.mediaportal.ampdroid.data.TvProgramBase;
 import com.mediaportal.ampdroid.lists.ILoadingAdapterItem;
-import com.mediaportal.ampdroid.lists.LazyLoadingImage;
 import com.mediaportal.ampdroid.lists.LazyLoadingAdapter.ViewHolder;
+import com.mediaportal.ampdroid.lists.LazyLoadingImage;
 import com.mediaportal.ampdroid.lists.SubtextViewHolder;
 
-public class TvServerProgramsDetailsViewItem implements ILoadingAdapterItem {
+public class TvServerProgramsBaseViewItem implements ILoadingAdapterItem {
 
    private TvProgramBase mProgram;
    private String mDateString;
    private String mOverviewString;
    
-   public TvServerProgramsDetailsViewItem(TvProgramBase _program) {
+   public TvServerProgramsBaseViewItem(TvProgramBase _program) {
       mProgram = _program;
 
       Date begin = mProgram.getStartTime();
@@ -57,12 +56,12 @@ public class TvServerProgramsDetailsViewItem implements ILoadingAdapterItem {
 
    @Override
    public int getType() {
-      return 2;
+      return 1;
    }
 
    @Override
    public int getXml() {
-      return R.layout.listitem_epg_details;
+      return R.layout.listitem_epg;
    }
 
    @Override
@@ -74,8 +73,7 @@ public class TvServerProgramsDetailsViewItem implements ILoadingAdapterItem {
    public ViewHolder createViewHolder(View _view) {
       SubtextViewHolder holder = new SubtextViewHolder();
       holder.title = (TextView) _view.findViewById(R.id.TextViewProgramName);
-      holder.text = (TextView) _view.findViewById(R.id.TextViewProgramDescription);
-      holder.subtext = (TextView) _view.findViewById(R.id.TextViewProgramDate);
+      holder.text = (TextView) _view.findViewById(R.id.TextViewProgramDate);
       holder.image2 = (ImageView) _view.findViewById(R.id.ImageViewRecording);
       return holder;
    }
@@ -88,11 +86,7 @@ public class TvServerProgramsDetailsViewItem implements ILoadingAdapterItem {
       }
 
       if (holder.text != null) {
-         holder.text.setText(mOverviewString);
-      }
-
-      if (holder.subtext != null) {
-         holder.subtext.setText(mDateString);
+         holder.text.setText(mDateString);
       }
       
       if(holder.image2 != null){

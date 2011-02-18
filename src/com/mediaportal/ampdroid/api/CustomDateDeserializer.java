@@ -22,13 +22,13 @@ public class CustomDateDeserializer extends JsonDeserializer {
       //TODO: this filters out the "+0100" timezone representation at the end of the string
       // this might lead to problems in the future :(
       int posPlus = dateStr.indexOf('+');
-      int posMinus = dateStr.indexOf('+');
+      int posMinus = dateStr.indexOf('-');
       
-      if(posPlus != 0){
+      if(posPlus > 0){
          dateStr = dateStr.substring(0, posPlus);
       }
       
-      if(posMinus != 0){
+      if(posMinus > 0){
          dateStr = dateStr.substring(0, posMinus);
       }
 

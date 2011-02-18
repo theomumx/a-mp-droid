@@ -254,7 +254,7 @@ public class DataHandler {
       mediaDatabase.open();
       SeriesFull series = mediaDatabase.getFullSeries(_seriesId);
 
-      if (series == null) {
+      if (series != null) {
          series = remoteAccess.getFullSeries(_seriesId);
          mediaDatabase.saveSeriesDetails(series);
       }

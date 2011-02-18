@@ -329,6 +329,5 @@ public class TvServerChannelDetailsActivity extends BaseActivity {
       mEpgAdapter.notifyDataSetChanged();
       mEpgLoaderTask = new LoadEpgTask(this);
       mEpgLoaderTask.execute(_position);
-
    }
 }

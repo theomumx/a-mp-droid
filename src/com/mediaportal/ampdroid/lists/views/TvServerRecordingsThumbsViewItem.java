@@ -99,13 +99,11 @@ public class TvServerRecordingsThumbsViewItem implements ILoadingAdapterItem {
 
    @Override
    public int getLoadingImageResource() {
-      // TODO Auto-generated method stub
-      return 0;
+      return R.drawable.mplogo;
    }
 
    @Override
    public int getDefaultImageResource() {
-      // TODO Auto-generated method stub
-      return 0;
+      return R.drawable.mplogo;
    }
 }
