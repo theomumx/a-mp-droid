@@ -51,7 +51,7 @@ public class Tv4HomeJsonApi implements ITvServiceApi {
    private final String GET_CHANNEL_DETAILED_BY_ID = "GetChannelDetailedById";
    private final String GET_ACTIVE_USERS = "GetActiveUsers";
    private final String GET_CURRENT_PROGRAM_CHANNEL = "GetCurrentProgramOnChannel";
-   private final String GET_PROGRAM = "GetProgramById";
+   private final String GET_PROGRAM = "GetProgramDetailedById";
    private final String GET_PROGRAM_IS_SCHEDULED_CHANNEL = "GetProgramIsScheduledOnChannel";
    private final String GET_PROGRAMS_DETAILED_FOR_CHANNEL = "GetProgramsDetailedForChannel";
    private final String GET_PROGRAMS_BASIC_FOR_CHANNEL = "GetProgramsBasicForChannel";

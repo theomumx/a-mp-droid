@@ -127,12 +127,12 @@ public class TabEpisodesActivity extends Activity {
             try {
                SeriesEpisode selected = (SeriesEpisode) ((ILoadingAdapterItem) _item
                      .getItemAtPosition(_position)).getItem();
-               EpisodeDetails details = mService.getEpisode(mSeriesId, selected.getId());
-               if (details != null) {
-                  final EpisodeFile epFile = details.getEpisodeFile();
+               //EpisodeDetails details = mService.getEpisode(mSeriesId, selected.getId());
+               final String epFile = selected.getFileName();
+               if (epFile != null) {
                   String dirName = DownloaderUtils.getTvEpisodePath(mSeriesName, selected);
                   final String fileName = dirName
-                        + Utils.getFileNameWithExtension(epFile.getFileName(), "\\");
+                        + Utils.getFileNameWithExtension(epFile, "\\");
 
                   final QuickAction qa = new QuickAction(_view);
                   
@@ -149,7 +149,7 @@ public class TabEpisodesActivity extends Activity {
                      playItemAction.setOnClickListener(new OnClickListener() {
                         @Override
                         public void onClick(View _view) {
-                           String url = mService.getDownloadUri(epFile.getFileName());
+                           String url = mService.getDownloadUri(epFile);
                            Intent playIntent = new Intent(Intent.ACTION_VIEW);
                            playIntent.setDataAndType(Uri.parse(localFileName.toString()), "video/*");
                            startActivity(playIntent);
@@ -167,7 +167,7 @@ public class TabEpisodesActivity extends Activity {
                      sdCardAction.setOnClickListener(new OnClickListener() {
                         @Override
                         public void onClick(View _view) {
-                           String url = mService.getDownloadUri(epFile.getFileName());
+                           String url = mService.getDownloadUri(epFile);
                            Intent download = new Intent(_view.getContext(),
                                  ItemDownloaderService.class);
                            download.putExtra("url", url);
@@ -187,7 +187,7 @@ public class TabEpisodesActivity extends Activity {
                      playOnClientAction.setOnClickListener(new OnClickListener() {
                         @Override
                         public void onClick(View _view) {
-                           mService.playFileOnClient(epFile.getFileName());
+                           mService.playFileOnClient(epFile);
                         }
                      });
                      qa.addActionItem(playOnClientAction);
@@ -195,11 +195,9 @@ public class TabEpisodesActivity extends Activity {
 
                   qa.setAnimStyle(QuickAction.ANIM_AUTO);
 
-                  
-
                   qa.show();
                } else {
-                  Util.showToast(_view.getContext(), "Error getting episode details");
+                  Util.showToast(_view.getContext(), "No local file available for this episode");
                }
                return true;
             } catch (Exception ex) {

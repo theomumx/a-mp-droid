@@ -24,6 +24,7 @@ import android.widget.RemoteViews;
 import com.mediaportal.ampdroid.lists.Utils;
 import com.mediaportal.ampdroid.utils.DownloaderUtils;
 import com.mediaportal.ampdroid.R;
+
 public class ItemDownloaderService extends Service {
    public static final String ITEM_DOWNLOAD_STARTED = "download_started";
    public static final String ITEM_DOWNLOAD_PROGRESSED = "download_progressed";
@@ -133,7 +134,7 @@ public class ItemDownloaderService extends Service {
 
             File downloadFile = new File(DownloaderUtils.getBaseDirectory() + "/" + myFileName);
             File donwloadDir = new File(Utils.getFolder(downloadFile.toString(), "/"));
-            
+
             if (!donwloadDir.exists()) {
                if (donwloadDir.mkdirs()) {
                   Log.d("ItemDownloaderService", "created directory on sd card");
@@ -186,22 +187,23 @@ public class ItemDownloaderService extends Service {
 
       @Override
       protected void onPostExecute(Boolean result) {
-         stopSelf();
-         mNotificationManager.cancel(NOTIFICATION_ID);
-         Notification notification = new Notification(R.drawable.mp_logo_2, "Notify",
-               System.currentTimeMillis());
-         if (result) {
-            notification.setLatestEventInfo(getApplicationContext(), "aMPdroid",
-                  "Downloads finished", PendingIntent.getActivity(getApplicationContext(), 0,
-                        mIntent, PendingIntent.FLAG_CANCEL_CURRENT));
-         } else {
-            notification.setLatestEventInfo(getApplicationContext(), "aMPdroid",
-                  "Downloads failed", PendingIntent.getActivity(getApplicationContext(), 0,
-                        mIntent, PendingIntent.FLAG_CANCEL_CURRENT));
+         if (mNotificationManager != null) {
+            stopSelf();
+            mNotificationManager.cancel(NOTIFICATION_ID);
+            Notification notification = new Notification(R.drawable.mp_logo_2, "Notify",
+                  System.currentTimeMillis());
+            if (result) {
+               notification.setLatestEventInfo(getApplicationContext(), "aMPdroid",
+                     "Downloads finished", PendingIntent.getActivity(getApplicationContext(), 0,
+                           mIntent, PendingIntent.FLAG_CANCEL_CURRENT));
+            } else {
+               notification.setLatestEventInfo(getApplicationContext(), "aMPdroid",
+                     "Downloads failed", PendingIntent.getActivity(getApplicationContext(), 0,
+                           mIntent, PendingIntent.FLAG_CANCEL_CURRENT));
+            }
+
+            mNotificationManager.notify(49, notification);
          }
-
-         mNotificationManager.notify(49, notification);
-
          super.onPostExecute(result);
       }
 

@@ -183,6 +183,16 @@ public class StatusBarActivityHandler {
                   progress.setVisibility(View.INVISIBLE);
                }
             });
+            
+            ImageButton homeButton = (ImageButton)actionBar.getHomeButton();
+            homeButton.setOnClickListener(new OnClickListener() {
+               @Override
+               public void onClick(View v) {
+                  Intent intent = new Intent(mParent, HomeActivity.class );
+                  intent.setFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP );
+                  mParent.startActivity( intent );
+               }
+            });
 
             actionBar.setInitialised(true);
          }

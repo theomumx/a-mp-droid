@@ -54,6 +54,10 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
    public ImageButton getSearchButton() {
       return mSearchBtn;
    }
+   
+   public ImageButton getHomeButton(){
+      return mHomeBtn;
+   }
 
    private boolean mIsInitialised = false;
    private boolean mLoading;

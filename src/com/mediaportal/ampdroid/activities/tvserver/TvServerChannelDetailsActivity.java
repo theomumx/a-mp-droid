@@ -5,11 +5,13 @@ import java.util.Date;
 import java.util.List;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
@@ -22,14 +24,18 @@ import com.mediaportal.ampdroid.R;
 import com.mediaportal.ampdroid.activities.BaseActivity;
 import com.mediaportal.ampdroid.activities.StatusBarActivityHandler;
 import com.mediaportal.ampdroid.api.DataHandler;
+import com.mediaportal.ampdroid.asynctasks.AddScheduleTask;
+import com.mediaportal.ampdroid.asynctasks.CancelScheduleTask;
+import com.mediaportal.ampdroid.data.TvChannel;
 import com.mediaportal.ampdroid.data.TvProgram;
 import com.mediaportal.ampdroid.data.TvProgramBase;
 import com.mediaportal.ampdroid.lists.ILoadingAdapterItem;
 import com.mediaportal.ampdroid.lists.LazyLoadingAdapter;
+import com.mediaportal.ampdroid.lists.views.TvServerChannelAdapterItem;
+import com.mediaportal.ampdroid.lists.views.TvServerProgramsBaseViewItem;
 import com.mediaportal.ampdroid.lists.views.TvServerProgramsDetailsViewItem;
 import com.mediaportal.ampdroid.quickactions.ActionItem;
 import com.mediaportal.ampdroid.quickactions.QuickAction;
-import com.mediaportal.ampdroid.utils.Util;
 
 public class TvServerChannelDetailsActivity extends BaseActivity {
    private DataHandler mService;
@@ -48,65 +54,6 @@ public class TvServerChannelDetailsActivity extends BaseActivity {
    private AddScheduleTask mAddScheduleTask;
    private CancelScheduleTask mCancelScheduleTask;
    private StatusBarActivityHandler mStatusBarHandler;
-
-   private class CancelScheduleTask extends AsyncTask<TvProgramBase, Boolean, Boolean> {
-      private Context mContext;
-
-      private CancelScheduleTask(Context _context) {
-         mContext = _context;
-      }
-
-      @Override
-      protected Boolean doInBackground(TvProgramBase... _params) {
-         TvProgramBase program = _params[0];
-         mService.cancelTvScheduleByProgramId(program.getIdProgram());
-
-         program.setIsScheduled(false);
-
-         return true;
-      }
-
-      @Override
-      protected void onPostExecute(Boolean _result) {
-         if (_result) {
-            Util.showToast(mContext, "Schedule cancelled");
-
-            mEpgAdapter.notifyDataSetInvalidated();
-         } else {
-            Util.showToast(mContext, "Couldn't cancel schedule");
-         }
-      }
-   }
-
-   private class AddScheduleTask extends AsyncTask<TvProgramBase, Boolean, Boolean> {
-      private Context mContext;
-
-      private AddScheduleTask(Context _context) {
-         mContext = _context;
-      }
-
-      @Override
-      protected Boolean doInBackground(TvProgramBase... _params) {
-         TvProgramBase program = _params[0];
-         mService.addTvSchedule(program.getIdChannel(), program.getTitle(), program.getStartTime(),
-               program.getEndTime());
-
-         program.setIsScheduled(true);
-
-         return true;
-      }
-
-      @Override
-      protected void onPostExecute(Boolean _result) {
-         if (_result) {
-            Util.showToast(mContext, "Schedule added");
-
-            mEpgAdapter.notifyDataSetInvalidated();
-         } else {
-            Util.showToast(mContext, "Couldn't add schedule");
-         }
-      }
-   }
 
    private class LoadEpgTask extends AsyncTask<Integer, Integer, List<TvProgramBase>> {
       private Context mContext;
@@ -218,9 +165,9 @@ public class TvServerChannelDetailsActivity extends BaseActivity {
 
          mNextDayButton = (Button) findViewById(R.id.ButtonNextDay);
          mPrevDayButton = (Button) findViewById(R.id.ButtonPrevDay);
-         mChannelNameText = (TextView)findViewById(R.id.TextViewChannelName);
-         mCurrentDateTextView = (TextView)findViewById(R.id.TextViewCurrentDate);
-         
+         mChannelNameText = (TextView) findViewById(R.id.TextViewChannelName);
+         mCurrentDateTextView = (TextView) findViewById(R.id.TextViewCurrentDate);
+
          mChannelNameText.setText(mChannelName);
 
          mDaysSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
@@ -276,7 +223,8 @@ public class TvServerChannelDetailsActivity extends BaseActivity {
                   addScheduleAction.setOnClickListener(new OnClickListener() {
                      @Override
                      public void onClick(View _view) {
-                        mCancelScheduleTask = new CancelScheduleTask(_view.getContext());
+                        mCancelScheduleTask = new CancelScheduleTask(_view.getContext(), mService,
+                              mEpgAdapter);
                         mCancelScheduleTask.execute(program);
 
                         qa.dismiss();
@@ -291,7 +239,8 @@ public class TvServerChannelDetailsActivity extends BaseActivity {
                   addScheduleAction.setOnClickListener(new OnClickListener() {
                      @Override
                      public void onClick(View _view) {
-                        mAddScheduleTask = new AddScheduleTask(_view.getContext());
+                        mAddScheduleTask = new AddScheduleTask(_view.getContext(), mService,
+                              mEpgAdapter);
                         mAddScheduleTask.execute(program);
 
                         qa.dismiss();
@@ -301,6 +250,23 @@ public class TvServerChannelDetailsActivity extends BaseActivity {
                }
                qa.show();
                return true;
+            }
+         });
+
+         mEpgView.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> _adapter, View _view, int _pos, long _id) {
+               ILoadingAdapterItem item = (ILoadingAdapterItem) mEpgAdapter.getItem(_pos);
+
+               // open program detail view
+               TvProgramBase prog = (TvProgramBase) item.getItem();
+
+               Intent myIntent = new Intent(_view.getContext(),
+                     TvServerProgramDetailsActivity.class);
+               myIntent.putExtra("program_id", prog.getIdProgram());
+               myIntent.putExtra("program_name", prog.getTitle());
+               startActivity(myIntent);
+
             }
          });
       }

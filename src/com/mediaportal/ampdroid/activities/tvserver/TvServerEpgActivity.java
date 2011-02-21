@@ -7,12 +7,16 @@ import java.util.List;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -22,13 +26,18 @@ import com.mediaportal.ampdroid.R;
 import com.mediaportal.ampdroid.activities.BaseActivity;
 import com.mediaportal.ampdroid.activities.StatusBarActivityHandler;
 import com.mediaportal.ampdroid.api.DataHandler;
+import com.mediaportal.ampdroid.asynctasks.AddScheduleTask;
+import com.mediaportal.ampdroid.asynctasks.CancelScheduleTask;
 import com.mediaportal.ampdroid.data.TvChannel;
 import com.mediaportal.ampdroid.data.TvChannelGroup;
+import com.mediaportal.ampdroid.data.TvProgram;
 import com.mediaportal.ampdroid.data.TvProgramBase;
 import com.mediaportal.ampdroid.lists.ILoadingAdapterItem;
 import com.mediaportal.ampdroid.lists.LazyLoadingAdapter;
 import com.mediaportal.ampdroid.lists.views.TvServerChannelAdapterItem;
 import com.mediaportal.ampdroid.lists.views.TvServerProgramsBaseViewItem;
+import com.mediaportal.ampdroid.quickactions.ActionItem;
+import com.mediaportal.ampdroid.quickactions.QuickAction;
 
 public class TvServerEpgActivity extends BaseActivity {
    private DataHandler mService;
@@ -37,7 +46,7 @@ public class TvServerEpgActivity extends BaseActivity {
    private StatusBarActivityHandler mStatusBarHandler;
    private LazyLoadingAdapter mEpgAdapter;
    ProgressDialog mLoadingDialog;
-   
+
    boolean mShowAllGroup = false;
    ArrayAdapter<TvChannelGroup> mGroupsItems;
    UpdateGroupsTask mGroupsUpdater;
@@ -62,7 +71,7 @@ public class TvServerEpgActivity extends BaseActivity {
          }
       }
    }
-   
+
    private class LoadEpgTask extends AsyncTask<Integer, ILoadingAdapterItem, List<TvProgramBase>> {
       private Context mContext;
 
@@ -77,10 +86,10 @@ public class TvServerEpgActivity extends BaseActivity {
          Calendar cal = Calendar.getInstance();
          cal.add(Calendar.HOUR, 3);
          Date end = cal.getTime();
-         
+
          List<TvChannel> channels = mService.getTvChannelsForGroup(_params[0]);
          if (channels != null) {
-            
+
             for (TvChannel c : channels) {
 
                List<TvProgramBase> programs = mService.getTvBaseEpgForChannel(c.getIdChannel(),
@@ -120,7 +129,7 @@ public class TvServerEpgActivity extends BaseActivity {
       setContentView(R.layout.tvserverepgactivity);
       mEpgView = (ListView) findViewById(R.id.ListViewEpg);
       mGroups = (Spinner) findViewById(R.id.SpinnerGroups);
-      
+
       mGroups.setOnItemSelectedListener(new OnItemSelectedListener() {
 
          @Override
@@ -134,9 +143,89 @@ public class TvServerEpgActivity extends BaseActivity {
 
          }
       });
-      
+
       mEpgAdapter = new LazyLoadingAdapter(this);
       mEpgView.setAdapter(mEpgAdapter);
+
+      mEpgView.setOnItemClickListener(new OnItemClickListener() {
+
+         @Override
+         public void onItemClick(AdapterView<?> _adapter, View _view, int _pos, long _id) {
+            ILoadingAdapterItem item = (ILoadingAdapterItem) mEpgAdapter.getItem(_pos);
+            if (_adapter.getItemAtPosition(_pos).getClass()
+                  .equals(TvServerChannelAdapterItem.class)) {
+               // open channel detail view
+               TvChannel channel = (TvChannel) item.getItem();
+
+               Intent myIntent = new Intent(_view.getContext(),
+                     TvServerChannelDetailsActivity.class);
+               myIntent.putExtra("channel_id", channel.getIdChannel());
+               myIntent.putExtra("channel_name", channel.getDisplayName());
+               startActivity(myIntent);
+            }
+
+            if (_adapter.getItemAtPosition(_pos).getClass()
+                  .equals(TvServerProgramsBaseViewItem.class)) {
+               // open program detail view
+               TvProgramBase prog = (TvProgramBase) item.getItem();
+
+               Intent myIntent = new Intent(_view.getContext(),
+                     TvServerProgramDetailsActivity.class);
+               myIntent.putExtra("program_id", prog.getIdProgram());
+               myIntent.putExtra("program_name", prog.getTitle());
+               startActivity(myIntent);
+            }
+         }
+      });
+
+      mEpgView.setOnItemLongClickListener(new OnItemLongClickListener() {
+         @Override
+         public boolean onItemLongClick(AdapterView<?> _item, View _view, final int _pos, long _id) {
+            ILoadingAdapterItem item = (ILoadingAdapterItem) mEpgView.getItemAtPosition(_pos);
+            final TvProgramBase program = (TvProgramBase) item.getItem();
+
+            final QuickAction qa = new QuickAction(_view);
+
+            if (program.isIsScheduled()) {
+               ActionItem addScheduleAction = new ActionItem();
+               addScheduleAction.setTitle("Cancel Recording");
+               addScheduleAction.setIcon(getResources().getDrawable(R.drawable.bubble_del));
+               addScheduleAction.setOnClickListener(new OnClickListener() {
+                  private CancelScheduleTask mCancelScheduleTask;
+
+                  @Override
+                  public void onClick(View _view) {
+                     mCancelScheduleTask = new CancelScheduleTask(_view.getContext(), mService,
+                           mEpgAdapter);
+                     mCancelScheduleTask.execute(program);
+
+                     qa.dismiss();
+                  }
+               });
+               qa.addActionItem(addScheduleAction);
+            } else {
+               ActionItem addScheduleAction = new ActionItem();
+               addScheduleAction.setTitle("Record this");
+               addScheduleAction.setIcon(getResources().getDrawable(
+                     R.drawable.quickaction_recording));
+               addScheduleAction.setOnClickListener(new OnClickListener() {
+                  private AddScheduleTask mAddScheduleTask;
+
+                  @Override
+                  public void onClick(View _view) {
+                     mAddScheduleTask = new AddScheduleTask(_view.getContext(), mService,
+                           mEpgAdapter);
+                     mAddScheduleTask.execute(program);
+
+                     qa.dismiss();
+                  }
+               });
+               qa.addActionItem(addScheduleAction);
+            }
+            qa.show();
+            return true;
+         }
+      });
 
       mGroupsItems = new ArrayAdapter<TvChannelGroup>(this, android.R.layout.simple_spinner_item);
       mGroupsItems.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -144,19 +233,19 @@ public class TvServerEpgActivity extends BaseActivity {
 
       SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
       mShowAllGroup = prefs.getBoolean("tvserver_showall", true);
-      
+
       mService = DataHandler.getCurrentRemoteInstance();
       mStatusBarHandler = new StatusBarActivityHandler(this, mService);
       mStatusBarHandler.setHome(false);
 
       refreshGroups();
    }
-   
-   private void refreshGroups(){
+
+   private void refreshGroups() {
       mLoadingDialog = ProgressDialog.show(TvServerEpgActivity.this, " Loading Groups ",
             " Loading. Please wait ... ", true);
       mLoadingDialog.setCancelable(true);
-      
+
       mGroupsUpdater = new UpdateGroupsTask();
       mGroupsUpdater.execute(0);
    }

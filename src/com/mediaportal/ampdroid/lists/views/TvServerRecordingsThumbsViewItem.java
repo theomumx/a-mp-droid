@@ -15,6 +15,7 @@ import com.mediaportal.ampdroid.lists.ILoadingAdapterItem;
 import com.mediaportal.ampdroid.lists.LazyLoadingImage;
 import com.mediaportal.ampdroid.lists.LazyLoadingAdapter.ViewHolder;
 import com.mediaportal.ampdroid.lists.SubtextViewHolder;
+import com.mediaportal.ampdroid.utils.DateTimeHelper;
 public class TvServerRecordingsThumbsViewItem implements ILoadingAdapterItem {
    TvRecording mRecording;
    TvChannel mChannel;
@@ -35,8 +36,8 @@ public class TvServerRecordingsThumbsViewItem implements ILoadingAdapterItem {
       Date begin = mRecording.getStartTime();
       Date end = mRecording.getEndTime();
       if (begin != null && end != null) {
-         String startString = (String) android.text.format.DateFormat.format("yyyy-MM-dd kk:mm", begin);
-         String endString = (String) android.text.format.DateFormat.format("kk:mm", end);
+         String startString = DateTimeHelper.getDateString(begin, true);
+         String endString = DateTimeHelper.getTimeString(end);
          return startString + " - " + endString;
       } else {
          return "Unknown time";
