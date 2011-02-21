@@ -72,14 +72,12 @@ public class SeriesBannerViewAdapterItem implements ILoadingAdapterItem {
 
    @Override
    public int getLoadingImageResource() {
-      // TODO Auto-generated method stub
-      return 0;
+      return R.drawable.listview_imageloading_thumb;
    }
 
    @Override
    public int getDefaultImageResource() {
-      // TODO Auto-generated method stub
-      return 0;
+      return R.drawable.listview_imageloading_thumb;
    }
 
 }

@@ -36,7 +36,7 @@ public class MovieFull extends Movie {
    private String ImdbId;
    private String CoverPathAlternate;
    private String CoverPath;
-   private String BackdropPath;
+   
 
    @ColumnProperty(value="DiscId", type="text")
    @JsonProperty("DiscId")
@@ -362,15 +362,4 @@ public class MovieFull extends Movie {
       CoverPath = coverPath;
    }
 
-   @ColumnProperty(value="BackdropPath", type="text")
-   @JsonProperty("BackdropPath")
-   public String getBackdropPath() {
-      return BackdropPath;
-   }
-
-   @ColumnProperty(value="BackdropPath", type="text")
-   @JsonProperty("BackdropPath")
-   public void setBackdropPath(String backdropPath) {
-      BackdropPath = backdropPath;
-   }
 }

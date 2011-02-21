@@ -19,6 +19,7 @@ public class SeriesEpisode {
 	private float Rating;
 	private int RatingCount;
 	private boolean HasLocalFile;
+	private String FileName;
 	
 	public SeriesEpisode() {
 
@@ -150,5 +151,17 @@ public class SeriesEpisode {
    @JsonProperty("HasLocalFile")
    public void setHasLocalFile(boolean hasLocalFile) {
       HasLocalFile = hasLocalFile;
+   }
+
+   @ColumnProperty(value="FileName", type="text")
+   @JsonProperty("FileName")
+   public void setFileName(String fileName) {
+      FileName = fileName;
+   }
+
+   @ColumnProperty(value="FileName", type="text")
+   @JsonProperty("FileName")
+   public String getFileName() {
+      return FileName;
    }
 }

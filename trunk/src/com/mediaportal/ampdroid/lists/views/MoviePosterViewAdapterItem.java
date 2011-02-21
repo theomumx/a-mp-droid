@@ -23,7 +23,7 @@ public class MoviePosterViewAdapterItem implements ILoadingAdapterItem {
       mMovie = _movie;
       
       String fileName = Utils.getFileNameWithExtension(mMovie.getCoverThumbPath(), "\\");
-      String cacheName =   "Movies" + File.separator + mMovie.getId() + File.separator + fileName;
+      String cacheName =   "Movies" + File.separator + mMovie.getId() + File.separator + "Poster" + File.separator + fileName;
       
       mImage = new LazyLoadingImage(mMovie.getCoverThumbPath(), cacheName, 300, 100);
    }
@@ -82,11 +82,11 @@ public class MoviePosterViewAdapterItem implements ILoadingAdapterItem {
 
    @Override
    public int getLoadingImageResource() {
-      return R.drawable.listview_imageloading_poster;
+      return R.drawable.listview_imageloading_poster_2;
    }
    
    @Override
    public int getDefaultImageResource() {
-      return R.drawable.listview_imageloading_poster;
+      return R.drawable.listview_imageloading_poster_2;
    }
 }

@@ -26,7 +26,9 @@ import android.util.Log;
 import com.mediaportal.ampdroid.api.CustomDateDeserializer;
 import com.mediaportal.ampdroid.api.IMediaAccessApi;
 import com.mediaportal.ampdroid.api.JsonClient;
+import com.mediaportal.ampdroid.api.JsonUtils;
 import com.mediaportal.ampdroid.data.EpisodeDetails;
+import com.mediaportal.ampdroid.data.FileInfo;
 import com.mediaportal.ampdroid.data.Movie;
 import com.mediaportal.ampdroid.data.MovieFull;
 import com.mediaportal.ampdroid.data.MusicAlbum;
@@ -64,12 +66,13 @@ public class GmaJsonWebserviceApi implements IMediaAccessApi {
       CustomDeserializerFactory sf = new CustomDeserializerFactory();
       mJsonObjectMapper.setDeserializerProvider(new StdDeserializerProvider(sf));
       sf.addSpecificMapping(Date.class, new CustomDateDeserializer());
-      
+
       m_moviesAPI = new GmaJsonWebserviceMovieApi(mJsonClient, mJsonObjectMapper);
       m_seriesAPI = new GmaJsonWebserviceSeriesApi(mJsonClient, mJsonObjectMapper);
-      //m_musicAPI = new GmaWebserviceMusicApi(m_wcfService, mJsonObjectMapper);
+      // m_musicAPI = new GmaWebserviceMusicApi(m_wcfService,
+      // mJsonObjectMapper);
    }
-   
+
    @Override
    public String getServer() {
       return mServer;
@@ -126,11 +129,29 @@ public class GmaJsonWebserviceApi implements IMediaAccessApi {
       String response = mJsonClient.Execute(methodName);
 
       if (response != null) {
-         VideoShare[] returnObject = (VideoShare[]) getObjectsFromJson(response,
-               VideoShare[].class);
+         VideoShare[] returnObject = (VideoShare[]) getObjectsFromJson(response, VideoShare[].class);
 
          if (returnObject != null) {
             return new ArrayList<VideoShare>(Arrays.asList(returnObject));
+         } else {
+            Log.d("aMPdroid JSON", "Error parsing result from JSON method " + methodName);
+         }
+      } else {
+         Log.d("aMPdroid JSON", "Error retrieving data for method" + methodName);
+      }
+      return null;
+   }
+
+   @Override
+   public ArrayList<FileInfo> getFilesForFolder(String _path) {
+      String methodName = "FS_GetFilesFromDirectory";
+      String response = mJsonClient.Execute(methodName, JsonUtils.newPair("folderPath", _path));
+
+      if (response != null) {
+         FileInfo[] returnObject = (FileInfo[]) getObjectsFromJson(response, FileInfo[].class);
+
+         if (returnObject != null) {
+            return new ArrayList<FileInfo>(Arrays.asList(returnObject));
          } else {
             Log.d("aMPdroid JSON", "Error parsing result from JSON method " + methodName);
          }
@@ -284,6 +305,5 @@ public class GmaJsonWebserviceApi implements IMediaAccessApi {
       // TODO Auto-generated method stub
       return null;
    }
-
 
 }

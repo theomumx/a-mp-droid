@@ -52,4 +52,9 @@
 	<string name="state_recording">Recording</string>
 	<string name="state_timeshifting">Timeshifting</string>
 	<string name="state_grabbingEpg">Grabbing EPG</string>
+	
+	<string name="tvserver_program_start">Start Time</string>
+	<string name="tvserver_program_end">End Time</string>
+	<string name="tvserver_program_duration">Duration</string>
+	<string name="tvserver_program_desc">Description</string>
 </resources>

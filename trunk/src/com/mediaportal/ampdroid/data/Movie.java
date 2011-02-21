@@ -18,6 +18,7 @@ public class Movie {
 	private int Year;
 	private String ParentalRating;
 	private String CoverThumbPath;
+	private String BackdropPath;
 	
 	public Movie()
 	{
@@ -131,4 +132,17 @@ public class Movie {
 	public void setName(String name) {
 		this.Title = name;
 	}
+   
+
+   @ColumnProperty(value="BackdropPath", type="text")
+   @JsonProperty("BackdropPath")
+   public String getBackdropPath() {
+      return BackdropPath;
+   }
+
+   @ColumnProperty(value="BackdropPath", type="text")
+   @JsonProperty("BackdropPath")
+   public void setBackdropPath(String backdropPath) {
+      BackdropPath = backdropPath;
+   }
 }

@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 
 import com.mediaportal.ampdroid.data.CacheItemsSetting;
 import com.mediaportal.ampdroid.data.EpisodeDetails;
+import com.mediaportal.ampdroid.data.FileInfo;
 import com.mediaportal.ampdroid.data.Movie;
 import com.mediaportal.ampdroid.data.MovieFull;
 import com.mediaportal.ampdroid.data.MusicAlbum;
@@ -121,6 +122,10 @@ public class DataHandler {
 
    public List<VideoShare> getAllVideoShares() {
       return client.getRemoteAccessApi().getVideoShares();
+   }
+   
+   public ArrayList<FileInfo> getFilesForFolder(String _path){
+      return client.getRemoteAccessApi().getFilesForFolder(_path);
    }
 
    public Date getMovieDatabaseLastUpdated() {
@@ -254,7 +259,7 @@ public class DataHandler {
       mediaDatabase.open();
       SeriesFull series = mediaDatabase.getFullSeries(_seriesId);
 
-      if (series != null) {
+      if (series == null) {
          series = remoteAccess.getFullSeries(_seriesId);
          mediaDatabase.saveSeriesDetails(series);
       }
@@ -515,6 +520,10 @@ public class DataHandler {
 
    public void playChannelOnClient(int _channel) {
       client.getClientControlApi().playChannelOnClient(_channel);
+   }
+
+   public TvProgram getTvEpgDetails(Integer _id) {
+      return client.getTvControlApi().GetProgramById(_id);
    }
 
 }

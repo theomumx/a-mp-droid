@@ -2,14 +2,15 @@ package com.mediaportal.ampdroid.lists.views;
 
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.mediaportal.ampdroid.R;
 import com.mediaportal.ampdroid.data.TvChannel;
 import com.mediaportal.ampdroid.lists.ILoadingAdapterItem;
-import com.mediaportal.ampdroid.lists.SubtextViewHolder;
 import com.mediaportal.ampdroid.lists.LazyLoadingAdapter.ViewHolder;
 import com.mediaportal.ampdroid.lists.LazyLoadingImage;
+import com.mediaportal.ampdroid.lists.SubtextViewHolder;
 
 public class TvServerChannelAdapterItem implements ILoadingAdapterItem {
    TvChannel mChannel;
@@ -45,7 +46,7 @@ public class TvServerChannelAdapterItem implements ILoadingAdapterItem {
 
    @Override
    public Object getItem() {
-      return null;
+      return mChannel;
    }
 
    @Override

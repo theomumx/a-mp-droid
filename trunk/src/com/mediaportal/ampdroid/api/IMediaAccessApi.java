@@ -6,6 +6,7 @@ import java.util.List;
 import android.graphics.Bitmap;
 
 import com.mediaportal.ampdroid.data.EpisodeDetails;
+import com.mediaportal.ampdroid.data.FileInfo;
 import com.mediaportal.ampdroid.data.Movie;
 import com.mediaportal.ampdroid.data.MovieFull;
 import com.mediaportal.ampdroid.data.MusicAlbum;
@@ -59,6 +60,8 @@ public interface IMediaAccessApi extends IApiInterface {
    ArrayList<VideoShare> getVideoShares();
 
    EpisodeDetails getEpisode(int _seriesId, int _episodeId);
+
+   ArrayList<FileInfo> getFilesForFolder(String _path);
 
 
 
