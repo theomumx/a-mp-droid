@@ -199,6 +199,7 @@ public class TvServerChannelDetailsActivity extends BaseActivity {
          mDaysAdapter.add(new EpgDay(2, begin, end));
 
          mDaysSpinner.setAdapter(mDaysAdapter);
+         mDaysSpinner.setSelection(1);
 
          mNextDayButton = (Button) findViewById(R.id.ButtonNextDay);
          mPrevDayButton = (Button) findViewById(R.id.ButtonPrevDay);
