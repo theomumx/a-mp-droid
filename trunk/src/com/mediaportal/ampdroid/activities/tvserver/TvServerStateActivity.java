@@ -1,6 +1,5 @@
 package com.mediaportal.ampdroid.activities.tvserver;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import android.app.ProgressDialog;
@@ -32,6 +31,7 @@ import com.mediaportal.ampdroid.api.DataHandler;
 import com.mediaportal.ampdroid.data.TvChannel;
 import com.mediaportal.ampdroid.data.TvChannelGroup;
 import com.mediaportal.ampdroid.data.TvVirtualCard;
+import com.mediaportal.ampdroid.lists.ILoadingAdapterItem;
 import com.mediaportal.ampdroid.lists.LazyLoadingAdapter;
 import com.mediaportal.ampdroid.lists.views.VirtualCardStateAdapterItem;
 import com.mediaportal.ampdroid.quickactions.ActionItem;
@@ -62,7 +62,7 @@ public class TvServerStateActivity extends BaseActivity {
    private class UpdateGroupsTask extends AsyncTask<Integer, Integer, List<TvChannelGroup>> {
       @Override
       protected List<TvChannelGroup> doInBackground(Integer... _group) {
-         ArrayList<TvChannelGroup> groups = mService.getTvChannelGroups();
+         List<TvChannelGroup> groups = mService.getTvChannelGroups();
          return groups;
       }
 
@@ -102,10 +102,10 @@ public class TvServerStateActivity extends BaseActivity {
    private class UpdateCardsTask extends AsyncTask<Integer, Integer, List<TvVirtualCard>> {
       private Context mContext;
 
-      UpdateCardsTask(Context _context){
+      UpdateCardsTask(Context _context) {
          mContext = _context;
       }
-      
+
       @Override
       protected List<TvVirtualCard> doInBackground(Integer... _params) {
          List<TvVirtualCard> cards = mService.getTvCardsActive();
@@ -204,8 +204,10 @@ public class TvServerStateActivity extends BaseActivity {
 
       mListView.setOnItemClickListener(new OnItemClickListener() {
          @Override
-         public void onItemClick(AdapterView<?> a, View v, int position, long id) {
-            Object selected = mListView.getItemAtPosition(position);
+         public void onItemClick(AdapterView<?> _adapter, View _view, int _pos, long _id) {
+            ILoadingAdapterItem selected = (ILoadingAdapterItem) mListView.getItemAtPosition(_pos);
+            TvVirtualCard card = (TvVirtualCard) selected.getItem();
+            Util.showToast(_view.getContext(), card.getRTSPUrl());
          }
       });
 
@@ -217,9 +219,10 @@ public class TvServerStateActivity extends BaseActivity {
             ActionItem sdCardAction = new ActionItem();
 
             sdCardAction.setTitle("Stop Timeshift");
-            sdCardAction.setIcon(getResources().getDrawable(R.drawable.quickaction_delete));
+            sdCardAction.setIcon(getResources().getDrawable(R.drawable.bubble_del));
 
-            VirtualCardStateAdapterItem selected = (VirtualCardStateAdapterItem) mListView.getItemAtPosition(_position);
+            VirtualCardStateAdapterItem selected = (VirtualCardStateAdapterItem) mListView
+                  .getItemAtPosition(_position);
             final TvVirtualCard card = (TvVirtualCard) selected.getItem();
 
             sdCardAction.setOnClickListener(new OnClickListener() {
@@ -230,11 +233,10 @@ public class TvServerStateActivity extends BaseActivity {
                }
             });
             qa.addActionItem(sdCardAction);
-            
+
             ActionItem playOnDeviceAction = new ActionItem();
             playOnDeviceAction.setTitle("Play on Device");
-            playOnDeviceAction
-                  .setIcon(getResources().getDrawable(R.drawable.quickaction_play));
+            playOnDeviceAction.setIcon(getResources().getDrawable(R.drawable.quickaction_play));
             playOnDeviceAction.setOnClickListener(new OnClickListener() {
                @Override
                public void onClick(View _view) {
@@ -250,7 +252,7 @@ public class TvServerStateActivity extends BaseActivity {
                }
             });
             qa.addActionItem(playOnDeviceAction);
-            
+
             qa.setAnimStyle(QuickAction.ANIM_AUTO);
 
             qa.show();
@@ -299,7 +301,7 @@ public class TvServerStateActivity extends BaseActivity {
       mLoadingDialog = ProgressDialog.show(TvServerStateActivity.this, " Loading Groups ",
             " Loading. Please wait ... ", true);
       mLoadingDialog.setCancelable(true);
-      
+
       mGroupsUpdater = new UpdateGroupsTask();
       mGroupsUpdater.execute(0);
    }
@@ -330,7 +332,7 @@ public class TvServerStateActivity extends BaseActivity {
       mLoadingDialog = ProgressDialog.show(TvServerStateActivity.this, " Loading Channels ",
             " Loading. Please wait ... ", true);
       mLoadingDialog.setCancelable(true);
-      
+
       mChannelUpdater = new UpdateChannelsTask();
       mChannelUpdater.execute(_group);
    }

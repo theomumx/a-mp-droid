@@ -1,6 +1,5 @@
 package com.mediaportal.ampdroid.activities.tvserver;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -19,6 +18,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Spinner;
 
@@ -30,7 +30,6 @@ import com.mediaportal.ampdroid.asynctasks.AddScheduleTask;
 import com.mediaportal.ampdroid.asynctasks.CancelScheduleTask;
 import com.mediaportal.ampdroid.data.TvChannel;
 import com.mediaportal.ampdroid.data.TvChannelGroup;
-import com.mediaportal.ampdroid.data.TvProgram;
 import com.mediaportal.ampdroid.data.TvProgramBase;
 import com.mediaportal.ampdroid.lists.ILoadingAdapterItem;
 import com.mediaportal.ampdroid.lists.LazyLoadingAdapter;
@@ -38,6 +37,7 @@ import com.mediaportal.ampdroid.lists.views.TvServerChannelAdapterItem;
 import com.mediaportal.ampdroid.lists.views.TvServerProgramsBaseViewItem;
 import com.mediaportal.ampdroid.quickactions.ActionItem;
 import com.mediaportal.ampdroid.quickactions.QuickAction;
+import com.mediaportal.ampdroid.utils.Util;
 
 public class TvServerEpgActivity extends BaseActivity {
    private DataHandler mService;
@@ -51,11 +51,14 @@ public class TvServerEpgActivity extends BaseActivity {
    ArrayAdapter<TvChannelGroup> mGroupsItems;
    UpdateGroupsTask mGroupsUpdater;
    private Spinner mGroups;
+   private int mHoursOffset = -1;
+   private Button mLaterButton;
+   private Button mEarlierButton;
 
    private class UpdateGroupsTask extends AsyncTask<Integer, Integer, List<TvChannelGroup>> {
       @Override
       protected List<TvChannelGroup> doInBackground(Integer... _group) {
-         ArrayList<TvChannelGroup> groups = mService.getTvChannelGroups();
+         List<TvChannelGroup> groups = mService.getTvChannelGroups();
          return groups;
       }
 
@@ -81,10 +84,11 @@ public class TvServerEpgActivity extends BaseActivity {
 
       @Override
       protected List<TvProgramBase> doInBackground(Integer... _params) {
-         Date begin = new Date();
 
          Calendar cal = Calendar.getInstance();
-         cal.add(Calendar.HOUR, 3);
+         cal.add(Calendar.HOUR, mHoursOffset);
+         Date begin = cal.getTime();
+         cal.add(Calendar.HOUR, 2);
          Date end = cal.getTime();
 
          List<TvChannel> channels = mService.getTvChannelsForGroup(_params[0]);
@@ -94,7 +98,8 @@ public class TvServerEpgActivity extends BaseActivity {
 
                List<TvProgramBase> programs = mService.getTvBaseEpgForChannel(c.getIdChannel(),
                      begin, end);
-               ILoadingAdapterItem[] channelList = new ILoadingAdapterItem[programs.size() + 1];
+               // ILoadingAdapterItem[] channelList = new
+               // ILoadingAdapterItem[programs.size() + 1];
                publishProgress(new TvServerChannelAdapterItem(c));
                for (TvProgramBase p : programs) {
                   publishProgress(new TvServerProgramsBaseViewItem(p));
@@ -118,6 +123,7 @@ public class TvServerEpgActivity extends BaseActivity {
 
       @Override
       protected void onPostExecute(List<TvProgramBase> _result) {
+         Util.showToast(mContext, "Finished loading epg");
          mLoadingDialog.cancel();
       }
    }
@@ -129,6 +135,8 @@ public class TvServerEpgActivity extends BaseActivity {
       setContentView(R.layout.tvserverepgactivity);
       mEpgView = (ListView) findViewById(R.id.ListViewEpg);
       mGroups = (Spinner) findViewById(R.id.SpinnerGroups);
+      mLaterButton = (Button) findViewById(R.id.ButtonLater);
+      mEarlierButton = (Button) findViewById(R.id.ButtonEarlier);
 
       mGroups.setOnItemSelectedListener(new OnItemSelectedListener() {
 
@@ -182,48 +190,69 @@ public class TvServerEpgActivity extends BaseActivity {
          @Override
          public boolean onItemLongClick(AdapterView<?> _item, View _view, final int _pos, long _id) {
             ILoadingAdapterItem item = (ILoadingAdapterItem) mEpgView.getItemAtPosition(_pos);
-            final TvProgramBase program = (TvProgramBase) item.getItem();
+            if (item.getClass().equals(TvServerProgramsBaseViewItem.class)) {
+               final TvProgramBase program = (TvProgramBase) item.getItem();
 
-            final QuickAction qa = new QuickAction(_view);
+               final QuickAction qa = new QuickAction(_view);
 
-            if (program.isIsScheduled()) {
-               ActionItem addScheduleAction = new ActionItem();
-               addScheduleAction.setTitle("Cancel Recording");
-               addScheduleAction.setIcon(getResources().getDrawable(R.drawable.bubble_del));
-               addScheduleAction.setOnClickListener(new OnClickListener() {
-                  private CancelScheduleTask mCancelScheduleTask;
+               if (program.isIsScheduled()) {
+                  ActionItem addScheduleAction = new ActionItem();
+                  addScheduleAction.setTitle("Cancel Recording");
+                  addScheduleAction.setIcon(getResources().getDrawable(R.drawable.bubble_del));
+                  addScheduleAction.setOnClickListener(new OnClickListener() {
+                     private CancelScheduleTask mCancelScheduleTask;
 
-                  @Override
-                  public void onClick(View _view) {
-                     mCancelScheduleTask = new CancelScheduleTask(_view.getContext(), mService,
-                           mEpgAdapter);
-                     mCancelScheduleTask.execute(program);
+                     @Override
+                     public void onClick(View _view) {
+                        mCancelScheduleTask = new CancelScheduleTask(_view.getContext(), mService,
+                              mEpgAdapter);
+                        mCancelScheduleTask.execute(program);
 
-                     qa.dismiss();
-                  }
-               });
-               qa.addActionItem(addScheduleAction);
-            } else {
-               ActionItem addScheduleAction = new ActionItem();
-               addScheduleAction.setTitle("Record this");
-               addScheduleAction.setIcon(getResources().getDrawable(
-                     R.drawable.quickaction_recording));
-               addScheduleAction.setOnClickListener(new OnClickListener() {
-                  private AddScheduleTask mAddScheduleTask;
+                        qa.dismiss();
+                     }
+                  });
+                  qa.addActionItem(addScheduleAction);
+               } else {
+                  ActionItem addScheduleAction = new ActionItem();
+                  addScheduleAction.setTitle("Record this");
+                  addScheduleAction.setIcon(getResources().getDrawable(
+                        R.drawable.quickaction_recording));
+                  addScheduleAction.setOnClickListener(new OnClickListener() {
+                     private AddScheduleTask mAddScheduleTask;
 
-                  @Override
-                  public void onClick(View _view) {
-                     mAddScheduleTask = new AddScheduleTask(_view.getContext(), mService,
-                           mEpgAdapter);
-                     mAddScheduleTask.execute(program);
+                     @Override
+                     public void onClick(View _view) {
+                        mAddScheduleTask = new AddScheduleTask(_view.getContext(), mService,
+                              mEpgAdapter);
+                        mAddScheduleTask.execute(program);
 
-                     qa.dismiss();
-                  }
-               });
-               qa.addActionItem(addScheduleAction);
+                        qa.dismiss();
+                     }
+                  });
+                  qa.addActionItem(addScheduleAction);
+               }
+               qa.show();
+               
             }
-            qa.show();
             return true;
+         }
+      });
+
+      mEarlierButton.setOnClickListener(new OnClickListener() {
+         @Override
+         public void onClick(View v) {
+            TvChannelGroup group = (TvChannelGroup) mGroups.getSelectedItem();
+            mHoursOffset--;
+            refreshEpg(group);
+         }
+      });
+
+      mLaterButton.setOnClickListener(new OnClickListener() {
+         @Override
+         public void onClick(View v) {
+            TvChannelGroup group = (TvChannelGroup) mGroups.getSelectedItem();
+            mHoursOffset++;
+            refreshEpg(group);
          }
       });
 

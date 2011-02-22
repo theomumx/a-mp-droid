@@ -8,18 +8,14 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.SubMenu;
 import android.view.View;
-import android.view.MenuItem.OnMenuItemClickListener;
-import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.mediaportal.ampdroid.R;
-import com.mediaportal.ampdroid.activities.BaseActivity;
 import com.mediaportal.ampdroid.activities.BaseTabActivity;
 import com.mediaportal.ampdroid.activities.StatusBarActivityHandler;
 import com.mediaportal.ampdroid.api.DataHandler;
@@ -31,8 +27,6 @@ import com.mediaportal.ampdroid.lists.views.SeriesBannerViewAdapterItem;
 import com.mediaportal.ampdroid.lists.views.SeriesPosterViewAdapterItem;
 import com.mediaportal.ampdroid.lists.views.SeriesThumbViewAdapterItem;
 import com.mediaportal.ampdroid.lists.views.ViewTypes;
-import com.mediaportal.ampdroid.quickactions.ActionItem;
-import com.mediaportal.ampdroid.quickactions.QuickAction;
 
 public class TabSeriesActivity extends Activity implements ILoadingListener {
    private ListView mListView;
@@ -44,6 +38,7 @@ public class TabSeriesActivity extends Activity implements ILoadingListener {
    private StatusBarActivityHandler mStatusBarHandler;
 
    private class LoadSeriesTask extends AsyncTask<Integer, List<Series>, Boolean> {
+      @SuppressWarnings("unchecked")
       @Override
       protected Boolean doInBackground(Integer... _params) {
          int seriesCount = mService.getSeriesCount();
@@ -122,9 +117,6 @@ public class TabSeriesActivity extends Activity implements ILoadingListener {
          public void onItemClick(AdapterView<?> _adapter, View _view, int _position, long _id) {
             ILoadingAdapterItem selectedItem = (ILoadingAdapterItem) mListView
                   .getItemAtPosition(_position);
-            // Toast toast = Toast.makeText(v.getContext(), selectedSeries
-            // .getTitle(), Toast.LENGTH_SHORT);
-            // toast.show();
             Series selectedSeries = (Series) selectedItem.getItem();
             if (selectedSeries != null) {
                Intent myIntent = new Intent(_view.getContext(), TabSeriesDetailsActivity.class);
@@ -142,41 +134,6 @@ public class TabSeriesActivity extends Activity implements ILoadingListener {
          }
       });
 
-      final ActionItem chart = new ActionItem();
-
-      chart.setTitle("Chart");
-      chart.setIcon(getResources().getDrawable(R.drawable.chart));
-      chart.setOnClickListener(new OnClickListener() {
-         @Override
-         public void onClick(View _view) {
-            Toast.makeText(_view.getContext(), "Chart selected", Toast.LENGTH_SHORT).show();
-         }
-      });
-
-      final ActionItem production = new ActionItem();
-
-      production.setTitle("Products");
-      production.setIcon(getResources().getDrawable(R.drawable.production));
-      production.setOnClickListener(new OnClickListener() {
-         @Override
-         public void onClick(View _view) {
-            Toast.makeText(_view.getContext(), "Products selected", Toast.LENGTH_SHORT).show();
-         }
-      });
-
-      mListView.setOnItemLongClickListener(new OnItemLongClickListener() {
-         @Override
-         public boolean onItemLongClick(AdapterView<?> _adapter, View _view, int _position, long _id) {
-            QuickAction qa = new QuickAction(_view);
-
-            qa.addActionItem(chart);
-            qa.addActionItem(production);
-            qa.setAnimStyle(QuickAction.ANIM_AUTO);
-
-            qa.show();
-            return true;
-         }
-      });
       mAdapter.setLoadingText("Loading Series ...");
       mAdapter.showLoadingItem(true);
 

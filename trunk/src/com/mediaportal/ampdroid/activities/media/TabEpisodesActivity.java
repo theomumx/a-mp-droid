@@ -1,7 +1,6 @@
 package com.mediaportal.ampdroid.activities.media;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
@@ -21,8 +20,6 @@ import android.widget.ListView;
 import com.mediaportal.ampdroid.R;
 import com.mediaportal.ampdroid.api.DataHandler;
 import com.mediaportal.ampdroid.api.ItemDownloaderService;
-import com.mediaportal.ampdroid.data.EpisodeDetails;
-import com.mediaportal.ampdroid.data.EpisodeFile;
 import com.mediaportal.ampdroid.data.SeriesEpisode;
 import com.mediaportal.ampdroid.lists.ILoadingAdapterItem;
 import com.mediaportal.ampdroid.lists.LazyLoadingAdapter;
@@ -34,7 +31,7 @@ import com.mediaportal.ampdroid.utils.DownloaderUtils;
 import com.mediaportal.ampdroid.utils.Util;
 
 public class TabEpisodesActivity extends Activity {
-   private ListView mlistView;
+   private ListView mListView;
    private LazyLoadingAdapter mAdapter;
    MediaPlayer mMediaPlayer;
    DataHandler mService;
@@ -46,13 +43,14 @@ public class TabEpisodesActivity extends Activity {
    private LoadEpisodesTask mEpisodesLoaderTask;
 
    private class LoadEpisodesTask extends AsyncTask<Integer, List<SeriesEpisode>, Boolean> {
+      @SuppressWarnings("unchecked")
       @Override
       protected Boolean doInBackground(Integer... _params) {
          int seriesCount = mService.getEpisodesCountForSeason(mSeriesId, mSeasonNumber);
 
          int cursor = 0;
          while (cursor < seriesCount) {
-            ArrayList<SeriesEpisode> episodes = mService.getEpisodesForSeason(mSeriesId,
+            List<SeriesEpisode> episodes = mService.getEpisodesForSeason(mSeriesId,
                   mSeasonNumber, cursor, cursor + 4);
             publishProgress(episodes);
 
@@ -87,7 +85,7 @@ public class TabEpisodesActivity extends Activity {
    public void onCreate(Bundle _savedInstanceState) {
       super.onCreate(_savedInstanceState);
       setContentView(R.layout.tabepisodesactivity);
-      mlistView = (ListView) findViewById(R.id.ListView);
+      mListView = (ListView) findViewById(R.id.ListView);
       mMediaPlayer = new MediaPlayer();
 
       Bundle extras = getIntent().getExtras();
@@ -99,7 +97,7 @@ public class TabEpisodesActivity extends Activity {
          mService = DataHandler.getCurrentRemoteInstance();
 
          mAdapter = new LazyLoadingAdapter(this);
-         mlistView.setAdapter(mAdapter);
+         mListView.setAdapter(mAdapter);
 
          refreshEpisodes();
 
@@ -107,7 +105,7 @@ public class TabEpisodesActivity extends Activity {
 
       }
 
-      mlistView.setOnItemClickListener(new OnItemClickListener() {
+      mListView.setOnItemClickListener(new OnItemClickListener() {
          @Override
          public void onItemClick(AdapterView<?> _adapter, View _view, int _position, long _id) {
             // Object obj = mlistView.getItemAtPosition(_position);
@@ -120,7 +118,7 @@ public class TabEpisodesActivity extends Activity {
          }
       });
 
-      mlistView.setOnItemLongClickListener(new OnItemLongClickListener() {
+      mListView.setOnItemLongClickListener(new OnItemLongClickListener() {
          @Override
          public boolean onItemLongClick(AdapterView<?> _item, View _view, final int _position,
                long _id) {
@@ -145,11 +143,10 @@ public class TabEpisodesActivity extends Activity {
 
                      playItemAction.setTitle("Play episode");
                      playItemAction.setIcon(getResources().getDrawable(
-                           R.drawable.quickaction_sdcard));
+                           R.drawable.quickaction_play));
                      playItemAction.setOnClickListener(new OnClickListener() {
                         @Override
                         public void onClick(View _view) {
-                           String url = mService.getDownloadUri(epFile);
                            Intent playIntent = new Intent(Intent.ACTION_VIEW);
                            playIntent.setDataAndType(Uri.parse(localFileName.toString()), "video/*");
                            startActivity(playIntent);
@@ -218,7 +215,7 @@ public class TabEpisodesActivity extends Activity {
    @Override
    public void onDestroy() {
       mAdapter.mImageLoader.stopThread();
-      mlistView.setAdapter(null);
+      mListView.setAdapter(null);
       super.onDestroy();
    }
 

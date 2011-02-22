@@ -124,8 +124,12 @@ public class DataHandler {
       return client.getRemoteAccessApi().getVideoShares();
    }
    
-   public ArrayList<FileInfo> getFilesForFolder(String _path){
+   public List<FileInfo> getFilesForFolder(String _path){
       return client.getRemoteAccessApi().getFilesForFolder(_path);
+   }
+   
+   public List<FileInfo> getFoldersForFolder(String _path){
+      return client.getRemoteAccessApi().getFoldersForFolder(_path);
    }
 
    public Date getMovieDatabaseLastUpdated() {
@@ -348,7 +352,7 @@ public class DataHandler {
       return remoteAccess.getEpisodesCountForSeason(_seriesId, _seasonNumber);
    }
 
-   public ArrayList<SeriesEpisode> getEpisodesForSeason(int _seriesId, int _seasonNumber,
+   public List<SeriesEpisode> getEpisodesForSeason(int _seriesId, int _seasonNumber,
          int _begin, int _end) {
       IMediaAccessApi remoteAccess = client.getRemoteAccessApi();
       return remoteAccess.getEpisodesForSeason(_seriesId, _seasonNumber, _begin, _end);
@@ -359,7 +363,7 @@ public class DataHandler {
       return remoteAccess.getEpisode(_seriesId, _episodeId);
    }
 
-   public ArrayList<MusicAlbum> getAllAlbums() {
+   public List<MusicAlbum> getAllAlbums() {
       IMediaAccessApi remoteAccess = client.getRemoteAccessApi();
       return remoteAccess.getAllAlbums();
    }
@@ -384,7 +388,7 @@ public class DataHandler {
       return remoteAccess.getBitmap(_url, _maxWidth, _maxHeight);
    }
 
-   public ArrayList<TvChannelGroup> getTvChannelGroups() {
+   public List<TvChannelGroup> getTvChannelGroups() {
       ITvServiceApi tvApi = client.getTvControlApi();
       return tvApi.GetGroups();
    }

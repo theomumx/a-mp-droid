@@ -21,7 +21,7 @@ public class HomeActivity extends BaseActivity {
       
       DataHandler remoteController = DataHandler.getCurrentRemoteInstance();
       statusBarHandler = new StatusBarActivityHandler(this, remoteController, true);
-      statusBarHandler.setupRemoteStatus();
+      //statusBarHandler.setupRemoteStatus();
 
       final ImageButton buttonRemote = (ImageButton) findViewById(R.id.ImageButtonRemote);
       buttonRemote.setOnClickListener(new View.OnClickListener() {

@@ -55,11 +55,25 @@ public class Utils {
       int sepPos = _path.lastIndexOf(_pathSeperator);
       return _path.substring(sepPos + 1);
    }
+
+   public static String getFileNameWithoutExtension(String _path, String _pathSeperator,
+         String _extensionSeperator) {
+      try {
+         int dot = _path.lastIndexOf(_extensionSeperator);
+         int sep = _path.lastIndexOf(_pathSeperator);
+         return _path.substring(sep + 1, dot);
+      } catch (Exception ex) {
+         return "Unknown";
+      }
+   }
    
-   public static String getFileNameWithoutExtension(String _path, String _pathSeperator, String _extensionSeperator ){
-      int dot = _path.lastIndexOf(_extensionSeperator);
-      int sep = _path.lastIndexOf(_pathSeperator);
-      return _path.substring(sep + 1, dot);
+   public static String getFolderNameWithoutExtension(String _path, String _pathSeperator) {
+      try {
+         int sep = _path.lastIndexOf(_pathSeperator);
+         return _path.substring(sep + 1, _path.length());
+      } catch (Exception ex) {
+         return "Unknown";
+      }
    }
 
    public static String getFolder(String _path, String _pathSeperator) {

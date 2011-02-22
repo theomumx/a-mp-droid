@@ -124,7 +124,7 @@ public class GmaJsonWebserviceApi implements IMediaAccessApi {
    }
 
    @Override
-   public ArrayList<VideoShare> getVideoShares() {
+   public List<VideoShare> getVideoShares() {
       String methodName = "MP_GetVideoShares";
       String response = mJsonClient.Execute(methodName);
 
@@ -143,7 +143,7 @@ public class GmaJsonWebserviceApi implements IMediaAccessApi {
    }
 
    @Override
-   public ArrayList<FileInfo> getFilesForFolder(String _path) {
+   public List<FileInfo> getFilesForFolder(String _path) {
       String methodName = "FS_GetFilesFromDirectory";
       String response = mJsonClient.Execute(methodName, JsonUtils.newPair("folderPath", _path));
 
@@ -162,7 +162,32 @@ public class GmaJsonWebserviceApi implements IMediaAccessApi {
    }
 
    @Override
-   public ArrayList<Movie> getAllMovies() {
+   public List<FileInfo> getFoldersForFolder(String _path) {
+      String methodName = "FS_GetDirectoryListByPath";
+      String response = mJsonClient.Execute(methodName, JsonUtils.newPair("folderPath", _path));
+
+      if (response != null) {
+         String[] returnObject = (String[]) getObjectsFromJson(response, String[].class);
+
+         if (returnObject != null) {
+            List<FileInfo> retList = new ArrayList<FileInfo>();
+
+            for (String f : returnObject) {
+               retList.add(new FileInfo(f, true));
+            }
+
+            return retList;
+         } else {
+            Log.d("aMPdroid JSON", "Error parsing result from JSON method " + methodName);
+         }
+      } else {
+         Log.d("aMPdroid JSON", "Error retrieving data for method" + methodName);
+      }
+      return null;
+   }
+
+   @Override
+   public List<Movie> getAllMovies() {
       return m_moviesAPI.getAllMovies();
    }
 
@@ -177,17 +202,17 @@ public class GmaJsonWebserviceApi implements IMediaAccessApi {
    }
 
    @Override
-   public ArrayList<Movie> getMovies(int _start, int _end) {
+   public List<Movie> getMovies(int _start, int _end) {
       return m_moviesAPI.getMovies(_start, _end);
    }
 
    @Override
-   public ArrayList<Series> getAllSeries() {
+   public List<Series> getAllSeries() {
       return m_seriesAPI.getAllSeries();
    }
 
    @Override
-   public ArrayList<Series> getSeries(int _start, int _end) {
+   public List<Series> getSeries(int _start, int _end) {
       return m_seriesAPI.getSeries(_start, _end);
    }
 
@@ -202,23 +227,23 @@ public class GmaJsonWebserviceApi implements IMediaAccessApi {
    }
 
    @Override
-   public ArrayList<SeriesSeason> getAllSeasons(int _seriesId) {
+   public List<SeriesSeason> getAllSeasons(int _seriesId) {
       return m_seriesAPI.getAllSeasons(_seriesId);
    }
 
    @Override
-   public ArrayList<SeriesEpisode> getAllEpisodes(int _seriesId) {
+   public List<SeriesEpisode> getAllEpisodes(int _seriesId) {
       return m_seriesAPI.getAllEpisodes(_seriesId);
    }
 
    @Override
-   public ArrayList<SeriesEpisode> getAllEpisodesForSeason(int _seriesId, int _seasonNumber) {
+   public List<SeriesEpisode> getAllEpisodesForSeason(int _seriesId, int _seasonNumber) {
       return m_seriesAPI.getAllEpisodesForSeason(_seriesId, _seasonNumber);
    }
 
    @Override
-   public ArrayList<SeriesEpisode> getEpisodesForSeason(int _seriesId, int _seasonNumber,
-         int _begin, int _end) {
+   public List<SeriesEpisode> getEpisodesForSeason(int _seriesId, int _seasonNumber, int _begin,
+         int _end) {
       return m_seriesAPI.getEpisodesForSeason(_seriesId, _seasonNumber, _begin, _end);
    }
 
@@ -295,7 +320,7 @@ public class GmaJsonWebserviceApi implements IMediaAccessApi {
    }
 
    @Override
-   public ArrayList<MusicAlbum> getAllAlbums() {
+   public List<MusicAlbum> getAllAlbums() {
       // TODO Auto-generated method stub
       return null;
    }

@@ -2,33 +2,38 @@ package com.mediaportal.ampdroid.lists.views;
 
 import java.util.Date;
 
+import android.graphics.Color;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mediaportal.ampdroid.R;
-import com.mediaportal.ampdroid.data.TvProgram;
 import com.mediaportal.ampdroid.data.TvProgramBase;
 import com.mediaportal.ampdroid.lists.ILoadingAdapterItem;
-import com.mediaportal.ampdroid.lists.LazyLoadingImage;
 import com.mediaportal.ampdroid.lists.LazyLoadingAdapter.ViewHolder;
+import com.mediaportal.ampdroid.lists.LazyLoadingImage;
 import com.mediaportal.ampdroid.lists.SubtextViewHolder;
+import com.mediaportal.ampdroid.utils.DateTimeHelper;
 
 public class TvServerProgramsDetailsViewItem implements ILoadingAdapterItem {
 
    private TvProgramBase mProgram;
    private String mDateString;
    private String mOverviewString;
-   
+   private boolean mIsCurrent = false;
+
    public TvServerProgramsDetailsViewItem(TvProgramBase _program) {
       mProgram = _program;
 
       Date begin = mProgram.getStartTime();
       Date end = mProgram.getEndTime();
       if (begin != null && end != null) {
-         String startString = (String) android.text.format.DateFormat.format("kk:mm", begin);
-         // String endString = (String)
-         // android.text.format.DateFormat.format("hh:mm a", end);
+         String startString = DateTimeHelper.getTimeString(begin);
+         
+         Date now = new Date();
+         if(now.after(begin) && now.before(end)){
+            mIsCurrent = true;
+         }
 
          mDateString = startString;
       } else {
@@ -85,6 +90,11 @@ public class TvServerProgramsDetailsViewItem implements ILoadingAdapterItem {
       SubtextViewHolder holder = (SubtextViewHolder) _holder;
       if (holder.title != null) {
          holder.title.setText(mProgram.getTitle() + (mProgram.isIsScheduled() ? " - Rec" : ""));
+         if (mIsCurrent) {
+            holder.title.setTextColor(Color.GREEN);
+         } else {
+            holder.title.setTextColor(Color.WHITE);
+         }
       }
 
       if (holder.text != null) {
@@ -93,13 +103,17 @@ public class TvServerProgramsDetailsViewItem implements ILoadingAdapterItem {
 
       if (holder.subtext != null) {
          holder.subtext.setText(mDateString);
-      }
-      
-      if(holder.image2 != null){
-         if(mProgram.isIsScheduled()){
-            holder.image2.setImageResource(R.drawable.tvserver_record_button);
+         if (mIsCurrent) {
+            holder.subtext.setTextColor(Color.GREEN);
+         } else {
+            holder.subtext.setTextColor(Color.WHITE);
          }
-         else{
+      }
+
+      if (holder.image2 != null) {
+         if (mProgram.isIsScheduled()) {
+            holder.image2.setImageResource(R.drawable.tvserver_record_button);
+         } else {
             holder.image2.setImageBitmap(null);
          }
       }
