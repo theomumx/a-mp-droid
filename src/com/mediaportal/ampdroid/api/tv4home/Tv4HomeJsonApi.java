@@ -72,6 +72,7 @@ public class Tv4HomeJsonApi implements ITvServiceApi {
    private final String JSON_PREFIX = "http://";
    private final String JSON_SUFFIX = "/TV4Home.Server.CoreService/TVEInteractionService/json";
 
+   @SuppressWarnings("unchecked")
    public Tv4HomeJsonApi(String _server, int _port) {
       m_server = _server;
       m_port = _port;

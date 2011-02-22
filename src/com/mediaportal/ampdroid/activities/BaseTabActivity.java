@@ -17,6 +17,7 @@ import android.view.Window;
 import com.mediaportal.ampdroid.activities.settings.SettingsActivity;
 import com.mediaportal.ampdroid.data.RemoteClient;
 import com.mediaportal.ampdroid.database.RemoteClientsDatabaseHandler;
+import com.mediaportal.ampdroid.utils.Util;
 
 public class BaseTabActivity extends TabActivity {
    /** Called when the activity is first created. */
@@ -41,8 +42,21 @@ public class BaseTabActivity extends TabActivity {
       remoteClientsDb.close();
 
       for (int i = 0; i < clients.size(); i++) {
-         menu.add(0, Menu.FIRST, Menu.NONE, clients.get(i).getClientName());
+         MenuItem item = menu.add(0, Menu.FIRST, Menu.NONE, clients.get(i).getClientName());
+         item.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+            
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+               notImplemented();
+               //TODO: Client switching
+               return false;
+            }
+         });
       }
+   }
+
+   protected void notImplemented() {
+      Util.showToast(this, "Not implemented yet");
    }
 
    @Override

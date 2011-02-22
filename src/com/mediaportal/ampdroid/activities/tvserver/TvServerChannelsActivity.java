@@ -1,7 +1,5 @@
 package com.mediaportal.ampdroid.activities.tvserver;
 
-import java.nio.channels.Channel;
-import java.util.ArrayList;
 import java.util.List;
 
 import android.app.ProgressDialog;
@@ -25,7 +23,6 @@ import com.mediaportal.ampdroid.activities.StatusBarActivityHandler;
 import com.mediaportal.ampdroid.api.DataHandler;
 import com.mediaportal.ampdroid.data.TvChannel;
 import com.mediaportal.ampdroid.data.TvChannelGroup;
-import com.mediaportal.ampdroid.lists.ILoadingAdapterItem;
 import com.mediaportal.ampdroid.quickactions.ActionItem;
 import com.mediaportal.ampdroid.quickactions.QuickAction;
 import com.mediaportal.ampdroid.utils.Util;
@@ -49,7 +46,7 @@ public class TvServerChannelsActivity extends BaseActivity {
    private class UpdateGroupsTask extends AsyncTask<Integer, Integer, List<TvChannelGroup>> {
       @Override
       protected List<TvChannelGroup> doInBackground(Integer... _group) {
-         ArrayList<TvChannelGroup> groups = mService.getTvChannelGroups();
+         List<TvChannelGroup> groups = mService.getTvChannelGroups();
          return groups;
       }
 
@@ -114,8 +111,8 @@ public class TvServerChannelsActivity extends BaseActivity {
          }
 
          @Override
-         public void onNothingSelected(AdapterView<?> arg0) {
-            // TODO Auto-generated method stub
+         public void onNothingSelected(AdapterView<?> _adapter) {
+
          }
       });
 

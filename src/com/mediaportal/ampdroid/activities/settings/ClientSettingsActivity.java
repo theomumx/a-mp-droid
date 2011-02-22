@@ -10,6 +10,7 @@ import android.view.MenuItem;
 
 import com.mediaportal.ampdroid.data.RemoteClient;
 import com.mediaportal.ampdroid.database.RemoteClientsDatabaseHandler;
+import com.mediaportal.ampdroid.utils.Util;
 
 public class ClientSettingsActivity extends PreferenceActivity {
    public static final int MENU_ADD_HOST = 1;
@@ -43,6 +44,9 @@ public class ClientSettingsActivity extends PreferenceActivity {
             root.addPreference(pref);
          }
       }
+      if(clients == null || clients.size() == 0){
+         Util.showToast(this, "Use menu to add host");
+      }
 
       setPreferenceScreen(root);
       super.onResume();
@@ -57,8 +61,8 @@ public class ClientSettingsActivity extends PreferenceActivity {
    @Override
    public boolean onCreateOptionsMenu(Menu menu) {
       menu.addSubMenu(0, MENU_ADD_HOST, 0, "Add Host");// .setIcon(R.drawable.menu_add_host);
-      menu.addSubMenu(0, MENU_ADD_HOST_WIZARD, 0, "Host Wizard");// .setIcon(R.drawable.menu_add_host);
-      menu.addSubMenu(0, MENU_EXIT, 0, "Exit");// .setIcon(R.drawable.menu_exit);
+      //menu.addSubMenu(0, MENU_ADD_HOST_WIZARD, 0, "Host Wizard");// .setIcon(R.drawable.menu_add_host);
+      //menu.addSubMenu(0, MENU_EXIT, 0, "Exit");// .setIcon(R.drawable.menu_exit);
 
       return true;
    }

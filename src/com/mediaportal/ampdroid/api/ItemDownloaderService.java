@@ -15,15 +15,17 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.IBinder;
 import android.util.Log;
 import android.widget.RemoteViews;
 
+import com.mediaportal.ampdroid.R;
 import com.mediaportal.ampdroid.lists.Utils;
 import com.mediaportal.ampdroid.utils.DownloaderUtils;
-import com.mediaportal.ampdroid.R;
+import com.mediaportal.ampdroid.utils.Util;
 
 public class ItemDownloaderService extends Service {
    public static final String ITEM_DOWNLOAD_STARTED = "download_started";
@@ -76,9 +78,11 @@ public class ItemDownloaderService extends Service {
       private NotificationManager mNotificationManager;
       private DownloadJob mCurrentJob;
       private int mNumberOfJobs;
+      private Context mContext;
 
-      private DownloaderTask() {
+      private DownloaderTask(Context _context) {
          mNumberOfJobs = 0;
+         mContext = _context;
       }
 
       @Override
@@ -95,6 +99,7 @@ public class ItemDownloaderService extends Service {
 
             } else {
                // TODO: download failed -> retry?
+               return false;
             }
          }
 
@@ -164,12 +169,16 @@ public class ItemDownloaderService extends Service {
             return true;
          } catch (MalformedURLException e) {
             e.printStackTrace();
+            //Util.showToast(mContext, e.toString());
          } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
+            //Util.showToast(mContext, e.toString());
          } catch (IOException e) {
             e.printStackTrace();
+            //Util.showToast(mContext, e.toString());
          } catch (Exception e) {
             e.printStackTrace();
+            //Util.showToast(mContext, e.toString());
          }
 
          return false;
@@ -238,13 +247,19 @@ public class ItemDownloaderService extends Service {
 
       String url = intent.getStringExtra("url");
       String fName = intent.getStringExtra("name");
+      String displayName = intent.getStringExtra("display_name");
 
       synchronized (mDownloadJobs) {
          mDownloadJobs.add(new DownloadJob(0, fName, url));
+         if (displayName != null) {
+            Util.showToast(this, "Added " + displayName + " to download list");
+         } else {
+            Util.showToast(this, "Added " + fName + " to download list");
+         }
       }
 
       if (mDownloader == null || mDownloader.isCancelled()) {
-         mDownloader = new DownloaderTask().execute();
+         mDownloader = new DownloaderTask(this).execute();
       }
 
       return Service.START_STICKY;

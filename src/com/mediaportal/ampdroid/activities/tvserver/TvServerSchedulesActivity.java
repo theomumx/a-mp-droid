@@ -1,6 +1,5 @@
 package com.mediaportal.ampdroid.activities.tvserver;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 

@@ -42,7 +42,12 @@ public class MediaAccessDatabaseHandler implements IMediaAccessDatabase {
 
    @Override
    public void open() {
-      mDatabase = mDbHelper.getWritableDatabase();
+      try{
+         mDatabase = mDbHelper.getWritableDatabase();
+      }
+      catch(Exception ex){
+         Log.e("aMPdroid", ex.toString());
+      }
    }
 
    @Override
@@ -350,7 +355,7 @@ public class MediaAccessDatabaseHandler implements IMediaAccessDatabase {
    public void saveSeason(SeriesSeason _season) {
       try {
          ContentValues dbValues = SqliteAnnotationsHelper.getContentValuesFromObject(_season,
-               SeriesFull.class);
+               SeriesSeason.class);
          dbValues.put(CLIENT_ID, mClientId);
 
          int rows = mDatabase.update("SeriesSeason", dbValues, CLIENT_ID + "=" + mClientId

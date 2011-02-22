@@ -1,23 +1,32 @@
 package com.mediaportal.ampdroid.activities.media;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.mediaportal.ampdroid.R;
 import com.mediaportal.ampdroid.api.DataHandler;
+import com.mediaportal.ampdroid.api.ItemDownloaderService;
 import com.mediaportal.ampdroid.data.FileInfo;
 import com.mediaportal.ampdroid.data.VideoShare;
+import com.mediaportal.ampdroid.quickactions.ActionItem;
+import com.mediaportal.ampdroid.quickactions.QuickAction;
+import com.mediaportal.ampdroid.utils.DownloaderUtils;
 import com.mediaportal.ampdroid.utils.Util;
 
 public class TabSharesActivity extends Activity {
@@ -25,6 +34,7 @@ public class TabSharesActivity extends Activity {
    private ArrayAdapter<VideoShare> mListItems;
    private ArrayAdapter<FileInfo> mFileItems;
    private List<String> mBreadCrumb;
+   private VideoShare mCurrentShare;
    private LoadSharesTask mSeriesLoaderTask;
    private DataHandler mService;
    private LoadFolderTask mFilesLoaderTask;
@@ -41,7 +51,7 @@ public class TabSharesActivity extends Activity {
       @Override
       protected void onPostExecute(List<VideoShare> _result) {
          mListItems.clear();
-         
+
          if (_result != null) {
             for (VideoShare s : _result) {
                mListItems.add(s);
@@ -53,22 +63,35 @@ public class TabSharesActivity extends Activity {
          mLoadingDialog.dismiss();
       }
    }
-   
+
    private class LoadFolderTask extends AsyncTask<String, Integer, List<FileInfo>> {
       @Override
       protected List<FileInfo> doInBackground(String... _params) {
-         List<FileInfo> shares = mService.getFilesForFolder(_params[0]);
+         String path = _params[0];
+         List<FileInfo> retList = new ArrayList<FileInfo>();
 
-         return shares;
+         List<FileInfo> folders = mService.getFoldersForFolder(path);
+         List<FileInfo> files = mService.getFilesForFolder(path);
+
+         if (folders != null) {
+            retList.addAll(folders);
+         }
+
+         if (files != null) {
+            retList.addAll(files);
+         }
+         return retList;
       }
 
       @Override
       protected void onPostExecute(List<FileInfo> _result) {
          mFileItems.clear();
-         
+
          if (_result != null) {
             for (FileInfo f : _result) {
-               mFileItems.add(f);
+               if (f.isFolder() || checkForValidExt(f)) {
+                  mFileItems.add(f);
+               }
             }
          }
 
@@ -76,8 +99,14 @@ public class TabSharesActivity extends Activity {
          mFileItems.notifyDataSetChanged();
          mLoadingDialog.dismiss();
       }
-   }
 
+      private boolean checkForValidExt(FileInfo f) {
+         for(String e : mCurrentShare.Extensions){
+            if(f.getFullPath().endsWith(e)) return true;
+         }
+         return false;
+      }
+   }
 
    /** Called when the activity is first created. */
    @Override
@@ -94,7 +123,7 @@ public class TabSharesActivity extends Activity {
             // handleListClick(v, position, selected);
          }
       });
-      
+
       mFileItems = new ArrayAdapter<FileInfo>(this, android.R.layout.simple_list_item_1);
 
       mListItems = new ArrayAdapter<VideoShare>(this, android.R.layout.simple_list_item_1);
@@ -102,61 +131,150 @@ public class TabSharesActivity extends Activity {
       mListView.setOnItemClickListener(new OnItemClickListener() {
          @Override
          public void onItemClick(AdapterView<?> _adapter, View _view, int _pos, long _id) {
-            if(_adapter.getAdapter().equals(mListItems)){
+            if (_adapter.getAdapter().equals(mListItems)) {
                VideoShare selected = (VideoShare) mListView.getItemAtPosition(_pos);
+               mCurrentShare = selected;
                loadFiles(selected.Path);
+            } else if (_adapter.getAdapter().equals(mFileItems)) {
+               FileInfo selected = (FileInfo) mListView.getItemAtPosition(_pos);
+               if (selected.isFolder()) {
+                  loadFiles(selected.getFullPath());
+               }
             }
          }
       });
       
+      mListView.setOnItemLongClickListener(new OnItemLongClickListener() {
+         @Override
+         public boolean onItemLongClick(AdapterView<?> _adapter, View _view, final int _pos,
+               long _id) {
+            try {
+               if (_adapter.getAdapter().equals(mFileItems)) {
+                  final FileInfo selected = (FileInfo) mListView.getItemAtPosition(_pos);
+                                
+                  final String fileName = DownloaderUtils.getVideoPath(mCurrentShare, selected);
+
+                  final QuickAction qa = new QuickAction(_view);
+                  
+                  final File localFileName = new File(DownloaderUtils.getBaseDirectory() + "/"
+                        + fileName);
+
+                  if (localFileName.exists()) {
+                     ActionItem playItemAction = new ActionItem();
+
+                     playItemAction.setTitle("Play episode");
+                     playItemAction.setIcon(getResources().getDrawable(
+                           R.drawable.quickaction_play));
+                     playItemAction.setOnClickListener(new OnClickListener() {
+                        @Override
+                        public void onClick(View _view) {
+                           Intent playIntent = new Intent(Intent.ACTION_VIEW);
+                           playIntent.setDataAndType(Uri.parse(localFileName.toString()), "video/*");
+                           startActivity(playIntent);
+
+                           qa.dismiss();
+                        }
+                     });
+
+                     qa.addActionItem(playItemAction);
+                  }
+                  else{
+                     ActionItem sdCardAction = new ActionItem();
+                     sdCardAction.setTitle("Download to sd card");
+                     sdCardAction.setIcon(getResources().getDrawable(R.drawable.quickaction_sdcard));
+                     sdCardAction.setOnClickListener(new OnClickListener() {
+                        @Override
+                        public void onClick(View _view) {
+                           String url = mService.getDownloadUri(selected.getFullPath());
+                           Intent download = new Intent(_view.getContext(),
+                                 ItemDownloaderService.class);
+                           download.putExtra("url", url);
+                           download.putExtra("name", fileName);
+                           startService(download);
+                        }
+                     });
+                     qa.addActionItem(sdCardAction);
+                  }
+                  
+                  if(mService.isClientControlConnected()){
+                     ActionItem playOnClientAction = new ActionItem();
+
+                     playOnClientAction.setTitle("Play on Client");
+                     playOnClientAction.setIcon(getResources().getDrawable(
+                           R.drawable.quickaction_sdcard));
+                     playOnClientAction.setOnClickListener(new OnClickListener() {
+                        @Override
+                        public void onClick(View _view) {
+                           mService.playFileOnClient(selected.getFullPath());
+                        }
+                     });
+                     qa.addActionItem(playOnClientAction);
+                  }
+
+                  qa.setAnimStyle(QuickAction.ANIM_AUTO);
+
+                  qa.show();
+               }
+            } catch (Exception ex) {
+               return false;
+            }
+            return false;
+         }
+      });
+
       mBreadCrumb = new ArrayList<String>();
 
       mService = DataHandler.getCurrentRemoteInstance();
 
       loadShares();
    }
-   
-   private void loadShares(){
+
+   private void loadShares() {
       mLoadingDialog = ProgressDialog.show(getParent(), " Loading Video Shares ",
             " Loading. Please wait ... ", true);
       mLoadingDialog.setCancelable(true);
-      
+
       mSeriesLoaderTask = new LoadSharesTask();
       mSeriesLoaderTask.execute(0);
    }
-
 
    protected void loadFiles(String _path) {
       mLoadingDialog = ProgressDialog.show(getParent(), " Loading Files ",
             " Loading. Please wait ... ", true);
       mLoadingDialog.setCancelable(true);
       mBreadCrumb.add(_path);
-      
+
       mFilesLoaderTask = new LoadFolderTask();
       mFilesLoaderTask.execute(_path);
    }
-   
-   
+
    @Override
    public boolean onKeyDown(int keyCode, KeyEvent event) {
-       if (keyCode == KeyEvent.KEYCODE_BACK) {
-          if(!mListView.getAdapter().equals(mListItems)){
-             if(mBreadCrumb.size() == 1){
-                mBreadCrumb.clear();
-                
-                loadShares();
-             }
-             else{
-                String lastFolder = mBreadCrumb.get(mBreadCrumb.size() - 1);
-                loadFiles(lastFolder);
-                mBreadCrumb.remove(mBreadCrumb.size() - 1);
-             }
-             return true;
-          }
-          
-       }
-       return super.onKeyDown(keyCode, event);
-   }
+      if (keyCode == KeyEvent.KEYCODE_BACK) {
+         if (!mListView.getAdapter().equals(mListItems)) {
+            if (mBreadCrumb.size() == 1) {
+               mBreadCrumb.clear();
 
+               loadShares();
+            } else {
+               mBreadCrumb.remove(mBreadCrumb.size() - 1);// remove current
+                                                          // directory
+               String lastFolder = mBreadCrumb.get(mBreadCrumb.size() - 1); // get
+                                                                            // the
+                                                                            // previous
+                                                                            // directory
+               mBreadCrumb.remove(mBreadCrumb.size() - 1); // remove prev
+                                                           // directory since it
+                                                           // will be readded on
+                                                           // loading
+               loadFiles(lastFolder);
+
+            }
+            return true;
+         }
+
+      }
+      return super.onKeyDown(keyCode, event);
+   }
 
 }

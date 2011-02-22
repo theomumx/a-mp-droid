@@ -26,16 +26,14 @@ import com.mediaportal.ampdroid.activities.StatusBarActivityHandler;
 import com.mediaportal.ampdroid.api.DataHandler;
 import com.mediaportal.ampdroid.asynctasks.AddScheduleTask;
 import com.mediaportal.ampdroid.asynctasks.CancelScheduleTask;
-import com.mediaportal.ampdroid.data.TvChannel;
-import com.mediaportal.ampdroid.data.TvProgram;
 import com.mediaportal.ampdroid.data.TvProgramBase;
 import com.mediaportal.ampdroid.lists.ILoadingAdapterItem;
 import com.mediaportal.ampdroid.lists.LazyLoadingAdapter;
-import com.mediaportal.ampdroid.lists.views.TvServerChannelAdapterItem;
-import com.mediaportal.ampdroid.lists.views.TvServerProgramsBaseViewItem;
 import com.mediaportal.ampdroid.lists.views.TvServerProgramsDetailsViewItem;
 import com.mediaportal.ampdroid.quickactions.ActionItem;
 import com.mediaportal.ampdroid.quickactions.QuickAction;
+import com.mediaportal.ampdroid.utils.DateTimeHelper;
+import com.mediaportal.ampdroid.utils.Util;
 
 public class TvServerChannelDetailsActivity extends BaseActivity {
    private DataHandler mService;
@@ -80,13 +78,35 @@ public class TvServerChannelDetailsActivity extends BaseActivity {
 
       @Override
       protected void onPostExecute(List<TvProgramBase> _result) {
+         int selectedPos = 0;
          if (_result != null) {
+            Util.showToast(mContext, "Finished loading programs ...");
+
             for (TvProgramBase p : _result) {
-               mEpgAdapter.addItem(new TvServerProgramsDetailsViewItem(p));
+               Date begin = p.getStartTime();
+               Date end = p.getEndTime();
+
+               Calendar cal = Calendar.getInstance();
+               cal.set(Calendar.DAY_OF_MONTH, begin.getDate());
+               Date now = cal.getTime();
+
+               ILoadingAdapterItem item = new TvServerProgramsDetailsViewItem(p);
+
+               mEpgAdapter.addItem(item);
+
+               if (now.after(begin) && now.before(end)) {
+                  selectedPos = mEpgAdapter.getCount() - 3;
+                  if (selectedPos < 0) {
+                     selectedPos = 0;
+                  }
+               }
             }
+
          }
          mEpgAdapter.showLoadingItem(false);
          mEpgAdapter.notifyDataSetChanged();
+
+         mEpgView.setSelection(selectedPos);
       }
    }
 
@@ -116,8 +136,10 @@ public class TvServerChannelDetailsActivity extends BaseActivity {
             return getString(R.string.days_yesterday);
          case 0:
             return getString(R.string.days_today);
-         default:
+         case 1:
             return getString(R.string.days_tomorrow);
+         default:
+            return DateTimeHelper.getDayOfWeek(mDayBegin);
          }
 
       }
@@ -149,9 +171,18 @@ public class TvServerChannelDetailsActivity extends BaseActivity {
          cal.set(Calendar.HOUR, 0);
          cal.set(Calendar.MINUTE, 0);
          cal.set(Calendar.SECOND, 0);
+
+         cal.add(Calendar.DATE, -1);
+
          Date begin = cal.getTime();
          cal.add(Calendar.DATE, 1);
          Date end = cal.getTime();
+
+         mDaysAdapter.add(new EpgDay(-1, begin, end));
+
+         begin = cal.getTime();
+         cal.add(Calendar.DATE, 1);
+         end = cal.getTime();
 
          mDaysAdapter.add(new EpgDay(0, begin, end));
 
@@ -160,6 +191,12 @@ public class TvServerChannelDetailsActivity extends BaseActivity {
          end = cal.getTime();
 
          mDaysAdapter.add(new EpgDay(1, begin, end));
+
+         begin = cal.getTime();
+         cal.add(Calendar.DATE, 1);
+         end = cal.getTime();
+
+         mDaysAdapter.add(new EpgDay(2, begin, end));
 
          mDaysSpinner.setAdapter(mDaysAdapter);
 
@@ -179,9 +216,7 @@ public class TvServerChannelDetailsActivity extends BaseActivity {
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> arg0) {
-               // TODO Auto-generated method stub
-
+            public void onNothingSelected(AdapterView<?> _adapter) {
             }
          });
 

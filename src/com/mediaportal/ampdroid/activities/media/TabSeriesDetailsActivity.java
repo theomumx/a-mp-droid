@@ -71,7 +71,6 @@ public class TabSeriesDetailsActivity extends Activity {
 
       @Override
       protected void onPostExecute(SeriesFull _result) {
-         
          if (_result != null) {
             String seriesPoster = _result.getCurrentPosterUrl();
             if (seriesPoster != null && !seriesPoster.equals("")) {
@@ -86,8 +85,6 @@ public class TabSeriesDetailsActivity extends Activity {
                      mSeriesPoster);
 
             }
-
-            mSeriesName.setText(_result.getPrettyName());
 
             Date firstAired = _result.getFirstAired();
 
@@ -135,6 +132,9 @@ public class TabSeriesDetailsActivity extends Activity {
                }
             });
          }
+         
+         mLoadSeasonTask = new LoadSeasonsDetailsTask(mContext);
+         mLoadSeasonTask.execute(mSeriesId);
       }
    }
 
@@ -180,7 +180,7 @@ public class TabSeriesDetailsActivity extends Activity {
                   @Override
                   public boolean onTouch(View v, MotionEvent event) {
                      if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                        v.setBackgroundColor(Color.rgb(255, 165, 0));
+                        v.setBackgroundResource(android.R.drawable.list_selector_background);
                      } else if (event.getAction() == MotionEvent.ACTION_CANCEL) {
                         v.setBackgroundColor(Color.TRANSPARENT);
                      } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
@@ -215,7 +215,7 @@ public class TabSeriesDetailsActivity extends Activity {
                });
 
                text.setText("Season " + s.getSeasonNumber());
-               subtext.setText(s.getEpisodesUnwatchedCount() + "/" + s.getEpisodesCount());
+               subtext.setText(s.getEpisodesCount() + " Episodes");
                view.setTag(s);
 
                mSeasonLayout.addView(view);
@@ -243,6 +243,8 @@ public class TabSeriesDetailsActivity extends Activity {
       Bundle extras = getIntent().getExtras();
       if (extras != null) {
          mSeriesId = extras.getInt("series_id");
+         String seriesName = extras.getString("series_name");
+         mSeriesName.setText(seriesName);
 
          mService = DataHandler.getCurrentRemoteInstance();
          mImageHandler = new ImageHandler(this);
@@ -256,9 +258,6 @@ public class TabSeriesDetailsActivity extends Activity {
          mLoadingDialog = ProgressDialog.show(getParent(), " Loading Series Details ",
                " Loading. Please wait ... ", true);
          mLoadingDialog.setCancelable(true);
-
-         mLoadSeasonTask = new LoadSeasonsDetailsTask(this);
-         mLoadSeasonTask.execute(mSeriesId);
       } else {// activity called without movie id (shouldn't happen ;))
 
       }

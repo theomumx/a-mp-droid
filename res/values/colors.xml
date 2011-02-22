@@ -6,5 +6,7 @@
 	<color name="actionbar_background_item_pressed_start">#FF7F00</color>
 	<color name="actionbar_background_item_pressed_end">#EE7600</color>
 	<color name="listview_background">#00477D</color>
-<color name="details_view_header_background">#3B3E40</color>
+	<color name="details_view_header_background">#3B3E40</color>
+	<color name="listitem_epg_current">#FFFFFF</color>
+	<color name="listitem_epg_default">#000000</color>
 </resources>

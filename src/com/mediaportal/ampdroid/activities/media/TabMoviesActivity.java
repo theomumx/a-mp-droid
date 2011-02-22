@@ -1,25 +1,41 @@
 package com.mediaportal.ampdroid.activities.media;
 
+import java.io.File;
 import java.util.List;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.MenuItem.OnMenuItemClickListener;
+import android.view.SubMenu;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 
 import com.mediaportal.ampdroid.R;
 import com.mediaportal.ampdroid.activities.BaseTabActivity;
 import com.mediaportal.ampdroid.activities.StatusBarActivityHandler;
 import com.mediaportal.ampdroid.api.DataHandler;
+import com.mediaportal.ampdroid.api.ItemDownloaderService;
 import com.mediaportal.ampdroid.data.Movie;
 import com.mediaportal.ampdroid.lists.ILoadingAdapterItem;
 import com.mediaportal.ampdroid.lists.LazyLoadingAdapter;
 import com.mediaportal.ampdroid.lists.LazyLoadingAdapter.ILoadingListener;
+import com.mediaportal.ampdroid.lists.Utils;
 import com.mediaportal.ampdroid.lists.views.MoviePosterViewAdapterItem;
+import com.mediaportal.ampdroid.lists.views.MovieThumbViewAdapterItem;
+import com.mediaportal.ampdroid.lists.views.ViewTypes;
+import com.mediaportal.ampdroid.quickactions.ActionItem;
+import com.mediaportal.ampdroid.quickactions.QuickAction;
+import com.mediaportal.ampdroid.utils.DownloaderUtils;
+import com.mediaportal.ampdroid.utils.Util;
 
 public class TabMoviesActivity extends Activity implements ILoadingListener {
    private ListView mListView;
@@ -31,6 +47,7 @@ public class TabMoviesActivity extends Activity implements ILoadingListener {
    private StatusBarActivityHandler mStatusBarHandler;
 
    private class LoadMoviesTask extends AsyncTask<Integer, List<Movie>, Boolean> {
+      @SuppressWarnings("unchecked")
       @Override
       protected Boolean doInBackground(Integer... _params) {
          int loadItems = mSeriesLoaded + _params[0];
@@ -54,7 +71,8 @@ public class TabMoviesActivity extends Activity implements ILoadingListener {
          if (values != null) {
             List<Movie> series = values[0];
             for (Movie s : series) {
-               mAdapter.addItem(new MoviePosterViewAdapterItem(s));
+               mAdapter.addItem(ViewTypes.PosterView.ordinal(), new MoviePosterViewAdapterItem(s));
+               mAdapter.addItem(ViewTypes.ThumbView.ordinal(), new MovieThumbViewAdapterItem(s));
             }
          }
          mAdapter.notifyDataSetChanged();
@@ -83,6 +101,10 @@ public class TabMoviesActivity extends Activity implements ILoadingListener {
       mStatusBarHandler.setHome(false);
       
       mAdapter = new LazyLoadingAdapter(this);
+      mAdapter.addView(ViewTypes.PosterView.ordinal());
+      mAdapter.addView(ViewTypes.ThumbView.ordinal());
+      mAdapter.setView(ViewTypes.PosterView.ordinal());
+      
       mAdapter.setLoadingListener(this);
 
       mListView = (ListView) findViewById(R.id.ListViewVideos);
@@ -108,6 +130,92 @@ public class TabMoviesActivity extends Activity implements ILoadingListener {
 
          }
       });
+      
+      mListView.setOnItemLongClickListener(new OnItemLongClickListener() {
+         @Override
+         public boolean onItemLongClick(AdapterView<?> _item, View _view, final int _position,
+               long _id) {
+            try {
+               Movie selected = (Movie) ((ILoadingAdapterItem) _item
+                     .getItemAtPosition(_position)).getItem();
+               //EpisodeDetails details = mService.getEpisode(mSeriesId, selected.getId());
+               final String movieFile = selected.getFilename();
+               if (movieFile != null) {
+                  String dirName = DownloaderUtils.getMoviePath(selected);
+                  final String fileName = dirName
+                        + Utils.getFileNameWithExtension(movieFile, "\\");
+
+                  final QuickAction qa = new QuickAction(_view);
+                  
+                  
+                  final File localFileName = new File(DownloaderUtils.getBaseDirectory() + "/"
+                        + fileName);
+
+                  if (localFileName.exists()) {
+                     ActionItem playItemAction = new ActionItem();
+
+                     playItemAction.setTitle("Play movie");
+                     playItemAction.setIcon(getResources().getDrawable(
+                           R.drawable.quickaction_play));
+                     playItemAction.setOnClickListener(new OnClickListener() {
+                        @Override
+                        public void onClick(View _view) {
+                           Intent playIntent = new Intent(Intent.ACTION_VIEW);
+                           playIntent.setDataAndType(Uri.parse(localFileName.toString()), "video/*");
+                           startActivity(playIntent);
+
+                           qa.dismiss();
+                        }
+                     });
+
+                     qa.addActionItem(playItemAction);
+                  }
+                  else{
+                     ActionItem sdCardAction = new ActionItem();
+                     sdCardAction.setTitle("Download to sd card");
+                     sdCardAction.setIcon(getResources().getDrawable(R.drawable.quickaction_sdcard));
+                     sdCardAction.setOnClickListener(new OnClickListener() {
+                        @Override
+                        public void onClick(View _view) {
+                           String url = mService.getDownloadUri(movieFile);
+                           Intent download = new Intent(_view.getContext(),
+                                 ItemDownloaderService.class);
+                           download.putExtra("url", url);
+                           download.putExtra("name", fileName);
+                           startService(download);
+                        }
+                     });
+                     qa.addActionItem(sdCardAction);
+                  }
+                  
+                  if(mService.isClientControlConnected()){
+                     ActionItem playOnClientAction = new ActionItem();
+
+                     playOnClientAction.setTitle("Play on Client");
+                     playOnClientAction.setIcon(getResources().getDrawable(
+                           R.drawable.quickaction_sdcard));
+                     playOnClientAction.setOnClickListener(new OnClickListener() {
+                        @Override
+                        public void onClick(View _view) {
+                           mService.playFileOnClient(movieFile);
+                        }
+                     });
+                     qa.addActionItem(playOnClientAction);
+                  }
+
+                  qa.setAnimStyle(QuickAction.ANIM_AUTO);
+
+                  qa.show();
+               } else {
+                  Util.showToast(_view.getContext(), "No local file available for this movie");
+               }
+               return true;
+            } catch (Exception ex) {
+               return false;
+            }
+         }
+      });
+   
 
       mAdapter.setLoadingText("Loading Movies ...");
       mAdapter.showLoadingItem(true);
@@ -124,5 +232,34 @@ public class TabMoviesActivity extends Activity implements ILoadingListener {
          mSeriesLoaderTask = new LoadMoviesTask();
          mSeriesLoaderTask.execute(20);
       }
+   }
+   
+   @Override
+   public boolean onCreateOptionsMenu(Menu _menu) {
+      super.onCreateOptionsMenu(_menu);
+      SubMenu viewItem = _menu.addSubMenu(0, Menu.FIRST + 1, Menu.NONE, "Views");
+
+      MenuItem posterSettingsItem = viewItem.add(0, Menu.FIRST + 1, Menu.NONE, "Poster");
+      MenuItem thumbsSettingsItem = viewItem.add(0, Menu.FIRST + 2, Menu.NONE, "Thumbs");
+
+      posterSettingsItem.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+         @Override
+         public boolean onMenuItemClick(MenuItem item) {
+            mAdapter.setView(ViewTypes.PosterView.ordinal());
+            mAdapter.notifyDataSetInvalidated();
+            return true;
+         }
+      });
+
+      thumbsSettingsItem.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+         @Override
+         public boolean onMenuItemClick(MenuItem item) {
+            mAdapter.setView(ViewTypes.ThumbView.ordinal());
+            mAdapter.notifyDataSetInvalidated();
+            return true;
+         }
+      });
+
+      return true;
    }
 }
