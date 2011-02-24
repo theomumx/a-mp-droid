@@ -25,6 +25,7 @@ import com.mediaportal.ampdroid.lists.LazyLoadingAdapter;
 import com.mediaportal.ampdroid.lists.LazyLoadingAdapter.ILoadingListener;
 import com.mediaportal.ampdroid.lists.views.SeriesBannerViewAdapterItem;
 import com.mediaportal.ampdroid.lists.views.SeriesPosterViewAdapterItem;
+import com.mediaportal.ampdroid.lists.views.SeriesTextViewAdapterItem;
 import com.mediaportal.ampdroid.lists.views.SeriesThumbViewAdapterItem;
 import com.mediaportal.ampdroid.lists.views.ViewTypes;
 
@@ -65,6 +66,7 @@ public class TabSeriesActivity extends Activity implements ILoadingListener {
          if (values != null) {
             List<Series> series = values[0];
             for (Series s : series) {
+               mAdapter.addItem(ViewTypes.TextView.ordinal(), new SeriesTextViewAdapterItem(s));
                mAdapter.addItem(ViewTypes.PosterView.ordinal(), new SeriesPosterViewAdapterItem(s));
                mAdapter.addItem(ViewTypes.ThumbView.ordinal(), new SeriesThumbViewAdapterItem(s));
                mAdapter.addItem(ViewTypes.BannerView.ordinal(), new SeriesBannerViewAdapterItem(s));
@@ -103,6 +105,7 @@ public class TabSeriesActivity extends Activity implements ILoadingListener {
       mStatusBarHandler.setHome(false);
 
       mAdapter = new LazyLoadingAdapter(this);
+      mAdapter.addView(ViewTypes.TextView.ordinal());
       mAdapter.addView(ViewTypes.PosterView.ordinal());
       mAdapter.addView(ViewTypes.ThumbView.ordinal());
       mAdapter.addView(ViewTypes.BannerView.ordinal());
@@ -153,10 +156,20 @@ public class TabSeriesActivity extends Activity implements ILoadingListener {
       super.onCreateOptionsMenu(_menu);
       SubMenu viewItem = _menu.addSubMenu(0, Menu.FIRST + 1, Menu.NONE, "Views");
 
-      MenuItem posterSettingsItem = viewItem.add(0, Menu.FIRST + 1, Menu.NONE, "Poster");
-      MenuItem thumbsSettingsItem = viewItem.add(0, Menu.FIRST + 2, Menu.NONE, "Thumbs");
-      MenuItem bannerSettingsItem = viewItem.add(0, Menu.FIRST + 3, Menu.NONE, "Banner");
+      MenuItem textSettingsItem = viewItem.add(0, Menu.FIRST + 1, Menu.NONE, "Text");
+      MenuItem posterSettingsItem = viewItem.add(0, Menu.FIRST + 2, Menu.NONE, "Poster");
+      MenuItem thumbsSettingsItem = viewItem.add(0, Menu.FIRST + 3, Menu.NONE, "Thumbs");
+      MenuItem bannerSettingsItem = viewItem.add(0, Menu.FIRST + 4, Menu.NONE, "Banner");
 
+      textSettingsItem.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+         @Override
+         public boolean onMenuItemClick(MenuItem item) {
+            mAdapter.setView(ViewTypes.TextView.ordinal());
+            mAdapter.notifyDataSetInvalidated();
+            return true;
+         }
+      });
+      
       posterSettingsItem.setOnMenuItemClickListener(new OnMenuItemClickListener() {
          @Override
          public boolean onMenuItemClick(MenuItem item) {

@@ -36,7 +36,7 @@ public class MediaAccessDatabaseHandler implements IMediaAccessDatabase {
 
    public MediaAccessDatabaseHandler(Context _context, int _clientId) {
       mContext = _context;
-      mDbHelper = new MediaDatabaseHelper(mContext, "ampdroid_media", null, 43);
+      mDbHelper = new MediaDatabaseHelper(mContext, "ampdroid_media", null, 44);
       mClientId = _clientId;
    }
 

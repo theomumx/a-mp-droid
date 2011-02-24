@@ -49,7 +49,7 @@ public class GmaJsonWebserviceApi implements IMediaAccessApi {
    private final String GET_SUPPORTED_FUNCTIONS = "MP_GetSupportedFunctions";
 
    private final String JSON_PREFIX = "http://";
-   private final String JSON_SUFFIX = "/json";
+   private final String JSON_SUFFIX = "/GmaWebService/MediaAccessService/json";
 
    private JsonClient mJsonClient;
    private ObjectMapper mJsonObjectMapper;
@@ -145,7 +145,7 @@ public class GmaJsonWebserviceApi implements IMediaAccessApi {
    @Override
    public List<FileInfo> getFilesForFolder(String _path) {
       String methodName = "FS_GetFilesFromDirectory";
-      String response = mJsonClient.Execute(methodName, JsonUtils.newPair("folderPath", _path));
+      String response = mJsonClient.Execute(methodName, JsonUtils.newPair("path", _path));
 
       if (response != null) {
          FileInfo[] returnObject = (FileInfo[]) getObjectsFromJson(response, FileInfo[].class);
@@ -164,7 +164,7 @@ public class GmaJsonWebserviceApi implements IMediaAccessApi {
    @Override
    public List<FileInfo> getFoldersForFolder(String _path) {
       String methodName = "FS_GetDirectoryListByPath";
-      String response = mJsonClient.Execute(methodName, JsonUtils.newPair("folderPath", _path));
+      String response = mJsonClient.Execute(methodName, JsonUtils.newPair("path", _path));
 
       if (response != null) {
          String[] returnObject = (String[]) getObjectsFromJson(response, String[].class);
@@ -263,7 +263,7 @@ public class GmaJsonWebserviceApi implements IMediaAccessApi {
       Bitmap bmImg = null;
       try {
          myFileUrl = new URL(JSON_PREFIX + mServer + ":" + mPort + JSON_SUFFIX
-               + "/FS_GetImage/?path=" + URLEncoder.encode(_url, "UTF-8"));
+               + "/FS_GetImage?path=" + URLEncoder.encode(_url, "UTF-8"));
          HttpURLConnection conn = (HttpURLConnection) myFileUrl.openConnection();
          conn.setDoInput(true);
          conn.connect();
@@ -287,7 +287,7 @@ public class GmaJsonWebserviceApi implements IMediaAccessApi {
       Bitmap bmImg = null;
       try {
          myFileUrl = new URL(JSON_PREFIX + mServer + ":" + mPort + JSON_SUFFIX
-               + "/FS_GetImageResized/?path=" + URLEncoder.encode(_url, "UTF-8") + "&maxWidth="
+               + "/FS_GetImageResized?path=" + URLEncoder.encode(_url, "UTF-8") + "&maxWidth="
                + _maxWidth + "&maxHeight=" + _maxHeight);
          HttpURLConnection conn = (HttpURLConnection) myFileUrl.openConnection();
          conn.setDoInput(true);
@@ -310,7 +310,7 @@ public class GmaJsonWebserviceApi implements IMediaAccessApi {
    public String getDownloadUri(String _filePath) {
       String fileUrl = null;
       try {
-         fileUrl = JSON_PREFIX + mServer + ":" + mPort + JSON_SUFFIX + "/FS_GetMediaItem/?path="
+         fileUrl = JSON_PREFIX + mServer + ":" + mPort + JSON_SUFFIX + "/FS_GetMediaItem?path="
                + URLEncoder.encode(_filePath, "UTF-8");
       } catch (UnsupportedEncodingException e) {
          e.printStackTrace();

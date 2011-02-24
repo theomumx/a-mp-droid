@@ -1,10 +1,10 @@
 package com.mediaportal.ampdroid.lists.views;
 
 public enum ViewTypes {
+   TextView,
    PosterView,
    BannerView,
    ThumbView,
-   ListView,
    WallView,
    CoverFlowView   
 }
