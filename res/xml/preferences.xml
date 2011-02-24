@@ -29,5 +29,6 @@
 </PreferenceCategory>
 	<PreferenceCategory android:title="@string/settings_category_media" android:key="cat_media"><EditTextPreference android:title="@string/settings_media_cachevalid_title" android:key="media_cache_valid" android:summary="@string/settings_media_cachevalid_desc"></EditTextPreference>
 <CheckBoxPreference android:key="media_load_details" android:summary="@string/settings_media_loaddetails_desc" android:title="@string/settings_media_loaddetails_title"></CheckBoxPreference>
+<ListPreference android:title="Default View" android:key="media_default_view" android:entries="@array/settings_media_default_view_text" android:entryValues="@array/settings_media_default_view_values" android:summary="Default View for media browsing"></ListPreference>
 </PreferenceCategory>
 </PreferenceScreen>

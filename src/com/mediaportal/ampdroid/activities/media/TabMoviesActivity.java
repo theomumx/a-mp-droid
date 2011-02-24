@@ -30,6 +30,7 @@ import com.mediaportal.ampdroid.lists.LazyLoadingAdapter;
 import com.mediaportal.ampdroid.lists.LazyLoadingAdapter.ILoadingListener;
 import com.mediaportal.ampdroid.lists.Utils;
 import com.mediaportal.ampdroid.lists.views.MoviePosterViewAdapterItem;
+import com.mediaportal.ampdroid.lists.views.MovieTextViewAdapterItem;
 import com.mediaportal.ampdroid.lists.views.MovieThumbViewAdapterItem;
 import com.mediaportal.ampdroid.lists.views.ViewTypes;
 import com.mediaportal.ampdroid.quickactions.ActionItem;
@@ -70,9 +71,14 @@ public class TabMoviesActivity extends Activity implements ILoadingListener {
       protected void onProgressUpdate(List<Movie>... values) {
          if (values != null) {
             List<Movie> series = values[0];
-            for (Movie s : series) {
-               mAdapter.addItem(ViewTypes.PosterView.ordinal(), new MoviePosterViewAdapterItem(s));
-               mAdapter.addItem(ViewTypes.ThumbView.ordinal(), new MovieThumbViewAdapterItem(s));
+            if (series != null) {
+               for (Movie m : series) {
+                  mAdapter.addItem(ViewTypes.TextView.ordinal(),
+                        new MovieTextViewAdapterItem(m));
+                  mAdapter.addItem(ViewTypes.PosterView.ordinal(),
+                        new MoviePosterViewAdapterItem(m));
+                  mAdapter.addItem(ViewTypes.ThumbView.ordinal(), new MovieThumbViewAdapterItem(m));
+               }
             }
          }
          mAdapter.notifyDataSetChanged();
@@ -93,18 +99,19 @@ public class TabMoviesActivity extends Activity implements ILoadingListener {
    public void onCreate(Bundle _savedInstanceState) {
       super.onCreate(_savedInstanceState);
       setContentView(R.layout.tabmoviesactivity);
-      
+
       mBaseActivity = (BaseTabActivity) getParent().getParent();
 
       mService = DataHandler.getCurrentRemoteInstance();
       mStatusBarHandler = new StatusBarActivityHandler(mBaseActivity, mService);
       mStatusBarHandler.setHome(false);
-      
+
       mAdapter = new LazyLoadingAdapter(this);
+      mAdapter.addView(ViewTypes.TextView.ordinal());
       mAdapter.addView(ViewTypes.PosterView.ordinal());
       mAdapter.addView(ViewTypes.ThumbView.ordinal());
       mAdapter.setView(ViewTypes.PosterView.ordinal());
-      
+
       mAdapter.setLoadingListener(this);
 
       mListView = (ListView) findViewById(R.id.ListViewVideos);
@@ -130,24 +137,23 @@ public class TabMoviesActivity extends Activity implements ILoadingListener {
 
          }
       });
-      
+
       mListView.setOnItemLongClickListener(new OnItemLongClickListener() {
          @Override
          public boolean onItemLongClick(AdapterView<?> _item, View _view, final int _position,
                long _id) {
             try {
-               Movie selected = (Movie) ((ILoadingAdapterItem) _item
-                     .getItemAtPosition(_position)).getItem();
-               //EpisodeDetails details = mService.getEpisode(mSeriesId, selected.getId());
+               Movie selected = (Movie) ((ILoadingAdapterItem) _item.getItemAtPosition(_position))
+                     .getItem();
+               // EpisodeDetails details = mService.getEpisode(mSeriesId,
+               // selected.getId());
                final String movieFile = selected.getFilename();
                if (movieFile != null) {
                   String dirName = DownloaderUtils.getMoviePath(selected);
-                  final String fileName = dirName
-                        + Utils.getFileNameWithExtension(movieFile, "\\");
+                  final String fileName = dirName + Utils.getFileNameWithExtension(movieFile, "\\");
 
                   final QuickAction qa = new QuickAction(_view);
-                  
-                  
+
                   final File localFileName = new File(DownloaderUtils.getBaseDirectory() + "/"
                         + fileName);
 
@@ -155,8 +161,8 @@ public class TabMoviesActivity extends Activity implements ILoadingListener {
                      ActionItem playItemAction = new ActionItem();
 
                      playItemAction.setTitle("Play movie");
-                     playItemAction.setIcon(getResources().getDrawable(
-                           R.drawable.quickaction_play));
+                     playItemAction
+                           .setIcon(getResources().getDrawable(R.drawable.quickaction_play));
                      playItemAction.setOnClickListener(new OnClickListener() {
                         @Override
                         public void onClick(View _view) {
@@ -169,11 +175,11 @@ public class TabMoviesActivity extends Activity implements ILoadingListener {
                      });
 
                      qa.addActionItem(playItemAction);
-                  }
-                  else{
+                  } else {
                      ActionItem sdCardAction = new ActionItem();
                      sdCardAction.setTitle("Download to sd card");
-                     sdCardAction.setIcon(getResources().getDrawable(R.drawable.quickaction_sdcard));
+                     sdCardAction
+                           .setIcon(getResources().getDrawable(R.drawable.quickaction_sdcard));
                      sdCardAction.setOnClickListener(new OnClickListener() {
                         @Override
                         public void onClick(View _view) {
@@ -187,8 +193,8 @@ public class TabMoviesActivity extends Activity implements ILoadingListener {
                      });
                      qa.addActionItem(sdCardAction);
                   }
-                  
-                  if(mService.isClientControlConnected()){
+
+                  if (mService.isClientControlConnected()) {
                      ActionItem playOnClientAction = new ActionItem();
 
                      playOnClientAction.setTitle("Play on Client");
@@ -215,7 +221,6 @@ public class TabMoviesActivity extends Activity implements ILoadingListener {
             }
          }
       });
-   
 
       mAdapter.setLoadingText("Loading Movies ...");
       mAdapter.showLoadingItem(true);
@@ -233,15 +238,25 @@ public class TabMoviesActivity extends Activity implements ILoadingListener {
          mSeriesLoaderTask.execute(20);
       }
    }
-   
+
    @Override
    public boolean onCreateOptionsMenu(Menu _menu) {
       super.onCreateOptionsMenu(_menu);
       SubMenu viewItem = _menu.addSubMenu(0, Menu.FIRST + 1, Menu.NONE, "Views");
+      
+      MenuItem textSettingsItem = viewItem.add(0, Menu.FIRST + 1, Menu.NONE, "Text");
+      MenuItem posterSettingsItem = viewItem.add(0, Menu.FIRST + 2, Menu.NONE, "Poster");
+      MenuItem thumbsSettingsItem = viewItem.add(0, Menu.FIRST + 3, Menu.NONE, "Thumbs");
 
-      MenuItem posterSettingsItem = viewItem.add(0, Menu.FIRST + 1, Menu.NONE, "Poster");
-      MenuItem thumbsSettingsItem = viewItem.add(0, Menu.FIRST + 2, Menu.NONE, "Thumbs");
-
+      textSettingsItem.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+         @Override
+         public boolean onMenuItemClick(MenuItem item) {
+            mAdapter.setView(ViewTypes.TextView.ordinal());
+            mAdapter.notifyDataSetInvalidated();
+            return true;
+         }
+      });
+      
       posterSettingsItem.setOnMenuItemClickListener(new OnMenuItemClickListener() {
          @Override
          public boolean onMenuItemClick(MenuItem item) {

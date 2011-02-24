@@ -23,11 +23,16 @@ public class MovieThumbViewAdapterItem implements ILoadingAdapterItem {
    public MovieThumbViewAdapterItem(Movie _movie) {
       mMovie = _movie;
 
-      String fileName = Utils.getFileNameWithExtension(mMovie.getBackdropPath(), "\\");
-      String cacheName = "Movies" + File.separator + mMovie.getId() + File.separator + "Thumbs"
-            + File.separator + fileName;
+      String backdrop = mMovie.getBackdropPath();
 
-      mImage = new LazyLoadingImage(mMovie.getBackdropPath(), cacheName, 300, 100);
+      if (backdrop != null) {
+
+         String fileName = Utils.getFileNameWithExtension(backdrop, "\\");
+         String cacheName = "Movies" + File.separator + mMovie.getId() + File.separator + "Thumbs"
+               + File.separator + fileName;
+
+         mImage = new LazyLoadingImage(backdrop, cacheName, 300, 100);
+      }
    }
 
    @Override

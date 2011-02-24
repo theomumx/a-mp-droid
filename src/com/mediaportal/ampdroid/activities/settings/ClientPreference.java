@@ -143,7 +143,7 @@ public class ClientPreference extends DialogPreference {
          }         
          mClient.setClientName(mNameView.getText().toString());
          String addr = mHostView.getText().toString();
-         GmaJsonWebserviceApi api = new GmaJsonWebserviceApi(addr, 4322);
+         GmaJsonWebserviceApi api = new GmaJsonWebserviceApi(addr, 44321);
          mClient.setRemoteAccessApi(api);
          
          Tv4HomeJsonApi tvApi = new Tv4HomeJsonApi(addr, 4321);

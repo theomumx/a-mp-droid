@@ -39,6 +39,20 @@
 	<string name="settings_media_cachevalid_title">Cache valid</string>
 	<string name="settings_media_cachevalid_desc">Cached items should be refreshed if older then
 	</string>
+		<string-array name="settings_media_default_view_text">
+		<item>Text</item>
+		<item>Poster</item>
+		<item>Banner</item>
+		<item>Thumb</item>
+		
+	</string-array>
+	<string-array name="settings_media_default_view_values">
+		<item>0</item>
+		<item>1</item>
+		<item>2</item>
+		<item>3</item>
+	</string-array>
+	
 	<string name="title_home">MediaPortal for Android</string>
 	<string name="title_tvserver">TvServer</string>
 	<string name="title_tvserver_state">Manual Control</string>
