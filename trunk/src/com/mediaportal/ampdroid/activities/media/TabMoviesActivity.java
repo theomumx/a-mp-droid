@@ -57,28 +57,41 @@ public class TabMoviesActivity extends Activity implements ILoadingListener {
          while (mSeriesLoaded < loadItems) {
             List<Movie> series = mService.getMovies(mSeriesLoaded, mSeriesLoaded + 4);
             publishProgress(series);
+            if (series == null){
+               break;
+            }
             mSeriesLoaded += 5;
          }
 
+         
          if (mSeriesLoaded < seriesCount) {
             return false;// not yet finished;
          } else {
             return true;// finished
          }
+         
+         
+         /*List<Movie> series = mService.getAllMovies();
+         publishProgress(series);
+         
+         return true;*/
       }
 
       @Override
       protected void onProgressUpdate(List<Movie>... values) {
          if (values != null) {
-            List<Movie> series = values[0];
-            if (series != null) {
-               for (Movie m : series) {
+            List<Movie> movies = values[0];
+            if (movies != null) {
+               for (Movie m : movies) {
                   mAdapter.addItem(ViewTypes.TextView.ordinal(),
                         new MovieTextViewAdapterItem(m));
                   mAdapter.addItem(ViewTypes.PosterView.ordinal(),
                         new MoviePosterViewAdapterItem(m));
                   mAdapter.addItem(ViewTypes.ThumbView.ordinal(), new MovieThumbViewAdapterItem(m));
                }
+            }
+            else{
+               mAdapter.setLoadingText("Loading failed, check your connection");
             }
          }
          mAdapter.notifyDataSetChanged();
@@ -125,6 +138,7 @@ public class TabMoviesActivity extends Activity implements ILoadingListener {
 
             Intent myIntent = new Intent(v.getContext(), TabMovieDetailsActivity.class);
             myIntent.putExtra("movie_id", selectedMovie.getId());
+            myIntent.putExtra("movie_name", selectedMovie.getName());
 
             myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
@@ -243,7 +257,7 @@ public class TabMoviesActivity extends Activity implements ILoadingListener {
    public boolean onCreateOptionsMenu(Menu _menu) {
       super.onCreateOptionsMenu(_menu);
       SubMenu viewItem = _menu.addSubMenu(0, Menu.FIRST + 1, Menu.NONE, "Views");
-      
+
       MenuItem textSettingsItem = viewItem.add(0, Menu.FIRST + 1, Menu.NONE, "Text");
       MenuItem posterSettingsItem = viewItem.add(0, Menu.FIRST + 2, Menu.NONE, "Poster");
       MenuItem thumbsSettingsItem = viewItem.add(0, Menu.FIRST + 3, Menu.NONE, "Thumbs");
@@ -256,7 +270,7 @@ public class TabMoviesActivity extends Activity implements ILoadingListener {
             return true;
          }
       });
-      
+
       posterSettingsItem.setOnMenuItemClickListener(new OnMenuItemClickListener() {
          @Override
          public boolean onMenuItemClick(MenuItem item) {

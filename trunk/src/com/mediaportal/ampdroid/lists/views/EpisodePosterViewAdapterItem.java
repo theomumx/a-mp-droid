@@ -26,9 +26,12 @@ public class EpisodePosterViewAdapterItem implements ILoadingAdapterItem {
       mSeriesId = _seriesId;
       
       String ext = Utils.getExtension(mEpisode.getBannerUrl());
+      
+      int width = 400;
+      int height = 200;
       String cacheName =  "Series" + File.separator + mSeriesId + File.separator + "Season." + mEpisode.getSeasonNumber()
-            + File.separator + "Ep" + mEpisode.getEpisodeNumber() + "." + ext;
-      mImage = new LazyLoadingImage(mEpisode.getBannerUrl(), cacheName, 400, 200);
+            + File.separator + "Ep" + _episode.getEpisodeNumber() + "_" + width + "x" + height + "." + ext;
+      mImage = new LazyLoadingImage(mEpisode.getBannerUrl(), cacheName, width, height);
    }
 
    @Override
@@ -73,7 +76,7 @@ public class EpisodePosterViewAdapterItem implements ILoadingAdapterItem {
       }
 
       if (holder.text != null) {
-         holder.text.setText(mEpisode.getSeasonNumber() + "x" + mEpisode.getEpisodeNumber());
+         holder.text.setText("Episode " + mEpisode.getEpisodeNumber());
          holder.text.setTextColor(Color.WHITE);
       }
 

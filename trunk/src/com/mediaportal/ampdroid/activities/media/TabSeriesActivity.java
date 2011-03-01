@@ -47,7 +47,7 @@ public class TabSeriesActivity extends Activity implements ILoadingListener {
 
          while (mSeriesLoaded < loadItems) {
             List<Series> series = mService.getSeries(mSeriesLoaded, mSeriesLoaded + 4);
-            if(series == null){
+            if (series == null) {
                return false;
             }
             publishProgress(series);
@@ -65,13 +65,21 @@ public class TabSeriesActivity extends Activity implements ILoadingListener {
       protected void onProgressUpdate(List<Series>... values) {
          if (values != null) {
             List<Series> series = values[0];
-            for (Series s : series) {
-               mAdapter.addItem(ViewTypes.TextView.ordinal(), new SeriesTextViewAdapterItem(s));
-               mAdapter.addItem(ViewTypes.PosterView.ordinal(), new SeriesPosterViewAdapterItem(s));
-               mAdapter.addItem(ViewTypes.ThumbView.ordinal(), new SeriesThumbViewAdapterItem(s));
-               mAdapter.addItem(ViewTypes.BannerView.ordinal(), new SeriesBannerViewAdapterItem(s));
+            if (series != null) {
+               for (Series s : series) {
+                  mAdapter.addItem(ViewTypes.TextView.ordinal(), new SeriesTextViewAdapterItem(s));
+                  mAdapter.addItem(ViewTypes.PosterView.ordinal(), new SeriesPosterViewAdapterItem(
+                        s));
+                  mAdapter
+                        .addItem(ViewTypes.ThumbView.ordinal(), new SeriesThumbViewAdapterItem(s));
+                  mAdapter.addItem(ViewTypes.BannerView.ordinal(), new SeriesBannerViewAdapterItem(
+                        s));
+               }
+            } else {
+               mAdapter.setLoadingText("Loading failed, check your connection");
             }
          }
+
          mAdapter.notifyDataSetChanged();
          super.onProgressUpdate(values);
       }
@@ -169,7 +177,7 @@ public class TabSeriesActivity extends Activity implements ILoadingListener {
             return true;
          }
       });
-      
+
       posterSettingsItem.setOnMenuItemClickListener(new OnMenuItemClickListener() {
          @Override
          public boolean onMenuItemClick(MenuItem item) {

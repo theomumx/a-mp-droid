@@ -259,7 +259,6 @@ public class DataHandler {
 
    public SeriesFull getFullSeries(int _seriesId) {
       IMediaAccessApi remoteAccess = client.getRemoteAccessApi();
-
       mediaDatabase.open();
       SeriesFull series = mediaDatabase.getFullSeries(_seriesId);
 
@@ -274,7 +273,6 @@ public class DataHandler {
 
    public int getSeriesCount() {
       IMediaAccessApi remoteAccess = client.getRemoteAccessApi();
-
       mediaDatabase.open();
       CacheItemsSetting setting = mediaDatabase.getSeriesCount();
 
@@ -316,10 +314,10 @@ public class DataHandler {
 
       if (episodes == null || episodes.size() == 0) {
          episodes = remoteAccess.getAllEpisodes(_seriesId);
-         ;
+         
          if (episodes != null) {
             for (SeriesEpisode e : episodes) {
-               mediaDatabase.saveEpisode(e);
+               mediaDatabase.saveEpisode(_seriesId, e);
             }
          }
       }
@@ -338,7 +336,7 @@ public class DataHandler {
          episodes = remoteAccess.getAllEpisodesForSeason(_seriesId, _seasonNumber);
          if (episodes != null) {
             for (SeriesEpisode e : episodes) {
-               mediaDatabase.saveEpisode(e);
+               mediaDatabase.saveEpisode(_seriesId, e);
             }
          }
       }
@@ -347,7 +345,7 @@ public class DataHandler {
       return episodes;
    }
 
-   public int getEpisodesCountForSeason(int _seriesId, Integer _seasonNumber) {
+   public int getEpisodesCountForSeason(int _seriesId, int _seasonNumber) {
       IMediaAccessApi remoteAccess = client.getRemoteAccessApi();
       return remoteAccess.getEpisodesCountForSeason(_seriesId, _seasonNumber);
    }
@@ -360,7 +358,17 @@ public class DataHandler {
 
    public EpisodeDetails getEpisode(int _seriesId, int _episodeId) {
       IMediaAccessApi remoteAccess = client.getRemoteAccessApi();
-      return remoteAccess.getEpisode(_seriesId, _episodeId);
+
+      mediaDatabase.open();
+      EpisodeDetails episode = mediaDatabase.getEpisodeDetails(_seriesId, _episodeId);
+
+      if (episode == null) {
+         episode = remoteAccess.getEpisode(_seriesId, _episodeId);
+         mediaDatabase.saveEpisodeDetails(_seriesId, episode);
+      }
+
+      mediaDatabase.close();
+      return episode;
    }
 
    public List<MusicAlbum> getAllAlbums() {
@@ -370,7 +378,18 @@ public class DataHandler {
 
    public SupportedFunctions getSupportedFunctions() {
       IMediaAccessApi remoteAccess = client.getRemoteAccessApi();
-      return remoteAccess.getSupportedFunctions();
+      mediaDatabase.open();
+      SupportedFunctions supported = mediaDatabase.getSupportedFunctions();
+
+      if (supported == null) {
+         supported = remoteAccess.getSupportedFunctions();
+         if (supported != null) {
+            mediaDatabase.setSupportedFunctions(supported);
+         }
+      }
+
+      mediaDatabase.close();
+      return supported;
    }
 
    public List<MusicAlbum> getAlbums(int _start, int _end) {

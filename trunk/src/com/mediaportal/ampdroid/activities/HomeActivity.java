@@ -1,5 +1,7 @@
 package com.mediaportal.ampdroid.activities;
 
+import java.util.List;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -8,20 +10,22 @@ import android.widget.Toast;
 
 import com.mediaportal.ampdroid.R;
 import com.mediaportal.ampdroid.api.DataHandler;
+import com.mediaportal.ampdroid.data.Movie;
 import com.mediaportal.ampdroid.utils.Util;
 
 public class HomeActivity extends BaseActivity {
    private StatusBarActivityHandler statusBarHandler = null;
+   private DataHandler mService;
 
    /** Called when the activity is first created. */
    @Override
    public void onCreate(Bundle _savedInstanceState) {
       super.onCreate(_savedInstanceState);
       setContentView(R.layout.homescreen);
-      
-      DataHandler remoteController = DataHandler.getCurrentRemoteInstance();
-      statusBarHandler = new StatusBarActivityHandler(this, remoteController, true);
-      //statusBarHandler.setupRemoteStatus();
+
+      mService = DataHandler.getCurrentRemoteInstance();
+      statusBarHandler = new StatusBarActivityHandler(this, mService, true);
+      // statusBarHandler.setupRemoteStatus();
 
       final ImageButton buttonRemote = (ImageButton) findViewById(R.id.ImageButtonRemote);
       buttonRemote.setOnClickListener(new View.OnClickListener() {
@@ -69,8 +73,13 @@ public class HomeActivity extends BaseActivity {
             Toast toast = Toast.makeText(_view.getContext(), "Pictures not implemented yet",
                   Toast.LENGTH_SHORT);
             toast.show();
-            Intent myIntent = new Intent(_view.getContext(), PicturesActivity.class);
-            startActivity(myIntent);
+            //Intent myIntent = new Intent(_view.getContext(), PicturesActivity.class);
+            //startActivity(myIntent);
+
+            List<Movie> movies = mService.getMovies(0, 20);
+            List<Movie> movies2 = mService.getAllMovies();
+            Movie m2 = movies.get(0);
+            Movie m3 = movies2.get(0);
          }
       });
 
@@ -78,16 +87,18 @@ public class HomeActivity extends BaseActivity {
       buttonPlugins.setOnClickListener(new View.OnClickListener() {
          public void onClick(View _view) {
             Util.Vibrate(_view.getContext(), 50);
-            //Toast toast = Toast.makeText(_view.getContext(), "Plugins not implemented yet",
-            //      Toast.LENGTH_SHORT);
-            //toast.show();
+            // Toast toast = Toast.makeText(_view.getContext(),
+            // "Plugins not implemented yet",
+            // Toast.LENGTH_SHORT);
+            // toast.show();
 
-            //Intent settingsIntent = new Intent(_view.getContext(), SettingsActivity.class);
-            //startActivity(settingsIntent);
+            // Intent settingsIntent = new Intent(_view.getContext(),
+            // SettingsActivity.class);
+            // startActivity(settingsIntent);
          }
       });
    }
-   
+
    @Override
    protected void onStart() {
       super.onStart();

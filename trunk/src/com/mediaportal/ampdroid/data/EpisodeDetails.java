@@ -5,7 +5,9 @@ import java.util.Date;
 import org.codehaus.jackson.annotate.JsonProperty;
 
 import com.mediaportal.ampdroid.database.ColumnProperty;
+import com.mediaportal.ampdroid.database.TableProperty;
 
+@TableProperty("SeriesEpisodeDetails")
 public class EpisodeDetails extends SeriesEpisode {
 
    // Div Info
@@ -126,13 +128,13 @@ public class EpisodeDetails extends SeriesEpisode {
       Writers = writers;
    }
 
-   @ColumnProperty(value="LastUpdated", type="text")
+   @ColumnProperty(value="LastUpdated", type="date")
    @JsonProperty("LastUpdated")
    public Date getLastUpdated() {
       return LastUpdated;
    }
 
-   @ColumnProperty(value="LastUpdated", type="text")
+   @ColumnProperty(value="LastUpdated", type="date")
    @JsonProperty("LastUpdated")
    public void setLastUpdated(Date lastUpdated) {
       LastUpdated = lastUpdated;

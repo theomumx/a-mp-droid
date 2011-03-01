@@ -145,7 +145,7 @@ public class GmaJsonWebserviceApi implements IMediaAccessApi {
    @Override
    public List<FileInfo> getFilesForFolder(String _path) {
       String methodName = "FS_GetFilesFromDirectory";
-      String response = mJsonClient.Execute(methodName, JsonUtils.newPair("path", _path));
+      String response = mJsonClient.Execute(methodName, JsonUtils.newPair("filepath", _path));
 
       if (response != null) {
          FileInfo[] returnObject = (FileInfo[]) getObjectsFromJson(response, FileInfo[].class);

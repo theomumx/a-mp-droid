@@ -7,8 +7,9 @@ import org.codehaus.jackson.annotate.JsonProperty;
 import com.mediaportal.ampdroid.database.ColumnProperty;
 import com.mediaportal.ampdroid.database.TableProperty;
 
-@TableProperty("SeriesEpisode")
+@TableProperty("SeriesEpisodes")
 public class SeriesEpisode {
+   private int SeriesId;
 	private int Id;
 	private String Name;
 	private int SeasonNumber;
@@ -43,6 +44,16 @@ public class SeriesEpisode {
    @JsonProperty("Id")
    public void setId(int id) {
       Id = id;
+   }
+   
+   @ColumnProperty(value="SeriesId", type="integer")
+   public void setSeriesId(int seriesId) {
+      SeriesId = seriesId;
+   }
+
+   @ColumnProperty(value="SeriesId", type="integer")
+   public int getSeriesId() {
+      return SeriesId;
    }
    
    @ColumnProperty(value="Name", type="text")
@@ -164,4 +175,5 @@ public class SeriesEpisode {
    public String getFileName() {
       return FileName;
    }
+
 }

@@ -14,7 +14,13 @@
 	<string name="series_release">Release Date</string>
 	<string name="series_runtime">Runtime</string>
 	<string name="series_certification">Certification</string>
-	<string name="movie_actors">Actors:</string>
+	<string name="movie_actors">Actors</string>
+	<string name="movie_release">Release Date</string>
+	<string name="movie_runtime">Runtime</string>
+	<string name="movie_certification">Certification</string>
+	<string name="episode_gueststars">Guest Stars</string>
+	<string name="episode_firstaired">First Aired</string>
+	<string name="episode_rating">Rating</string>
 	<string name="button_prev">Prev</string>
 	<string name="button_next">Next</string>
 	<string name="button_earlier">Earlier</string>
@@ -39,12 +45,12 @@
 	<string name="settings_media_cachevalid_title">Cache valid</string>
 	<string name="settings_media_cachevalid_desc">Cached items should be refreshed if older then
 	</string>
-		<string-array name="settings_media_default_view_text">
+	<string-array name="settings_media_default_view_text">
 		<item>Text</item>
 		<item>Poster</item>
 		<item>Banner</item>
 		<item>Thumb</item>
-		
+
 	</string-array>
 	<string-array name="settings_media_default_view_values">
 		<item>0</item>
@@ -52,7 +58,7 @@
 		<item>2</item>
 		<item>3</item>
 	</string-array>
-	
+
 	<string name="title_home">MediaPortal for Android</string>
 	<string name="title_tvserver">TvServer</string>
 	<string name="title_tvserver_state">Manual Control</string>
@@ -66,7 +72,7 @@
 	<string name="state_recording">Recording</string>
 	<string name="state_timeshifting">Timeshifting</string>
 	<string name="state_grabbingEpg">Grabbing EPG</string>
-	
+
 	<string name="tvserver_program_start">Start Time</string>
 	<string name="tvserver_program_end">End Time</string>
 	<string name="tvserver_program_duration">Duration</string>

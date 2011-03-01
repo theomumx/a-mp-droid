@@ -56,19 +56,27 @@ public class RemoteControlActivity extends BaseActivity implements IClientContro
          if (mController.isClientControlConnected()) {
             mController.sendRemoteButton((RemoteKey) _keys[0]);
 
-            waitForMilliseconds(100);
+            waitForMilliseconds(500);
 
-            if (mRepeat) {
-               mController.sendRemoteButtonDown((RemoteKey) _keys[0], 40);
-               waitForMilliseconds(120);
-
-               while (mRepeat) {
-                  mController.sendRemoteButtonDown((RemoteKey) _keys[0], 20);
-                  waitForMilliseconds(1000);
+            while (mRepeat) {
+               try {
+                  mController.sendRemoteButtonDown((RemoteKey) _keys[0], 60);
+                  Thread.sleep(1000);
+               } catch (InterruptedException e) {
+                  e.printStackTrace();
                }
-
-               mController.sendRemoteButtonUp();
             }
+
+            /*
+             * if (mRepeat) {
+             * 
+             * 
+             * mController.sendRemoteButtonDown((RemoteKey) _keys[0], 40);
+             * waitForMilliseconds(120);
+             * 
+             * while (mRepeat) { mController.sendRemoteButtonDown((RemoteKey)
+             * _keys[0], 20); waitForMilliseconds(1000); } }
+             */
             return null;
          } else {
             return "Remote not connected";
@@ -100,6 +108,26 @@ public class RemoteControlActivity extends BaseActivity implements IClientContro
 
       public boolean getRepeat() {
          return mRepeat;
+      }
+   }
+
+   protected class SendKeyUpTask extends AsyncTask<RemoteKey, String, String> {
+      private DataHandler mController;
+      private Context mContext;
+
+      protected SendKeyUpTask(Context _parent) {
+         mContext = _parent;
+      }
+
+      private SendKeyUpTask(Context _parent, DataHandler _controller) {
+         this(_parent);
+         mController = _controller;
+      }
+
+      @Override
+      protected String doInBackground(RemoteKey... _keys) {
+         mController.sendRemoteButtonUp();
+         return null;
       }
    }
 
@@ -162,7 +190,8 @@ public class RemoteControlActivity extends BaseActivity implements IClientContro
          public boolean onTouch(View _view, MotionEvent _event) {
             if (_event.getAction() == MotionEvent.ACTION_DOWN) {
                Util.Vibrate(_view.getContext(), 30);
-               new SendKeyTask(_view.getContext(), mService).execute(RemoteCommands.homeButton);
+               
+               //new SendKeyTask(_view.getContext(), mService).execute(RemoteCommands.homeButton);
                homeButton.setImageResource(R.drawable.remote_home_sel);
                return true;
             }
@@ -186,23 +215,37 @@ public class RemoteControlActivity extends BaseActivity implements IClientContro
                float x = _event.getX();
                float y = _event.getY();
                int index = getTouchPart(x, y);
+
                switch (index) {
                case 0:
                   remote.setImageResource(R.drawable.remote_left);
-                  new SendKeyTask(_view.getContext(), mService).execute(RemoteCommands.leftButton);
+                  if (task != null){
+                     task.setRepeat(false);
+                  }
+                  task = (SendKeyTask) new SendKeyTask(_view.getContext(), mService).execute(RemoteCommands.leftButton);
                   break;
                case 1:
                   remote.setImageResource(R.drawable.remote_right);
-
-                  new SendKeyTask(_view.getContext(), mService).execute(RemoteCommands.rightButton);
+                  if (task != null){
+                     task.setRepeat(false);
+                  }
+                  task = (SendKeyTask) new SendKeyTask(_view.getContext(), mService).execute(RemoteCommands.rightButton);
                   break;
                case 2:
                   remote.setImageResource(R.drawable.remote_up);
+                  //mService.sendRemoteButtonDown(RemoteCommands.upButton, 100);
+                  if (task != null){
+                     task.setRepeat(false);
+                  }
                   task = (SendKeyTask) new SendKeyTask(_view.getContext(), mService, true)
                         .execute(RemoteCommands.upButton);
                   break;
                case 3:
                   remote.setImageResource(R.drawable.remote_down);
+                  //mService.sendRemoteButtonDown(RemoteCommands.downButton, 100);
+                  if (task != null){
+                     task.setRepeat(false);
+                  }
                   task = (SendKeyTask) new SendKeyTask(_view.getContext(), mService, true)
                         .execute(RemoteCommands.downButton);
                   break;
@@ -214,8 +257,11 @@ public class RemoteControlActivity extends BaseActivity implements IClientContro
 
             }
             if (_event.getAction() == MotionEvent.ACTION_UP) {
-               if (task != null)
+               if (task != null){
                   task.setRepeat(false);
+               }
+               new SendKeyUpTask(_view.getContext(), mService).execute();
+               //mService.sendRemoteButtonUp();
                remote.setImageResource(R.drawable.remote_default);
             }
             return false;
@@ -268,11 +314,10 @@ public class RemoteControlActivity extends BaseActivity implements IClientContro
 
                      mStatusBarHandler.setStatusText("Change module to " + module);
                   }
-               }
-               else if (type.equals("nowplaying")){
+               } else if (type.equals("nowplaying")) {
                   NowPlaying nowPlayingMessage = new NowPlaying();
                   nowPlayingMessage.setTitle("");
-                  
+
                   mStatusBarHandler.setNowPlaying(nowPlayingMessage);
                }
             }

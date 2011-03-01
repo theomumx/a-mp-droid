@@ -33,11 +33,11 @@ public class MediaActivity extends BaseTabActivity {
       actionBar.setTitle("Media Browsing");
 
       DataHandler service = DataHandler.getCurrentRemoteInstance();
-      //SupportedFunctions functions = service.getSupportedFunctions();
-      SupportedFunctions functions = new SupportedFunctions();
-      functions.setSupportsMovies(true);
-      functions.setSupportsTvSeries(true);
-      functions.setSupportsVideo(true);
+      SupportedFunctions functions = service.getSupportedFunctions();
+      //SupportedFunctions functions = new SupportedFunctions();
+      //functions.setSupportsMovies(true);
+      //functions.setSupportsTvSeries(true);
+      //functions.setSupportsVideo(true);
 
       
       
