@@ -16,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.mediaportal.ampdroid.R;
 import com.mediaportal.ampdroid.api.DataHandler;
@@ -41,12 +42,14 @@ public class TabEpisodesActivity extends Activity {
    private int mSeasonNumber;
 
    private LoadEpisodesTask mEpisodesLoaderTask;
-
+   private TextView mTextViewSeriesName;
+   private TextView mTextViewSeason;
+   
    private class LoadEpisodesTask extends AsyncTask<Integer, List<SeriesEpisode>, Boolean> {
       @SuppressWarnings("unchecked")
       @Override
       protected Boolean doInBackground(Integer... _params) {
-         int seriesCount = mService.getEpisodesCountForSeason(mSeriesId, mSeasonNumber);
+         /*int seriesCount = mService.getEpisodesCountForSeason(mSeriesId, mSeasonNumber);
 
          int cursor = 0;
          while (cursor < seriesCount) {
@@ -55,8 +58,10 @@ public class TabEpisodesActivity extends Activity {
             publishProgress(episodes);
 
             cursor += 5;
-         }
-
+         }*/
+         
+         List<SeriesEpisode> episodes = mService.getAllEpisodesForSeason(mSeriesId, mSeasonNumber);
+         publishProgress(episodes);
          return true;
       }
 
@@ -86,6 +91,8 @@ public class TabEpisodesActivity extends Activity {
       super.onCreate(_savedInstanceState);
       setContentView(R.layout.tabepisodesactivity);
       mListView = (ListView) findViewById(R.id.ListView);
+      mTextViewSeriesName = (TextView)findViewById(R.id.TextViewSeriesName);
+      mTextViewSeason = (TextView)findViewById(R.id.TextViewSeason);
       mMediaPlayer = new MediaPlayer();
 
       Bundle extras = getIntent().getExtras();
@@ -94,6 +101,8 @@ public class TabEpisodesActivity extends Activity {
          mSeriesName = extras.getString("series_name");
          mSeasonNumber = extras.getInt("season_number");
 
+         mTextViewSeriesName.setText(mSeriesName);
+         mTextViewSeason.setText("Season " + mSeasonNumber);
          mService = DataHandler.getCurrentRemoteInstance();
 
          mAdapter = new LazyLoadingAdapter(this);
@@ -107,14 +116,28 @@ public class TabEpisodesActivity extends Activity {
 
       mListView.setOnItemClickListener(new OnItemClickListener() {
          @Override
-         public void onItemClick(AdapterView<?> _adapter, View _view, int _position, long _id) {
-            // Object obj = mlistView.getItemAtPosition(_position);
-            // ILoadingAdapterItem selectedItem = (ILoadingAdapterItem) obj;
+         public void onItemClick(AdapterView<?> _item, View _view, int _position, long _id) {
+             Object obj = _item.getItemAtPosition(_position);
+             ILoadingAdapterItem selectedItem = (ILoadingAdapterItem) obj;
+             SeriesEpisode selectedEp = (SeriesEpisode)selectedItem.getItem();
+             
+             Intent myIntent = new Intent(_view.getContext(), TabEpisodeDetailsActivity.class);
+             myIntent.putExtra("series_id", mSeriesId);
+             myIntent.putExtra("series_name", mSeriesName);
+             myIntent.putExtra("episode_id", selectedEp.getId());
+             myIntent.putExtra("episode_name", selectedEp.getName());
+             myIntent.putExtra("episode_season", selectedEp.getSeasonNumber());
+             myIntent.putExtra("episode_nr", selectedEp.getEpisodeNumber());
+             myIntent.putExtra("episode_banner", selectedEp.getBannerUrl());
+             
+             myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
-            // SeriesEpisode selectedEp = (SeriesEpisode)
-            // selectedItem.getItem();
-            // EpisodeDetails details = mService.getEpisode(mSeriesId,
-            // selectedEp.getId());
+             // Create the view using FirstGroup's LocalActivityManager
+             View view = TabSeriesActivityGroup.getGroup().getLocalActivityManager()
+                   .startActivity("episode_details", myIntent).getDecorView();
+
+             // Again, replace the view
+             TabSeriesActivityGroup.getGroup().replaceView(view);
          }
       });
 

@@ -5,8 +5,9 @@ import org.codehaus.jackson.annotate.JsonProperty;
 import com.mediaportal.ampdroid.database.ColumnProperty;
 import com.mediaportal.ampdroid.database.TableProperty;
 
-@TableProperty("SeriesSeason")
+@TableProperty("SeriesSeasons")
 public class SeriesSeason{
+   public static final int CACHE_ID = 2;
 	private String Id;
 	private int SeriesId;
 	private int SeasonNumber;
@@ -15,13 +16,13 @@ public class SeriesSeason{
 	private String SeasonBanner;
 	private String[] AlternateSeasonBanners;
    
-   @ColumnProperty(value="Id", type="integer")
+   @ColumnProperty(value="Id", type="text")
 	@JsonProperty("Id")
 	public String getId() {
       return Id;
    }
    
-   @ColumnProperty(value="Id", type="integer")
+   @ColumnProperty(value="Id", type="text")
    @JsonProperty("Id")
    public void setId(String id) {
       Id = id;

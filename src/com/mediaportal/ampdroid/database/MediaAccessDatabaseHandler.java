@@ -12,12 +12,14 @@ import android.util.Log;
 
 import com.mediaportal.ampdroid.api.IMediaAccessDatabase;
 import com.mediaportal.ampdroid.data.CacheItemsSetting;
+import com.mediaportal.ampdroid.data.EpisodeDetails;
 import com.mediaportal.ampdroid.data.Movie;
 import com.mediaportal.ampdroid.data.MovieFull;
 import com.mediaportal.ampdroid.data.Series;
 import com.mediaportal.ampdroid.data.SeriesEpisode;
 import com.mediaportal.ampdroid.data.SeriesFull;
 import com.mediaportal.ampdroid.data.SeriesSeason;
+import com.mediaportal.ampdroid.data.SupportedFunctions;
 
 public class MediaAccessDatabaseHandler implements IMediaAccessDatabase {
    private final String CLIENT_ID = "ClientId";
@@ -36,16 +38,15 @@ public class MediaAccessDatabaseHandler implements IMediaAccessDatabase {
 
    public MediaAccessDatabaseHandler(Context _context, int _clientId) {
       mContext = _context;
-      mDbHelper = new MediaDatabaseHelper(mContext, "ampdroid_media", null, 44);
+      mDbHelper = new MediaDatabaseHelper(mContext, "ampdroid_media", null, 50);
       mClientId = _clientId;
    }
 
    @Override
    public void open() {
-      try{
+      try {
          mDatabase = mDbHelper.getWritableDatabase();
-      }
-      catch(Exception ex){
+      } catch (Exception ex) {
          Log.e("aMPdroid", ex.toString());
       }
    }
@@ -102,8 +103,8 @@ public class MediaAccessDatabaseHandler implements IMediaAccessDatabase {
                Movie.class);
          dbValues.put(CLIENT_ID, mClientId);
 
-         int rows = mDatabase.update(Movie.TABLE_NAME, dbValues, null, new String[] {
-               CLIENT_ID + "=" + mClientId, "Id=" + movie.getId() });
+         int rows = mDatabase.update(Movie.TABLE_NAME, dbValues, CLIENT_ID + "=" + mClientId
+               + " AND Id=" + movie.getId(), null);
 
          if (rows != 1) {
             mDatabase.insert("Movies", null, dbValues);
@@ -335,7 +336,7 @@ public class MediaAccessDatabaseHandler implements IMediaAccessDatabase {
    @Override
    public List<SeriesSeason> getAllSeasons(int _seriesId) {
       try {
-         Cursor result = mDatabase.query("SeriesSeason", null, CLIENT_ID + "=" + mClientId
+         Cursor result = mDatabase.query("SeriesSeasons", null, CLIENT_ID + "=" + mClientId
                + " AND SeriesId=" + _seriesId, null, null, null, null);
 
          result.moveToFirst();
@@ -358,11 +359,11 @@ public class MediaAccessDatabaseHandler implements IMediaAccessDatabase {
                SeriesSeason.class);
          dbValues.put(CLIENT_ID, mClientId);
 
-         int rows = mDatabase.update("SeriesSeason", dbValues, CLIENT_ID + "=" + mClientId
-               + " AND Id=" + _season.getId(), null);
+         int rows = mDatabase.update("SeriesSeasons", dbValues, CLIENT_ID + "=" + mClientId
+               + " AND Id=\"" + _season.getId() + "\"", null);
 
          if (rows != 1) {
-            mDatabase.insert("SeriesDetails", null, dbValues);
+            mDatabase.insert("SeriesSeasons", null, dbValues);
          }
       } catch (Exception ex) {
          Log.e("Database", ex.getMessage());
@@ -372,7 +373,7 @@ public class MediaAccessDatabaseHandler implements IMediaAccessDatabase {
    @Override
    public List<SeriesEpisode> getAllEpisodes(int _seriesId) {
       try {
-         Cursor result = mDatabase.query("SeriesEpisode", null, CLIENT_ID + "=" + mClientId
+         Cursor result = mDatabase.query("SeriesEpisodes", null, CLIENT_ID + "=" + mClientId
                + " AND SeriesId=" + _seriesId, null, null, null, null);
 
          result.moveToFirst();
@@ -389,17 +390,18 @@ public class MediaAccessDatabaseHandler implements IMediaAccessDatabase {
    }
 
    @Override
-   public void saveEpisode(SeriesEpisode _episode) {
+   public void saveEpisode(int _seriesId, SeriesEpisode _episode) {
       try {
+         _episode.setSeriesId(_seriesId);
          ContentValues dbValues = SqliteAnnotationsHelper.getContentValuesFromObject(_episode,
-               SeriesFull.class);
+               SeriesEpisode.class);
          dbValues.put(CLIENT_ID, mClientId);
 
-         int rows = mDatabase.update("SeriesEpisode", dbValues, null, new String[] {
-               CLIENT_ID + "=" + mClientId, "Id=" + _episode.getId() });
+         int rows = mDatabase.update("SeriesEpisodes", dbValues, CLIENT_ID + "=" + mClientId
+               + " AND SeriesId=" + _seriesId + " AND Id=" + _episode.getId(), null);
 
          if (rows != 1) {
-            mDatabase.insert("SeriesDetails", null, dbValues);
+            mDatabase.insert("SeriesEpisodes", null, dbValues);
          }
       } catch (Exception ex) {
          Log.e("Database", ex.getMessage());
@@ -409,7 +411,7 @@ public class MediaAccessDatabaseHandler implements IMediaAccessDatabase {
    @Override
    public List<SeriesEpisode> getAllEpisodesForSeason(int _seriesId, int _seasonNumber) {
       try {
-         Cursor result = mDatabase.query("SeriesEpisode", null, CLIENT_ID + "=" + mClientId
+         Cursor result = mDatabase.query("SeriesEpisodes", null, CLIENT_ID + "=" + mClientId
                + " AND SeasonNumber=" + _seasonNumber + " AND SeriesId=" + _seriesId, null, null,
                null, null);
 
@@ -424,5 +426,96 @@ public class MediaAccessDatabaseHandler implements IMediaAccessDatabase {
       }
       // something went wrong obviously
       return null;
+   }
+
+   @Override
+   public SupportedFunctions getSupportedFunctions() {
+      try {
+         Cursor result = mDatabase.query("SupportedFunctions", null, CLIENT_ID + "=" + mClientId,
+               null, null, null, null);
+
+         /*
+          * ArrayList<RemoteFunction> functions = null; if
+          * (result.moveToFirst()) { functions = (ArrayList<RemoteFunction>)
+          * SqliteAnnotationsHelper.getObjectsFromCursor(result,
+          * RemoteFunction.class, 0); } SupportedFunctions retObject = new
+          * SupportedFunctions(); if(functions != null){ for(RemoteFunction f :
+          * functions){ if(f.getId() == 0){
+          * 
+          * } } }
+          */
+
+         SupportedFunctions retObject = null;
+         if (result.getCount() == 1) {
+            result.moveToFirst();
+            retObject = (SupportedFunctions) SqliteAnnotationsHelper.getObjectFromCursor(result,
+                  SupportedFunctions.class);
+         }
+
+         result.close();
+         return retObject;
+      } catch (Exception ex) {
+         Log.e("Database", ex.getMessage());
+      }
+      // something went wrong obviously
+      return null;
+   }
+
+   @Override
+   public void setSupportedFunctions(SupportedFunctions _supported) {
+      try {
+         ContentValues dbValues = SqliteAnnotationsHelper.getContentValuesFromObject(_supported,
+               SupportedFunctions.class);
+         dbValues.put(CLIENT_ID, mClientId);
+
+         int rows = mDatabase.update("SupportedFunctions", dbValues, CLIENT_ID + "=" + mClientId,
+               null);
+
+         if (rows != 1) {
+            mDatabase.insert("SupportedFunctions", null, dbValues);
+         }
+      } catch (Exception ex) {
+         Log.e("Database", ex.getMessage());
+      }
+
+   }
+
+   @Override
+   public EpisodeDetails getEpisodeDetails(int _seriesId, int _episodeId) {
+      try {
+         Cursor result = mDatabase.query("SeriesEpisodeDetails", null, CLIENT_ID + "=" + mClientId
+               + " AND SeriesId=" + _seriesId + " AND Id=" + _episodeId, null, null, null, null);
+         EpisodeDetails episode = null;
+         if (result.getCount() == 1) {
+            result.moveToFirst();
+            episode = (EpisodeDetails) SqliteAnnotationsHelper.getObjectFromCursor(result,
+                  EpisodeDetails.class);
+         }
+         result.close();
+         return episode;
+      } catch (Exception ex) {
+         Log.e("Database", ex.getMessage());
+      }
+      // something went wrong obviously
+      return null;
+   }
+
+   @Override
+   public void saveEpisodeDetails(int _seriesId, EpisodeDetails _episode) {
+      try {
+         _episode.setSeriesId(_seriesId);
+         ContentValues dbValues = SqliteAnnotationsHelper.getContentValuesFromObject(_episode,
+               EpisodeDetails.class);
+         dbValues.put(CLIENT_ID, mClientId);
+
+         int rows = mDatabase.update("SeriesEpisodeDetails", dbValues, CLIENT_ID + "=" + mClientId
+               + " AND SeriesId=" + _seriesId + " AND Id=" + _episode.getId(), null);
+
+         if (rows != 1) {
+            mDatabase.insert("SeriesEpisodeDetails", null, dbValues);
+         }
+      } catch (Exception ex) {
+         Log.e("Database", ex.getMessage());
+      }
    }
 }

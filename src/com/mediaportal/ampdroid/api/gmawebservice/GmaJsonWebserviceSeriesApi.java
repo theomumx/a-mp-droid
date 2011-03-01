@@ -214,7 +214,7 @@ public class GmaJsonWebserviceSeriesApi {
    public ArrayList<SeriesEpisode> getAllEpisodesForSeason(int _seriesId, int _seasonNumber) {
       String methodName = GET_ALL_EPISODES_FOR_SEASON;
       String response = mJsonClient.Execute(methodName, JsonUtils.newPair("seriesId", _seriesId),
-            JsonUtils.newPair("season", _seasonNumber));
+            JsonUtils.newPair("seasonNumber", _seasonNumber));
 
       if (response != null) {
          SeriesEpisode[] returnObject = (SeriesEpisode[]) getObjectsFromJson(response,
