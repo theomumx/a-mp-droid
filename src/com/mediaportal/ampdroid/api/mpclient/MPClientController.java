@@ -1,6 +1,7 @@
 package com.mediaportal.ampdroid.api.mpclient;
 
 import java.lang.reflect.Type;
+import java.util.List;
 
 import org.json.JSONObject;
 
@@ -11,6 +12,7 @@ import com.mediaportal.ampdroid.api.IClientControlApi;
 import com.mediaportal.ampdroid.api.IClientControlListener;
 import com.mediaportal.ampdroid.api.rest.RestClient;
 import com.mediaportal.ampdroid.api.rest.RestClient.RequestMethod;
+import com.mediaportal.ampdroid.data.ClientPlugin;
 import com.mediaportal.ampdroid.data.commands.RemoteKey;
 
 public class MPClientController implements IClientControlApi {
@@ -149,6 +151,18 @@ public class MPClientController implements IClientControlApi {
 
    @Override
    public void playChannelOnClient(int _channel) {
+      // TODO Auto-generated method stub
+      
+   }
+
+   @Override
+   public List<ClientPlugin> getPlugins() {
+      // TODO Auto-generated method stub
+      return null;
+   }
+
+   @Override
+   public void openPlugin(ClientPlugin _plugin) {
       // TODO Auto-generated method stub
       
    }

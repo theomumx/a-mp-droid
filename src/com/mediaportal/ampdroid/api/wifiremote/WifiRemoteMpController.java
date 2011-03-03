@@ -20,6 +20,7 @@ import com.google.myjson.Gson;
 import com.google.myjson.GsonBuilder;
 import com.mediaportal.ampdroid.api.IClientControlApi;
 import com.mediaportal.ampdroid.api.IClientControlListener;
+import com.mediaportal.ampdroid.data.ClientPlugin;
 import com.mediaportal.ampdroid.data.commands.RemoteKey;
 
 public class WifiRemoteMpController implements IClientControlApi {
@@ -282,6 +283,16 @@ public class WifiRemoteMpController implements IClientControlApi {
       writeLine(msgString);      
    }
 
+   @Override
+   public List<ClientPlugin> getPlugins(){
+      
+      return null;
+   }
+   
+   @Override
+   public void openPlugin(ClientPlugin _plugin){
+      
+   }
 
 
 }

@@ -19,6 +19,9 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.HTTP;
 
 import android.util.Log;
@@ -126,8 +129,13 @@ public class JsonClient {
    }
 
    private String executeRequest(HttpUriRequest request, String url) {
-      HttpClient client = new DefaultHttpClient();
-      // client.getParams().s
+      HttpParams httpParameters = new BasicHttpParams();
+      HttpConnectionParams.setConnectionTimeout(httpParameters, 5000);
+      HttpConnectionParams.setSoTimeout(httpParameters, 5000);
+      HttpConnectionParams.setTcpNoDelay(httpParameters, true);
+
+      HttpClient client = new DefaultHttpClient(httpParameters);
+      
       HttpResponse httpResponse;
 
       try {
