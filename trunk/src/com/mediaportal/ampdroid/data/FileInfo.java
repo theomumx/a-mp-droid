@@ -31,13 +31,13 @@ public class FileInfo {
    }
 
    @ColumnProperty(value = "FullPath", type = "text")
-   @JsonProperty("FullPath")
+   @JsonProperty("FullName")
    public void setFullPath(String fileInfo) {
       FullPath = fileInfo;
    }
 
    @ColumnProperty(value = "FullPath", type = "text")
-   @JsonProperty("FullPath")
+   @JsonProperty("FullName")
    public String getFullPath() {
       return FullPath;
    }
@@ -88,18 +88,6 @@ public class FileInfo {
    @JsonProperty("Name")
    public void setName(String name) {
       Name = name;
-   }
-
-   @ColumnProperty(value = "FullName", type = "text")
-   @JsonProperty("FullName")
-   public String getFullName() {
-      return FullName;
-   }
-
-   @ColumnProperty(value = "FullName", type = "text")
-   @JsonProperty("FullName")
-   public void setFullName(String fullName) {
-      FullName = fullName;
    }
 
    @ColumnProperty(value = "LastAccessTime", type = "date")

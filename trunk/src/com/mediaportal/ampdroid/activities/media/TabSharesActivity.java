@@ -102,7 +102,7 @@ public class TabSharesActivity extends Activity {
 
       private boolean checkForValidExt(FileInfo f) {
          for(String e : mCurrentShare.Extensions){
-            if(f.getFullPath().endsWith(e)) return true;
+            if(f.getFullPath() != null && f.getFullPath().endsWith(e)) return true;
          }
          return false;
       }
