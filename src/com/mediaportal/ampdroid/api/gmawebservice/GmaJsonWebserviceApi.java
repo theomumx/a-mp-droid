@@ -51,7 +51,8 @@ public class GmaJsonWebserviceApi implements IMediaAccessApi {
 
    private final String JSON_PREFIX = "http://";
    private final String JSON_SUFFIX = "/GmaWebService/MediaAccessService/json";
-
+   private final String STREAM_SUFFIX = "/GmaWebService/MediaAccessService/stream";
+   
    private JsonClient mJsonClient;
    private ObjectMapper mJsonObjectMapper;
    
@@ -155,6 +156,25 @@ public class GmaJsonWebserviceApi implements IMediaAccessApi {
 
          if (returnObject != null) {
             return new ArrayList<FileInfo>(Arrays.asList(returnObject));
+         } else {
+            Log.d("aMPdroid JSON", "Error parsing result from JSON method " + methodName);
+         }
+      } else {
+         Log.d("aMPdroid JSON", "Error retrieving data for method" + methodName);
+      }
+      return null;
+   }
+   
+   @Override
+   public FileInfo getFileInfo(String _path) {
+      String methodName = "FS_GetFileInfo";
+      String response = mJsonClient.Execute(methodName, JsonUtils.newPair("filepath", _path));
+
+      if (response != null) {
+         FileInfo returnObject = (FileInfo) getObjectsFromJson(response, FileInfo.class);
+
+         if (returnObject != null) {
+            return returnObject;
          } else {
             Log.d("aMPdroid JSON", "Error parsing result from JSON method " + methodName);
          }
@@ -285,7 +305,7 @@ public class GmaJsonWebserviceApi implements IMediaAccessApi {
       URL myFileUrl = null;
       Bitmap bmImg = null;
       try {
-         myFileUrl = new URL(JSON_PREFIX + mServer + ":" + mPort + JSON_SUFFIX
+         myFileUrl = new URL(JSON_PREFIX + mServer + ":" + mPort + STREAM_SUFFIX
                + "/FS_GetImage?path=" + URLEncoder.encode(_url, "UTF-8"));
          HttpURLConnection conn = (HttpURLConnection) myFileUrl.openConnection();
          conn.setDoInput(true);
@@ -309,7 +329,7 @@ public class GmaJsonWebserviceApi implements IMediaAccessApi {
       URL myFileUrl = null;
       Bitmap bmImg = null;
       try {
-         myFileUrl = new URL(JSON_PREFIX + mServer + ":" + mPort + JSON_SUFFIX
+         myFileUrl = new URL(JSON_PREFIX + mServer + ":" + mPort + STREAM_SUFFIX
                + "/FS_GetImageResized?path=" + URLEncoder.encode(_url, "UTF-8") + "&maxWidth="
                + _maxWidth + "&maxHeight=" + _maxHeight);
          HttpURLConnection conn = (HttpURLConnection) myFileUrl.openConnection();
@@ -333,7 +353,7 @@ public class GmaJsonWebserviceApi implements IMediaAccessApi {
    public String getDownloadUri(String _filePath) {
       String fileUrl = null;
       try {
-         fileUrl = JSON_PREFIX + mServer + ":" + mPort + JSON_SUFFIX + "/FS_GetMediaItem?path="
+         fileUrl = JSON_PREFIX + mServer + ":" + mPort + STREAM_SUFFIX + "/FS_GetMediaItem?path="
                + URLEncoder.encode(_filePath, "UTF-8");
       } catch (UnsupportedEncodingException e) {
          e.printStackTrace();

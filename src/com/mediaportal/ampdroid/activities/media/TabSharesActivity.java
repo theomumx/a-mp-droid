@@ -186,11 +186,17 @@ public class TabSharesActivity extends Activity {
                         @Override
                         public void onClick(View _view) {
                            String url = mService.getDownloadUri(selected.getFullPath());
-                           Intent download = new Intent(_view.getContext(),
-                                 ItemDownloaderService.class);
-                           download.putExtra("url", url);
-                           download.putExtra("name", fileName);
-                           startService(download);
+                           FileInfo info = mService.getFileInfo(selected.getFullPath());
+                           if (url != null) {
+                              Intent download = new Intent(_view.getContext(),
+                                    ItemDownloaderService.class);
+                              download.putExtra("url", url);
+                              download.putExtra("name", fileName);
+                              if (info != null) {
+                                 download.putExtra("length", info.getLength());
+                              }
+                              startService(download);
+                           }
                            
                            qa.dismiss();
                         }

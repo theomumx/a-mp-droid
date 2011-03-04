@@ -10,6 +10,8 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -23,6 +25,7 @@ import android.util.Log;
 import android.widget.RemoteViews;
 
 import com.mediaportal.ampdroid.R;
+import com.mediaportal.ampdroid.activities.HomeActivity;
 import com.mediaportal.ampdroid.lists.Utils;
 import com.mediaportal.ampdroid.utils.DownloaderUtils;
 import com.mediaportal.ampdroid.utils.Util;
@@ -41,6 +44,7 @@ public class ItemDownloaderService extends Service {
       private int mId;
       private String mName;
       private String mUrl;
+      private long mLength;
 
       public int getId() {
          return mId;
@@ -52,6 +56,14 @@ public class ItemDownloaderService extends Service {
 
       public String getName() {
          return mName;
+      }
+
+      public String getShortenedName() {
+         String name = mName;
+         if (name.length() > 30) {
+            name = name.substring(name.length() - 30);
+         }
+         return name;
       }
 
       public void setName(String _name) {
@@ -66,10 +78,19 @@ public class ItemDownloaderService extends Service {
          this.mUrl = _url;
       }
 
-      private DownloadJob(int _id, String _name, String _url) {
+      private DownloadJob(int _id, String _name, String _url, long _length) {
          mId = _id;
          mName = _name;
          mUrl = _url;
+         setLength(_length);
+      }
+
+      public void setLength(long length) {
+         mLength = length;
+      }
+
+      public long getLength() {
+         return mLength;
       }
    }
 
@@ -113,9 +134,16 @@ public class ItemDownloaderService extends Service {
             URL myFileUrl = new URL(_job.getUrl());
             String myFileName = _job.getName();
 
+            Intent homeIntent = new Intent(getApplicationContext(), HomeActivity.class);
+            
             // configure the intent
             PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0,
-                  mIntent, 0);
+                  homeIntent, 0);
+
+            // This is who should be launched if the user selects the app icon
+            // in the notification.
+            // Intent appIntent = new Intent(getApplicationContext(),
+            // HomeActivity.class);
 
             // configure the notification
             mNotification = new Notification(R.drawable.quickaction_sdcard, "Download",
@@ -133,9 +161,13 @@ public class ItemDownloaderService extends Service {
             mNotificationManager.notify(NOTIFICATION_ID, mNotification);
 
             HttpURLConnection conn = (HttpURLConnection) myFileUrl.openConnection();
+            Map<String, List<String>> headers2 = conn.getRequestProperties();
+
             conn.setDoInput(true);
             conn.connect();
+
             InputStream inputStream = conn.getInputStream();
+            Map<String, List<String>> headers = conn.getHeaderFields();
 
             File downloadFile = new File(DownloaderUtils.getBaseDirectory() + "/" + myFileName);
             File donwloadDir = new File(Utils.getFolder(downloadFile.toString(), "/"));
@@ -148,7 +180,10 @@ public class ItemDownloaderService extends Service {
 
             OutputStream out = new FileOutputStream(downloadFile);
             byte buf[] = new byte[1024];
-            int fileSize = conn.getContentLength();
+            long fileSize = conn.getContentLength();
+            if (fileSize == -1) {
+               fileSize = _job.getLength();
+            }
             long read = 0;
             int currentProgress = 0;
             int len;
@@ -169,16 +204,18 @@ public class ItemDownloaderService extends Service {
             return true;
          } catch (MalformedURLException e) {
             e.printStackTrace();
-            //Util.showToast(mContext, e.toString());
+            // Util.showToast(mContext, e.toString());
          } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
-            //Util.showToast(mContext, e.toString());
+            // Util.showToast(mContext, e.toString());
          } catch (IOException e) {
             e.printStackTrace();
-            //Util.showToast(mContext, e.toString());
+            // Util.showToast(mContext, e.toString());
          } catch (Exception e) {
-            e.printStackTrace();
-            //Util.showToast(mContext, e.toString());
+            if (e != null) {
+               e.printStackTrace();
+            }
+            // Util.showToast(mContext, e.toString());
          }
 
          return false;
@@ -186,11 +223,18 @@ public class ItemDownloaderService extends Service {
 
       private void createNotificationText(int _progress) {
          int totalDownloads = mNumberOfJobs + mDownloadJobs.size();
-         String text = "Donwload "
-               + Utils.getFileNameWithExtension(mCurrentJob.getName(), "/")
-               + (mDownloadJobs.size() > 0 ? " (" + mNumberOfJobs + "/" + totalDownloads + ")" : "");
-         mNotification.contentView.setTextViewText(R.id.status_text, text);
-         mNotification.contentView.setProgressBar(R.id.status_progress, 100, _progress, false);
+         String filename = Utils.getFileNameWithExtension(mCurrentJob.getName(), "/");
+         String overview = (mDownloadJobs.size() > 0 ? mNumberOfJobs + "/" + totalDownloads
+               : "1 File");
+         String progressText = _progress + " %";
+
+         mNotification.contentView.setTextViewText(R.id.TextViewNotificationFileName, filename);
+         mNotification.contentView.setTextViewText(R.id.TextViewNotificationOverview, overview);
+
+         mNotification.contentView.setTextViewText(R.id.TextViewNotificationProgressText,
+               progressText);
+         mNotification.contentView.setProgressBar(R.id.ProgressBarNotificationTransferStatus, 100,
+               _progress, false);
 
       }
 
@@ -248,9 +292,10 @@ public class ItemDownloaderService extends Service {
       String url = intent.getStringExtra("url");
       String fName = intent.getStringExtra("name");
       String displayName = intent.getStringExtra("display_name");
+      long length = intent.getLongExtra("length", 0);
 
       synchronized (mDownloadJobs) {
-         mDownloadJobs.add(new DownloadJob(0, fName, url));
+         mDownloadJobs.add(new DownloadJob(0, fName, url, length));
          if (displayName != null) {
             Util.showToast(this, "Added " + displayName + " to download list");
          } else {
