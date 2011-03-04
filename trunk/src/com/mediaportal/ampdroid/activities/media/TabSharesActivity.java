@@ -191,6 +191,8 @@ public class TabSharesActivity extends Activity {
                            download.putExtra("url", url);
                            download.putExtra("name", fileName);
                            startService(download);
+                           
+                           qa.dismiss();
                         }
                      });
                      qa.addActionItem(sdCardAction);
@@ -201,11 +203,13 @@ public class TabSharesActivity extends Activity {
 
                      playOnClientAction.setTitle("Play on Client");
                      playOnClientAction.setIcon(getResources().getDrawable(
-                           R.drawable.quickaction_sdcard));
+                           R.drawable.quickaction_play_device));
                      playOnClientAction.setOnClickListener(new OnClickListener() {
                         @Override
                         public void onClick(View _view) {
                            mService.playFileOnClient(selected.getFullPath());
+                           
+                           qa.dismiss();
                         }
                      });
                      qa.addActionItem(playOnClientAction);

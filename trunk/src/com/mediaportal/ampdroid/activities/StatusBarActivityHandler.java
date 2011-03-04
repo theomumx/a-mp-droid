@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
 import android.view.View.OnTouchListener;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
@@ -65,6 +66,14 @@ public class StatusBarActivityHandler {
             }
 
          });
+         
+         mPauseButton.setOnLongClickListener(new OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+               sendRemoteKey(RemoteCommands.stopButton);
+               return true;
+            }
+         });
       }
 
       if (mPrevButton != null) {
@@ -98,7 +107,7 @@ public class StatusBarActivityHandler {
          mRemoteButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View _view) {
-               Util.Vibrate(_view.getContext(), 50);
+               //Util.Vibrate(_view.getContext(), 50);
                if (!mParent.getClass().equals(RemoteControlActivity.class)) {
                   Intent myIntent = new Intent(_view.getContext(), RemoteControlActivity.class);
                   mParent.startActivity(myIntent);

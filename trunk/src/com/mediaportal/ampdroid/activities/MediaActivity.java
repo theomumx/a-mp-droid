@@ -16,7 +16,7 @@ import com.mediaportal.ampdroid.activities.actionbar.ActionBar;
 import com.mediaportal.ampdroid.activities.media.TabMoviesActivityGroup;
 import com.mediaportal.ampdroid.activities.media.TabSeriesActivityGroup;
 import com.mediaportal.ampdroid.activities.media.TabSharesActivity;
-import com.mediaportal.ampdroid.activities.media.TabVideosActivity;
+import com.mediaportal.ampdroid.activities.media.TabVideosActivityGroup;
 import com.mediaportal.ampdroid.api.DataHandler;
 import com.mediaportal.ampdroid.data.SupportedFunctions;
 
@@ -54,7 +54,7 @@ public class MediaActivity extends BaseTabActivity {
 
             TabSpec videosTabSpec = mTabHost.newTabSpec("tid1");
             videosTabSpec.setIndicator(createTabView(this, "Videos"));
-            videosTabSpec.setContent(new Intent(this, TabVideosActivity.class));
+            videosTabSpec.setContent(new Intent(this, TabVideosActivityGroup.class));
             mTabHost.addTab(videosTabSpec);
          }
 

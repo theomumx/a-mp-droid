@@ -1,185 +1,296 @@
 package com.mediaportal.ampdroid.activities.media;
 
-import java.util.ArrayList;
+import java.io.File;
 import java.util.List;
 
 import android.app.Activity;
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Bitmap.Config;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.LinearGradient;
-import android.graphics.Matrix;
-import android.graphics.Paint;
-import android.graphics.PorterDuff.Mode;
-import android.graphics.PorterDuffXfermode;
-import android.graphics.Shader.TileMode;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.MenuItem.OnMenuItemClickListener;
+import android.view.SubMenu;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.ImageView;
+import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.ListView;
 
-import com.mediaportal.ampdroid.api.DataHandler;
-import com.mediaportal.ampdroid.data.Series;
-import com.mediaportal.ampdroid.lists.CoverFlow;
 import com.mediaportal.ampdroid.R;
-public class TabVideosActivity extends Activity {
-   public class ImageAdapter extends BaseAdapter {
-      int mGalleryItemBackground;
-      private Context mContext;
-      private List<Bitmap> mMoviePosters = new ArrayList<Bitmap>();
-      private ImageView[] mImages;
+import com.mediaportal.ampdroid.activities.BaseTabActivity;
+import com.mediaportal.ampdroid.activities.StatusBarActivityHandler;
+import com.mediaportal.ampdroid.api.DataHandler;
+import com.mediaportal.ampdroid.api.ItemDownloaderService;
+import com.mediaportal.ampdroid.data.Movie;
+import com.mediaportal.ampdroid.lists.ILoadingAdapterItem;
+import com.mediaportal.ampdroid.lists.LazyLoadingAdapter;
+import com.mediaportal.ampdroid.lists.LazyLoadingAdapter.ILoadingListener;
+import com.mediaportal.ampdroid.lists.Utils;
+import com.mediaportal.ampdroid.lists.views.MoviePosterViewAdapterItem;
+import com.mediaportal.ampdroid.lists.views.MovieTextViewAdapterItem;
+import com.mediaportal.ampdroid.lists.views.MovieThumbViewAdapterItem;
+import com.mediaportal.ampdroid.lists.views.ViewTypes;
+import com.mediaportal.ampdroid.quickactions.ActionItem;
+import com.mediaportal.ampdroid.quickactions.QuickAction;
+import com.mediaportal.ampdroid.utils.DownloaderUtils;
+import com.mediaportal.ampdroid.utils.Util;
 
-      public ImageAdapter(Context _context) {
-         mContext = _context;
-         DataHandler service = DataHandler.getCurrentRemoteInstance();
-         List<Series> series = service.getAllSeries();
+public class TabVideosActivity extends Activity implements ILoadingListener {
+   private ListView mListView;
+   private LazyLoadingAdapter mAdapter;
+   DataHandler mService;
+   private LoadVideosTask mVideosLoaderTask;
+   private int mVideosLoaded = 0;
+   private BaseTabActivity mBaseActivity;
+   private StatusBarActivityHandler mStatusBarHandler;
 
-         for (Series s : series) {
-            Bitmap bmImg = service.getImage(s.getCurrentPosterUrl(), 150, 300);
+   private class LoadVideosTask extends AsyncTask<Integer, List<Movie>, Boolean> {
+      @SuppressWarnings("unchecked")
+      @Override
+      protected Boolean doInBackground(Integer... _params) {
+         int loadItems = mVideosLoaded + _params[0];
+         int videosCount = mService.getVideosCount();
 
-            if (bmImg != null) {
-               mMoviePosters.add(bmImg);
+         while (mVideosLoaded < loadItems && mVideosLoaded < videosCount) {
+            List<Movie> videos = mService.getVideos(mVideosLoaded, mVideosLoaded + 4);
+            publishProgress(videos);
+            if (videos == null) {
+               break;
             }
-            else{
-               mMoviePosters.add(BitmapFactory.decodeResource(getResources(), R.drawable.mplogo));
-            }
+            mVideosLoaded += 5;
          }
 
-         mImages = new ImageView[series.size()];
-      }
-
-      public boolean createReflectedImages() {
-         // The gap we want between the reflection and the original image
-         final int reflectionGap = 4;
-
-         int index = 0;
-         for (Bitmap originalImage : mMoviePosters) {
-            // Bitmap originalImage =
-            // BitmapFactory.decodeResource(getResources(), imageId);
-            if (originalImage != null) {
-               int width = originalImage.getWidth();
-               int height = originalImage.getHeight();
-
-               // This will not scale but will flip on the Y axis
-               Matrix matrix = new Matrix();
-               matrix.preScale(1, -1);
-
-               // Create a Bitmap with the flip matrix applied to it.
-               // We only want the bottom half of the image
-               Bitmap reflectionImage = Bitmap.createBitmap(originalImage, 0, height / 2, width,
-                     height / 2, matrix, false);
-
-               // Create a new bitmap with same width but taller to fit
-               // reflection
-               Bitmap bitmapWithReflection = Bitmap.createBitmap(width, (height + height / 2),
-                     Config.ARGB_8888);
-
-               // Create a new Canvas with the bitmap that's big enough for
-               // the image plus gap plus reflection
-               Canvas canvas = new Canvas(bitmapWithReflection);
-               // Draw in the original image
-               canvas.drawBitmap(originalImage, 0, 0, null);
-               // Draw in the gap
-               Paint deafaultPaint = new Paint();
-               canvas.drawRect(0, height, width, height + reflectionGap, deafaultPaint);
-               // Draw in the reflection
-               canvas.drawBitmap(reflectionImage, 0, height + reflectionGap, null);
-
-               // Create a shader that is a linear gradient that covers the
-               // reflection
-               Paint paint = new Paint();
-               LinearGradient shader = new LinearGradient(0, originalImage.getHeight(), 0,
-                     bitmapWithReflection.getHeight() + reflectionGap, 0x70ffffff, 0x00ffffff,
-                     TileMode.CLAMP);
-               // Set the paint to use this shader (linear gradient)
-               paint.setShader(shader);
-               // Set the Transfer mode to be porter duff and destination in
-               paint.setXfermode(new PorterDuffXfermode(Mode.DST_IN));
-               // Draw a rectangle using the paint with our linear gradient
-               canvas.drawRect(0, height, width, bitmapWithReflection.getHeight() + reflectionGap,
-                     paint);
-
-               ImageView imageView = new ImageView(mContext);
-               imageView.setImageBitmap(bitmapWithReflection);
-               imageView.setLayoutParams(new CoverFlow.LayoutParams(130, 130));
-               imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-               mImages[index++] = imageView;
-            }
+         if (mVideosLoaded < videosCount) {
+            return false;// not yet finished;
+         } else {
+            return true;// finished
          }
-         return true;
-      }
-
-      public int getCount() {
-         return mMoviePosters.size();
-      }
-
-      public Object getItem(int _position) {
-         return _position;
-      }
-
-      public long getItemId(int _position) {
-         return _position;
-      }
-
-      public View getView(int _position, View _convertView, ViewGroup _parent) {
 
          /*
-          * // Use this code if you want to load from resources ImageView i =
-          * new ImageView(mContext);
+          * List<Movie> series = mService.getAllMovies();
+          * publishProgress(series);
           * 
-          * i.setImageBitmap(moviePosters.get(position)); i.setLayoutParams(new
-          * CoverFlow.LayoutParams(130, 130));
-          * i.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-          * 
-          * // Make sure we set anti-aliasing otherwise we get jaggies
-          * BitmapDrawable drawable = (BitmapDrawable) i.getDrawable();
-          * drawable.setAntiAlias(true); return i;
+          * return true;
           */
-
-         return mImages[_position];
       }
 
-      /**
-       * Returns the size (0.0f to 1.0f) of the views depending on the 'offset'
-       * to the center.
-       */
-      public float getScale(boolean _focused, int _offset) {
-         /* Formula: 1 / (2 ^ offset) */
-         return Math.max(0, 1.0f / (float) Math.pow(2, Math.abs(_offset)));
+      @Override
+      protected void onProgressUpdate(List<Movie>... values) {
+         if (values != null) {
+            List<Movie> movies = values[0];
+            if (movies != null) {
+               for (Movie m : movies) {
+                  mAdapter.addItem(ViewTypes.TextView.ordinal(), new MovieTextViewAdapterItem(m));
+                  mAdapter.addItem(ViewTypes.PosterView.ordinal(),
+                        new MoviePosterViewAdapterItem(m));
+                  mAdapter.addItem(ViewTypes.ThumbView.ordinal(), new MovieThumbViewAdapterItem(m));
+               }
+            } else {
+               mAdapter.setLoadingText("Loading failed, check your connection");
+            }
+         }
+         mAdapter.notifyDataSetChanged();
+         super.onProgressUpdate(values);
       }
 
+      @Override
+      protected void onPostExecute(Boolean _result) {
+         if (_result) {
+            mAdapter.showLoadingItem(false);
+            mAdapter.notifyDataSetChanged();
+         }
+         mVideosLoaderTask = null;
+      }
    }
 
    /** Called when the activity is first created. */
    @Override
    public void onCreate(Bundle _savedInstanceState) {
       super.onCreate(_savedInstanceState);
-      setContentView(R.layout.tabvideosactivity);
+      setContentView(R.layout.tabmoviesactivity);
 
-      // Gallery3D gall3d = new Gallery3D(this);
-      // gall3d.setAdapter(new ImageAdapter(this));
-      // setContentView(gall3d);
+      mBaseActivity = (BaseTabActivity) getParent().getParent();
 
-      /*CoverFlow coverFlow;
-      coverFlow = new CoverFlow(this);
+      mService = DataHandler.getCurrentRemoteInstance();
 
-      // coverFlow.setAdapter(new ImageAdapter(this));
+      if (mBaseActivity != null && mService != null) {
+         mStatusBarHandler = new StatusBarActivityHandler(mBaseActivity, mService);
+         mStatusBarHandler.setHome(false);
+      }
 
-      ImageAdapter coverImageAdapter = new ImageAdapter(this);
+      mAdapter = new LazyLoadingAdapter(this);
+      mAdapter.addView(ViewTypes.TextView.ordinal());
+      mAdapter.addView(ViewTypes.PosterView.ordinal());
+      mAdapter.addView(ViewTypes.ThumbView.ordinal());
+      mAdapter.setView(ViewTypes.PosterView.ordinal());
 
-      coverImageAdapter.createReflectedImages();
+      mAdapter.setLoadingListener(this);
 
-      coverFlow.setAdapter(coverImageAdapter);
+      mListView = (ListView) findViewById(R.id.ListViewVideos);
+      mListView.setAdapter(mAdapter);
 
-      coverFlow.setSpacing(-60);
-      coverFlow.setSelection(4, true);
-      coverFlow.setAnimationDuration(100);
-      // /coverFlow.setAnimat
+      mListView.setOnItemClickListener(new OnItemClickListener() {
+         @Override
+         public void onItemClick(AdapterView<?> a, View v, int position, long id) {
+            Movie selectedMovie = (Movie) ((ILoadingAdapterItem) mListView
+                  .getItemAtPosition(position)).getItem();
 
-      setContentView(coverFlow);*/
+            Intent myIntent = new Intent(v.getContext(), TabVideoDetailsActivity.class);
+            myIntent.putExtra("video_id", selectedMovie.getId());
+            myIntent.putExtra("video_name", selectedMovie.getName());
 
+            myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+            // Create the view using FirstGroup's LocalActivityManager
+            View view = TabVideosActivityGroup.getGroup().getLocalActivityManager()
+                  .startActivity("video_details", myIntent).getDecorView();
+
+            // Again, replace the view
+            TabVideosActivityGroup.getGroup().replaceView(view);
+
+         }
+      });
+
+      mListView.setOnItemLongClickListener(new OnItemLongClickListener() {
+         @Override
+         public boolean onItemLongClick(AdapterView<?> _item, View _view, final int _position,
+               long _id) {
+            try {
+               Movie selected = (Movie) ((ILoadingAdapterItem) _item.getItemAtPosition(_position))
+                     .getItem();
+               // EpisodeDetails details = mService.getEpisode(mSeriesId,
+               // selected.getId());
+               final String movieFile = selected.getFilename();
+               if (movieFile != null) {
+                  String dirName = DownloaderUtils.getMoviePath(selected);
+                  final String fileName = dirName + Utils.getFileNameWithExtension(movieFile, "\\");
+
+                  final QuickAction qa = new QuickAction(_view);
+
+                  final File localFileName = new File(DownloaderUtils.getBaseDirectory() + "/"
+                        + fileName);
+
+                  if (localFileName.exists()) {
+                     ActionItem playItemAction = new ActionItem();
+
+                     playItemAction.setTitle("Play video");
+                     playItemAction
+                           .setIcon(getResources().getDrawable(R.drawable.quickaction_play));
+                     playItemAction.setOnClickListener(new OnClickListener() {
+                        @Override
+                        public void onClick(View _view) {
+                           Intent playIntent = new Intent(Intent.ACTION_VIEW);
+                           playIntent.setDataAndType(Uri.parse(localFileName.toString()), "video/*");
+                           startActivity(playIntent);
+
+                           qa.dismiss();
+                        }
+                     });
+
+                     qa.addActionItem(playItemAction);
+                  } else {
+                     ActionItem sdCardAction = new ActionItem();
+                     sdCardAction.setTitle("Download to sd card");
+                     sdCardAction
+                           .setIcon(getResources().getDrawable(R.drawable.quickaction_sdcard));
+                     sdCardAction.setOnClickListener(new OnClickListener() {
+                        @Override
+                        public void onClick(View _view) {
+                           String url = mService.getDownloadUri(movieFile);
+                           Intent download = new Intent(_view.getContext(),
+                                 ItemDownloaderService.class);
+                           download.putExtra("url", url);
+                           download.putExtra("name", fileName);
+                           startService(download);
+                        }
+                     });
+                     qa.addActionItem(sdCardAction);
+                  }
+
+                  if (mService.isClientControlConnected()) {
+                     ActionItem playOnClientAction = new ActionItem();
+
+                     playOnClientAction.setTitle("Play on Client");
+                     playOnClientAction.setIcon(getResources().getDrawable(
+                           R.drawable.quickaction_play_device));
+                     playOnClientAction.setOnClickListener(new OnClickListener() {
+                        @Override
+                        public void onClick(View _view) {
+                           mService.playFileOnClient(movieFile);
+                        }
+                     });
+                     qa.addActionItem(playOnClientAction);
+                  }
+
+                  qa.setAnimStyle(QuickAction.ANIM_AUTO);
+
+                  qa.show();
+               } else {
+                  Util.showToast(_view.getContext(), "No local file available for this movie");
+               }
+               return true;
+            } catch (Exception ex) {
+               return false;
+            }
+         }
+      });
+
+      mAdapter.setLoadingText("Loading Videos ...");
+      mAdapter.showLoadingItem(true);
+      loadFurtherMovieItems();
+   }
+
+   @Override
+   public void EndOfListReached() {
+      loadFurtherMovieItems();
+   }
+
+   private void loadFurtherMovieItems() {
+      if (mVideosLoaderTask == null) {
+         mVideosLoaderTask = new LoadVideosTask();
+         mVideosLoaderTask.execute(20);
+      }
+   }
+
+   @Override
+   public boolean onCreateOptionsMenu(Menu _menu) {
+      super.onCreateOptionsMenu(_menu);
+      SubMenu viewItem = _menu.addSubMenu(0, Menu.FIRST + 1, Menu.NONE, "Views");
+
+      MenuItem textSettingsItem = viewItem.add(0, Menu.FIRST + 1, Menu.NONE, "Text");
+      MenuItem posterSettingsItem = viewItem.add(0, Menu.FIRST + 2, Menu.NONE, "Poster");
+      MenuItem thumbsSettingsItem = viewItem.add(0, Menu.FIRST + 3, Menu.NONE, "Thumbs");
+
+      textSettingsItem.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+         @Override
+         public boolean onMenuItemClick(MenuItem item) {
+            mAdapter.setView(ViewTypes.TextView.ordinal());
+            mAdapter.notifyDataSetInvalidated();
+            return true;
+         }
+      });
+
+      posterSettingsItem.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+         @Override
+         public boolean onMenuItemClick(MenuItem item) {
+            mAdapter.setView(ViewTypes.PosterView.ordinal());
+            mAdapter.notifyDataSetInvalidated();
+            return true;
+         }
+      });
+
+      thumbsSettingsItem.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+         @Override
+         public boolean onMenuItemClick(MenuItem item) {
+            mAdapter.setView(ViewTypes.ThumbView.ordinal());
+            mAdapter.notifyDataSetInvalidated();
+            return true;
+         }
+      });
+
+      return true;
    }
 }
