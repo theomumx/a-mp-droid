@@ -21,6 +21,7 @@ import android.widget.TextView;
 import com.mediaportal.ampdroid.R;
 import com.mediaportal.ampdroid.api.DataHandler;
 import com.mediaportal.ampdroid.api.ItemDownloaderService;
+import com.mediaportal.ampdroid.data.FileInfo;
 import com.mediaportal.ampdroid.data.SeriesEpisode;
 import com.mediaportal.ampdroid.lists.ILoadingAdapterItem;
 import com.mediaportal.ampdroid.lists.LazyLoadingAdapter;
@@ -44,22 +45,22 @@ public class TabEpisodesActivity extends Activity {
    private LoadEpisodesTask mEpisodesLoaderTask;
    private TextView mTextViewSeriesName;
    private TextView mTextViewSeason;
-   
+
    private class LoadEpisodesTask extends AsyncTask<Integer, List<SeriesEpisode>, Boolean> {
       @SuppressWarnings("unchecked")
       @Override
       protected Boolean doInBackground(Integer... _params) {
-         /*int seriesCount = mService.getEpisodesCountForSeason(mSeriesId, mSeasonNumber);
+         /*
+          * int seriesCount = mService.getEpisodesCountForSeason(mSeriesId,
+          * mSeasonNumber);
+          * 
+          * int cursor = 0; while (cursor < seriesCount) { List<SeriesEpisode>
+          * episodes = mService.getEpisodesForSeason(mSeriesId, mSeasonNumber,
+          * cursor, cursor + 4); publishProgress(episodes);
+          * 
+          * cursor += 5; }
+          */
 
-         int cursor = 0;
-         while (cursor < seriesCount) {
-            List<SeriesEpisode> episodes = mService.getEpisodesForSeason(mSeriesId,
-                  mSeasonNumber, cursor, cursor + 4);
-            publishProgress(episodes);
-
-            cursor += 5;
-         }*/
-         
          List<SeriesEpisode> episodes = mService.getAllEpisodesForSeason(mSeriesId, mSeasonNumber);
          publishProgress(episodes);
          return true;
@@ -91,8 +92,8 @@ public class TabEpisodesActivity extends Activity {
       super.onCreate(_savedInstanceState);
       setContentView(R.layout.tabepisodesactivity);
       mListView = (ListView) findViewById(R.id.ListView);
-      mTextViewSeriesName = (TextView)findViewById(R.id.TextViewSeriesName);
-      mTextViewSeason = (TextView)findViewById(R.id.TextViewSeason);
+      mTextViewSeriesName = (TextView) findViewById(R.id.TextViewSeriesName);
+      mTextViewSeason = (TextView) findViewById(R.id.TextViewSeason);
       mMediaPlayer = new MediaPlayer();
 
       Bundle extras = getIntent().getExtras();
@@ -117,27 +118,27 @@ public class TabEpisodesActivity extends Activity {
       mListView.setOnItemClickListener(new OnItemClickListener() {
          @Override
          public void onItemClick(AdapterView<?> _item, View _view, int _position, long _id) {
-             Object obj = _item.getItemAtPosition(_position);
-             ILoadingAdapterItem selectedItem = (ILoadingAdapterItem) obj;
-             SeriesEpisode selectedEp = (SeriesEpisode)selectedItem.getItem();
-             
-             Intent myIntent = new Intent(_view.getContext(), TabEpisodeDetailsActivity.class);
-             myIntent.putExtra("series_id", mSeriesId);
-             myIntent.putExtra("series_name", mSeriesName);
-             myIntent.putExtra("episode_id", selectedEp.getId());
-             myIntent.putExtra("episode_name", selectedEp.getName());
-             myIntent.putExtra("episode_season", selectedEp.getSeasonNumber());
-             myIntent.putExtra("episode_nr", selectedEp.getEpisodeNumber());
-             myIntent.putExtra("episode_banner", selectedEp.getBannerUrl());
-             
-             myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            Object obj = _item.getItemAtPosition(_position);
+            ILoadingAdapterItem selectedItem = (ILoadingAdapterItem) obj;
+            SeriesEpisode selectedEp = (SeriesEpisode) selectedItem.getItem();
 
-             // Create the view using FirstGroup's LocalActivityManager
-             View view = TabSeriesActivityGroup.getGroup().getLocalActivityManager()
-                   .startActivity("episode_details", myIntent).getDecorView();
+            Intent myIntent = new Intent(_view.getContext(), TabEpisodeDetailsActivity.class);
+            myIntent.putExtra("series_id", mSeriesId);
+            myIntent.putExtra("series_name", mSeriesName);
+            myIntent.putExtra("episode_id", selectedEp.getId());
+            myIntent.putExtra("episode_name", selectedEp.getName());
+            myIntent.putExtra("episode_season", selectedEp.getSeasonNumber());
+            myIntent.putExtra("episode_nr", selectedEp.getEpisodeNumber());
+            myIntent.putExtra("episode_banner", selectedEp.getBannerUrl());
 
-             // Again, replace the view
-             TabSeriesActivityGroup.getGroup().replaceView(view);
+            myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+            // Create the view using FirstGroup's LocalActivityManager
+            View view = TabSeriesActivityGroup.getGroup().getLocalActivityManager()
+                  .startActivity("episode_details", myIntent).getDecorView();
+
+            // Again, replace the view
+            TabSeriesActivityGroup.getGroup().replaceView(view);
          }
       });
 
@@ -148,16 +149,15 @@ public class TabEpisodesActivity extends Activity {
             try {
                SeriesEpisode selected = (SeriesEpisode) ((ILoadingAdapterItem) _item
                      .getItemAtPosition(_position)).getItem();
-               //EpisodeDetails details = mService.getEpisode(mSeriesId, selected.getId());
+               // EpisodeDetails details = mService.getEpisode(mSeriesId,
+               // selected.getId());
                final String epFile = selected.getFileName();
                if (epFile != null) {
                   String dirName = DownloaderUtils.getTvEpisodePath(mSeriesName, selected);
-                  final String fileName = dirName
-                        + Utils.getFileNameWithExtension(epFile, "\\");
+                  final String fileName = dirName + Utils.getFileNameWithExtension(epFile, "\\");
 
                   final QuickAction qa = new QuickAction(_view);
-                  
-                  
+
                   final File localFileName = new File(DownloaderUtils.getBaseDirectory() + "/"
                         + fileName);
 
@@ -165,8 +165,8 @@ public class TabEpisodesActivity extends Activity {
                      ActionItem playItemAction = new ActionItem();
 
                      playItemAction.setTitle("Play episode");
-                     playItemAction.setIcon(getResources().getDrawable(
-                           R.drawable.quickaction_play));
+                     playItemAction
+                           .setIcon(getResources().getDrawable(R.drawable.quickaction_play));
                      playItemAction.setOnClickListener(new OnClickListener() {
                         @Override
                         public void onClick(View _view) {
@@ -179,26 +179,34 @@ public class TabEpisodesActivity extends Activity {
                      });
 
                      qa.addActionItem(playItemAction);
-                  }
-                  else{
+                  } else {
                      ActionItem sdCardAction = new ActionItem();
                      sdCardAction.setTitle("Download to sd card");
-                     sdCardAction.setIcon(getResources().getDrawable(R.drawable.quickaction_sdcard));
+                     sdCardAction
+                           .setIcon(getResources().getDrawable(R.drawable.quickaction_sdcard));
                      sdCardAction.setOnClickListener(new OnClickListener() {
                         @Override
                         public void onClick(View _view) {
                            String url = mService.getDownloadUri(epFile);
-                           Intent download = new Intent(_view.getContext(),
-                                 ItemDownloaderService.class);
-                           download.putExtra("url", url);
-                           download.putExtra("name", fileName);
-                           startService(download);
+                           FileInfo info = mService.getFileInfo(epFile);
+                           if (url != null) {
+                              Intent download = new Intent(_view.getContext(),
+                                    ItemDownloaderService.class);
+                              download.putExtra("url", url);
+                              download.putExtra("name", fileName);
+                              if (info != null) {
+                                 download.putExtra("length", info.getLength());
+                              }
+                              startService(download);
+                              
+                              qa.dismiss();
+                           }
                         }
                      });
                      qa.addActionItem(sdCardAction);
                   }
-                  
-                  if(mService.isClientControlConnected()){
+
+                  if (mService.isClientControlConnected()) {
                      ActionItem playOnClientAction = new ActionItem();
 
                      playOnClientAction.setTitle("Play on Client");
@@ -208,6 +216,8 @@ public class TabEpisodesActivity extends Activity {
                         @Override
                         public void onClick(View _view) {
                            mService.playFileOnClient(epFile);
+                           
+                           qa.dismiss();
                         }
                      });
                      qa.addActionItem(playOnClientAction);

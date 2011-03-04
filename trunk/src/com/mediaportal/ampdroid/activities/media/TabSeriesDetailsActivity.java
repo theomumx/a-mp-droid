@@ -5,8 +5,10 @@ import java.util.Date;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
@@ -16,6 +18,7 @@ import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
 import android.view.View.OnTouchListener;
 import android.widget.Button;
 import android.widget.Gallery;
@@ -25,14 +28,23 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.mediaportal.ampdroid.R;
+import com.mediaportal.ampdroid.activities.BaseTabActivity;
+import com.mediaportal.ampdroid.activities.TvServerOverviewActivity;
 import com.mediaportal.ampdroid.api.DataHandler;
+import com.mediaportal.ampdroid.api.ItemDownloaderService;
+import com.mediaportal.ampdroid.data.FileInfo;
 import com.mediaportal.ampdroid.data.Movie;
+import com.mediaportal.ampdroid.data.SeriesEpisode;
 import com.mediaportal.ampdroid.data.SeriesFull;
 import com.mediaportal.ampdroid.data.SeriesSeason;
 import com.mediaportal.ampdroid.lists.ImageHandler;
 import com.mediaportal.ampdroid.lists.LazyLoadingGalleryAdapter;
 import com.mediaportal.ampdroid.lists.LazyLoadingImage;
 import com.mediaportal.ampdroid.lists.Utils;
+import com.mediaportal.ampdroid.quickactions.ActionItem;
+import com.mediaportal.ampdroid.quickactions.QuickAction;
+import com.mediaportal.ampdroid.utils.DownloaderUtils;
+import com.mediaportal.ampdroid.utils.Util;
 
 public class TabSeriesDetailsActivity extends Activity {
    private LazyLoadingGalleryAdapter mAdapter;
@@ -52,8 +64,60 @@ public class TabSeriesDetailsActivity extends Activity {
    private ImageHandler mImageHandler;
    private LoadSeriesDetailsTask mLoadSeriesTask;
    private LoadSeasonsDetailsTask mLoadSeasonTask;
+   private DownloadSeasonTask mSeasonDownloaderTask;
    private DataHandler mService;
    private ProgressDialog mLoadingDialog;
+   private BaseTabActivity mBaseActivity;
+
+   private class DownloadSeasonTask extends AsyncTask<SeriesSeason, Intent, Boolean> {
+      private Context mContext;
+
+      private DownloadSeasonTask(Context _context) {
+         mContext = _context;
+      }
+
+      @Override
+      protected Boolean doInBackground(SeriesSeason... _params) {
+         SeriesSeason season = _params[0];
+
+         for (int i = 0; i < season.getEpisodesCount(); i++) {
+            List<SeriesEpisode> episodes = mService.getEpisodesForSeason(mSeriesId,
+                  season.getSeasonNumber(), i, i + 1);
+            SeriesEpisode ep = episodes.get(0);
+            String epFile = ep.getFileName();
+            
+            String url = mService.getDownloadUri(epFile);
+            FileInfo info = mService.getFileInfo(epFile);
+            String dirName = DownloaderUtils.getTvEpisodePath(mSeries.getPrettyName(), ep);
+            final String fileName = dirName + Utils.getFileNameWithExtension(epFile, "\\");
+
+            Intent download = new Intent(mContext, ItemDownloaderService.class);
+            download.putExtra("url", url);
+            download.putExtra("name", fileName);
+            if (info != null) {
+               download.putExtra("length", info.getLength());
+            }
+
+            publishProgress(download);
+         }
+
+         return true;
+      }
+
+      @Override
+      protected void onProgressUpdate(Intent... values) {
+         Intent donwloadIntent = values[0];
+         if (donwloadIntent != null) {
+            startService(donwloadIntent);
+         }
+         super.onProgressUpdate(values);
+      }
+
+      @Override
+      protected void onPostExecute(Boolean _result) {
+
+      }
+   }
 
    private class LoadSeriesDetailsTask extends AsyncTask<Integer, List<Movie>, SeriesFull> {
       Activity mContext;
@@ -122,17 +186,17 @@ public class TabSeriesDetailsActivity extends Activity {
             Dialog diag = new Dialog(getParent());
             diag.setTitle(" Couldn't load series ");
             diag.setCancelable(true);
-            
+
             diag.show();
             diag.setOnDismissListener(new OnDismissListener() {
                @Override
                public void onDismiss(DialogInterface dialog) {
                   mContext.finish();
-                  
+
                }
             });
          }
-         
+
          mLoadSeasonTask = new LoadSeasonsDetailsTask(mContext);
          mLoadSeasonTask.execute(mSeriesId);
       }
@@ -214,6 +278,84 @@ public class TabSeriesDetailsActivity extends Activity {
                   }
                });
 
+               view.setOnLongClickListener(new OnLongClickListener() {
+                  @Override
+                  public boolean onLongClick(View _view) {
+                     try {
+                        final SeriesSeason s = (SeriesSeason) _view.getTag();
+
+                        if (s != null) {
+                           final QuickAction qa = new QuickAction(_view);
+
+                           ActionItem sdCardAction = new ActionItem();
+                           sdCardAction.setTitle("Download to sd card");
+                           sdCardAction.setIcon(getResources().getDrawable(
+                                 R.drawable.quickaction_sdcard));
+                           sdCardAction.setOnClickListener(new OnClickListener() {
+                              @Override
+                              public void onClick(final View _view) {
+                                 AlertDialog.Builder builder = new AlertDialog.Builder(mBaseActivity);
+                                 builder.setTitle("Downloading multiple episodes!");
+                                 builder.setMessage("Do you really want to download "
+                                       + s.getEpisodesCount() + " Episodes?");
+                                 builder.setCancelable(false);
+                                 builder.setPositiveButton("Yes",
+                                       new DialogInterface.OnClickListener() {
+                                          public void onClick(DialogInterface dialog, int id) {
+                                             mSeasonDownloaderTask = new DownloadSeasonTask(_view
+                                                   .getContext());
+                                             mSeasonDownloaderTask.execute(s);
+                                          }
+                                       });
+
+                                 builder.setNegativeButton("No",
+                                       new DialogInterface.OnClickListener() {
+                                          public void onClick(DialogInterface dialog, int id) {
+                                               dialog.dismiss();
+                                          }
+                                       });
+                                 AlertDialog alert = builder.create();
+                                 alert.show();
+
+                                 qa.dismiss();
+                              }
+                           });
+                           qa.addActionItem(sdCardAction);
+
+                           if (mService.isClientControlConnected()) {
+                              ActionItem playOnClientAction = new ActionItem();
+
+                              playOnClientAction.setTitle("Play on Client");
+                              playOnClientAction.setIcon(getResources().getDrawable(
+                                    R.drawable.quickaction_play_device));
+                              playOnClientAction.setOnClickListener(new OnClickListener() {
+                                 @Override
+                                 public void onClick(View _view) {
+                                    // TODO: Add all files to playlist and start
+                                    // playback
+                                    Util.showToast(_view.getContext(), "Not implemented yet");
+                                    // mService.playFileOnClient(epFile);
+
+                                    qa.dismiss();
+                                 }
+                              });
+                              qa.addActionItem(playOnClientAction);
+                           }
+
+                           qa.setAnimStyle(QuickAction.ANIM_AUTO);
+
+                           qa.show();
+                        } else {
+                           Util.showToast(_view.getContext(),
+                                 "No local file available for this episode");
+                        }
+                        return true;
+                     } catch (Exception ex) {
+                        return false;
+                     }
+                  }
+               });
+
                text.setText("Season " + s.getSeasonNumber());
                subtext.setText(s.getEpisodesCount() + " Episodes");
                view.setTag(s);
@@ -239,6 +381,8 @@ public class TabSeriesDetailsActivity extends Activity {
       mSeriesActors = (TextView) findViewById(R.id.TextViewSeriesActors);
       mSeriesRating = (RatingBar) findViewById(R.id.RatingBarSeriesRating);
       mSeriesRating.setNumStars(10);
+      
+      mBaseActivity = (BaseTabActivity) getParent().getParent();
 
       Bundle extras = getIntent().getExtras();
       if (extras != null) {

@@ -131,6 +131,10 @@ public class DataHandler {
    public List<FileInfo> getFoldersForFolder(String _path){
       return client.getRemoteAccessApi().getFoldersForFolder(_path);
    }
+   
+   public FileInfo getFileInfo(String _path){
+      return client.getRemoteAccessApi().getFileInfo(_path);
+   }
 
    public Date getMovieDatabaseLastUpdated() {
       return new Date();

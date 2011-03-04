@@ -24,6 +24,7 @@ import com.mediaportal.ampdroid.activities.BaseTabActivity;
 import com.mediaportal.ampdroid.activities.StatusBarActivityHandler;
 import com.mediaportal.ampdroid.api.DataHandler;
 import com.mediaportal.ampdroid.api.ItemDownloaderService;
+import com.mediaportal.ampdroid.data.FileInfo;
 import com.mediaportal.ampdroid.data.Movie;
 import com.mediaportal.ampdroid.lists.ILoadingAdapterItem;
 import com.mediaportal.ampdroid.lists.LazyLoadingAdapter;
@@ -198,11 +199,19 @@ public class TabMoviesActivity extends Activity implements ILoadingListener {
                         @Override
                         public void onClick(View _view) {
                            String url = mService.getDownloadUri(movieFile);
-                           Intent download = new Intent(_view.getContext(),
-                                 ItemDownloaderService.class);
-                           download.putExtra("url", url);
-                           download.putExtra("name", fileName);
-                           startService(download);
+                           FileInfo info = mService.getFileInfo(movieFile);
+                           if (url != null) {
+                              Intent download = new Intent(_view.getContext(),
+                                    ItemDownloaderService.class);
+                              download.putExtra("url", url);
+                              download.putExtra("name", fileName);
+                              if (info != null) {
+                                 download.putExtra("length", info.getLength());
+                              }
+                              startService(download);
+                              
+                              qa.dismiss();
+                           }
                         }
                      });
                      qa.addActionItem(sdCardAction);
@@ -218,6 +227,8 @@ public class TabMoviesActivity extends Activity implements ILoadingListener {
                         @Override
                         public void onClick(View _view) {
                            mService.playFileOnClient(movieFile);
+                           
+                           qa.dismiss();
                         }
                      });
                      qa.addActionItem(playOnClientAction);
