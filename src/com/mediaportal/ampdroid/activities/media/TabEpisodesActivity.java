@@ -203,7 +203,7 @@ public class TabEpisodesActivity extends Activity {
 
                      playOnClientAction.setTitle("Play on Client");
                      playOnClientAction.setIcon(getResources().getDrawable(
-                           R.drawable.quickaction_sdcard));
+                           R.drawable.quickaction_play_device));
                      playOnClientAction.setOnClickListener(new OnClickListener() {
                         @Override
                         public void onClick(View _view) {

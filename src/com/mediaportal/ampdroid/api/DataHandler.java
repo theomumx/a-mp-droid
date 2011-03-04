@@ -215,6 +215,78 @@ public class DataHandler {
       mediaDatabase.close();
       return movie;
    }
+   
+   public List<Movie> getAllVideos() {
+      IMediaAccessApi remoteAccess = client.getRemoteAccessApi();
+
+      mediaDatabase.open();
+      List<Movie> movies = mediaDatabase.getAllVideos();
+
+      if (movies == null || movies.size() == 0) {
+         movies = remoteAccess.getAllVideos();
+         if (movies != null) {
+            for (Movie m : movies) {
+               mediaDatabase.saveVideo(m);
+            }
+         }
+      }
+
+      mediaDatabase.close();
+      return movies;
+   }
+
+   public int getVideosCount() {
+      IMediaAccessApi remoteAccess = client.getRemoteAccessApi();
+
+      mediaDatabase.open();
+      CacheItemsSetting setting = mediaDatabase.getVideosCount();
+      int movieCount = 0;
+      if (setting == null) {
+         movieCount = remoteAccess.getVideosCount();
+         setting = mediaDatabase.setVideosCount(movieCount);
+      }
+
+      mediaDatabase.close();
+      if (setting != null) {
+         return setting.getCacheCount();
+      } else {
+         return movieCount;
+      }
+   }
+
+   public List<Movie> getVideos(int _start, int _end) {
+      IMediaAccessApi remoteAccess = client.getRemoteAccessApi();
+
+      mediaDatabase.open();
+      List<Movie> movies = mediaDatabase.getVideos(_start, _end);
+
+      if (movies == null || movies.size() == 0) {
+         movies = remoteAccess.getVideos(_start, _end);
+         if (movies != null) {
+            for (Movie m : movies) {
+               mediaDatabase.saveVideo(m);
+            }
+         }
+      }
+
+      mediaDatabase.close();
+      return movies;
+   }
+
+   public MovieFull getVideoDetails(int _movieId) {
+      IMediaAccessApi remoteAccess = client.getRemoteAccessApi();
+
+      mediaDatabase.open();
+      MovieFull movie = mediaDatabase.getVideoDetails(_movieId);
+
+      if (movie == null) {
+         movie = remoteAccess.getVideoDetails(_movieId);
+         mediaDatabase.saveVideoDetails(movie);
+      }
+
+      mediaDatabase.close();
+      return movie;
+   }
 
    public Bitmap getBitmap(String _id) {
       IMediaAccessApi remoteAccess = client.getRemoteAccessApi();

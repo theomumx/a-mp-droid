@@ -518,4 +518,46 @@ public class MediaAccessDatabaseHandler implements IMediaAccessDatabase {
          Log.e("Database", ex.getMessage());
       }
    }
+
+   @Override
+   public MovieFull getVideoDetails(int _movieId) {
+      // TODO Auto-generated method stub
+      return null;
+   }
+
+   @Override
+   public List<Movie> getAllVideos() {
+      // TODO Auto-generated method stub
+      return null;
+   }
+
+   @Override
+   public void saveVideo(Movie m) {
+      // TODO Auto-generated method stub
+      
+   }
+
+   @Override
+   public CacheItemsSetting getVideosCount() {
+      // TODO Auto-generated method stub
+      return null;
+   }
+
+   @Override
+   public CacheItemsSetting setVideosCount(int movieCount) {
+      // TODO Auto-generated method stub
+      return null;
+   }
+
+   @Override
+   public List<Movie> getVideos(int _start, int _end) {
+      // TODO Auto-generated method stub
+      return null;
+   }
+
+   @Override
+   public void saveVideoDetails(MovieFull movie) {
+      // TODO Auto-generated method stub
+      
+   }
 }

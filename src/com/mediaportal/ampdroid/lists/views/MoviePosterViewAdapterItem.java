@@ -1,6 +1,5 @@
 package com.mediaportal.ampdroid.lists.views;
 
-
 import java.io.File;
 
 import android.graphics.Color;
@@ -16,18 +15,25 @@ import com.mediaportal.ampdroid.lists.SubtextViewHolder;
 import com.mediaportal.ampdroid.lists.LazyLoadingAdapter.ViewHolder;
 import com.mediaportal.ampdroid.lists.Utils;
 import com.mediaportal.ampdroid.R;
+
 public class MoviePosterViewAdapterItem implements ILoadingAdapterItem {
    private LazyLoadingImage mImage;
    private Movie mMovie;
-   public MoviePosterViewAdapterItem(Movie _movie){
+
+   public MoviePosterViewAdapterItem(Movie _movie) {
       mMovie = _movie;
-      
-      String fileName = Utils.getFileNameWithExtension(mMovie.getCoverThumbPath(), "\\");
-      String cacheName =   "Movies" + File.separator + mMovie.getId() + File.separator + "Poster" + File.separator + fileName;
-      
-      mImage = new LazyLoadingImage(mMovie.getCoverThumbPath(), cacheName, 300, 100);
+
+      String coverPath = mMovie.getCoverThumbPath();
+
+      if (coverPath != null) {
+         String fileName = Utils.getFileNameWithExtension(coverPath, "\\");
+         String cacheName = "Movies" + File.separator + mMovie.getId() + File.separator + "Poster"
+               + File.separator + fileName;
+
+         mImage = new LazyLoadingImage(coverPath, cacheName, 300, 100);
+      }
    }
-   
+
    @Override
    public LazyLoadingImage getImage() {
       return mImage;
@@ -38,12 +44,10 @@ public class MoviePosterViewAdapterItem implements ILoadingAdapterItem {
       return ViewTypes.PosterView.ordinal();
    }
 
-
    @Override
    public int getXml() {
       return R.layout.listitem_poster;
    }
-
 
    @Override
    public Object getItem() {
@@ -62,7 +66,7 @@ public class MoviePosterViewAdapterItem implements ILoadingAdapterItem {
 
    @Override
    public void fillViewFromViewHolder(ViewHolder _holder) {
-      SubtextViewHolder holder = (SubtextViewHolder)_holder;
+      SubtextViewHolder holder = (SubtextViewHolder) _holder;
       if (holder.title != null) {
          holder.title.setTypeface(null, Typeface.BOLD);
 
@@ -84,7 +88,7 @@ public class MoviePosterViewAdapterItem implements ILoadingAdapterItem {
    public int getLoadingImageResource() {
       return R.drawable.listview_imageloading_poster_2;
    }
-   
+
    @Override
    public int getDefaultImageResource() {
       return R.drawable.listview_imageloading_poster_2;

@@ -71,6 +71,14 @@
 			android:name="com.mediaportal.ampdroid.activities.media.TabVideosActivity"
 			android:screenOrientation="portrait">
 		</activity>
+		<activity
+			android:name="com.mediaportal.ampdroid.activities.media.TabVideoDetailsActivity"
+			android:screenOrientation="portrait">
+		</activity>
+		<activity
+			android:name="com.mediaportal.ampdroid.activities.media.TabVideosActivityGroup"
+			android:screenOrientation="portrait">
+		</activity>
 		<activity android:name="com.mediaportal.ampdroid.activities.MusicActivity"
 			android:screenOrientation="portrait">
 		</activity>

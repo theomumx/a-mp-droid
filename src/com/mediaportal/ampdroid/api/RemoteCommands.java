@@ -11,6 +11,7 @@ public class RemoteCommands {
    public static RemoteKey okButton = new RemoteKey(4, "OK", "ok", "");
    public static RemoteKey infoButton = new RemoteKey(5, "Info", "info", "");
    public static RemoteKey pauseButton = new RemoteKey(6, "Pause", "pause", "");
+   public static RemoteKey stopButton = new RemoteKey(6, "Stop", "stop", "");
    public static RemoteKey prevButton = new RemoteKey(7, "Prev", "rewind", "");
    public static RemoteKey nextButton = new RemoteKey(8, "Next", "forward", "");
    public static RemoteKey homeButton = new RemoteKey(9, "Home", "home", "");
@@ -20,4 +21,5 @@ public class RemoteCommands {
    public static RemoteKey menuButton = new RemoteKey(9, "Menu", "menu", "");
    public static RemoteKey channelUpButton = new RemoteKey(9, "Channel Up", "chup", "");
    public static RemoteKey channelDownButton = new RemoteKey(9, "Channel Down", "chdown", "");
+
 }

@@ -24,33 +24,33 @@ import com.mediaportal.ampdroid.lists.ImageHandler;
 import com.mediaportal.ampdroid.lists.LazyLoadingImage;
 import com.mediaportal.ampdroid.lists.Utils;
 
-public class TabMovieDetailsActivity extends Activity {
+public class TabVideoDetailsActivity extends Activity {
    private DataHandler mService;
    MovieFull mMovie;
-   int mMovieId;
+   int mVideoId;
 
    private ImageHandler mImageHandler;
-   private LoadVideoDetailsTask mLoadMovieTask;
+   private LoadMovieDetailsTask mLoadVideoTask;
    private ProgressDialog mLoadingDialog;
-   private ImageView mImageViewMoviePoster;
-   private TextView mTextViewMovieName;
-   private TextView mTextViewMovieReleaseDate;
-   private RatingBar mRatingBarMovieRating;
-   private TextView mTextViewMovieOverview;
-   private TextView mTextViewMovieRuntime;
-   private TextView mTextViewMovieActors;
-   private String mMovieName;
+   private ImageView mImageViewVideoPoster;
+   private TextView mTextViewVideoName;
+   private TextView mTextViewVideoReleaseDate;
+   private RatingBar mRatingBarVideoRating;
+   private TextView mTextViewVideoOverview;
+   private TextView mTextViewVideoRuntime;
+   private TextView mTextViewVideoActors;
+   private String mVideoName;
 
-   private class LoadVideoDetailsTask extends AsyncTask<Integer, List<Movie>, MovieFull> {
+   private class LoadMovieDetailsTask extends AsyncTask<Integer, List<Movie>, MovieFull> {
       Activity mContext;
 
-      private LoadVideoDetailsTask(Activity _context) {
+      private LoadMovieDetailsTask(Activity _context) {
          mContext = _context;
       }
 
       @Override
       protected MovieFull doInBackground(Integer... _params) {
-         mMovie = mService.getMovieDetails(mMovieId);
+         mMovie = mService.getVideoDetails(mVideoId);
 
          return mMovie;
       }
@@ -58,44 +58,44 @@ public class TabMovieDetailsActivity extends Activity {
       @Override
       protected void onPostExecute(MovieFull _result) {
          if (_result != null) {
-            String seriesPoster = _result.getCoverThumbPath();
-            if (seriesPoster != null && !seriesPoster.equals("")) {
+            String videosPoster = _result.getCoverThumbPath();
+            if (videosPoster != null && !videosPoster.equals("")) {
                String fileName = Utils.getFileNameWithExtension(_result.getCoverThumbPath(), "\\");
-               String cacheName = "Movies" + File.separator + mMovieId + File.separator
+               String cacheName = "Videos" + File.separator + mVideoId + File.separator
                      + "LargePoster" + File.separator + fileName;
 
-               LazyLoadingImage image = new LazyLoadingImage(seriesPoster, cacheName, 200, 400);
-               mImageViewMoviePoster.setTag(seriesPoster);
+               LazyLoadingImage image = new LazyLoadingImage(videosPoster, cacheName, 200, 400);
+               mImageViewVideoPoster.setTag(videosPoster);
                mImageHandler.DisplayImage(image, R.drawable.listview_imageloading_poster, mContext,
-                     mImageViewMoviePoster);
+                     mImageViewVideoPoster);
 
             }
 
-            mTextViewMovieReleaseDate.setText(String.valueOf(_result.getYear()));
+            mTextViewVideoReleaseDate.setText(String.valueOf(_result.getYear()));
 
             int runtime = _result.getRuntime();
             if (runtime != 0) {
-               mTextViewMovieRuntime.setText(String.valueOf(runtime));
+               mTextViewVideoRuntime.setText(String.valueOf(runtime));
             } else {
-               mTextViewMovieRuntime.setText("-");
+               mTextViewVideoRuntime.setText("-");
             }
 
             String actorsString = _result.getActorsString();
             if (actorsString != null) {
-               mTextViewMovieActors.setText(actorsString);
+               mTextViewVideoActors.setText(actorsString);
             } else {
-               mTextViewMovieActors.setText("-");
+               mTextViewVideoActors.setText("-");
             }
 
             int rating = (int) _result.getScore();
-            mRatingBarMovieRating.setRating(rating);
+            mRatingBarVideoRating.setRating(rating);
 
-            mTextViewMovieOverview.setText(_result.getSummary());
+            mTextViewVideoOverview.setText(_result.getSummary());
             mLoadingDialog.cancel();
          } else {
             mLoadingDialog.cancel();
             Dialog diag = new Dialog(getParent());
-            diag.setTitle(" Couldn't load series ");
+            diag.setTitle(" Couldn't load video ");
             diag.setCancelable(true);
 
             diag.show();
@@ -117,22 +117,22 @@ public class TabMovieDetailsActivity extends Activity {
 
       Bundle extras = getIntent().getExtras();
       if (extras != null) {
-         mMovieId = extras.getInt("movie_id");
-         mMovieName = extras.getString("movie_name");
+         mVideoId = extras.getInt("video_id");
+         mVideoName = extras.getString("video_name");
 
          mService = DataHandler.getCurrentRemoteInstance();
 
-         mTextViewMovieName = (TextView) findViewById(R.id.TextViewMovieName);
-         mTextViewMovieName.setText(mMovieName);
+         mTextViewVideoName = (TextView) findViewById(R.id.TextViewMovieName);
+         mTextViewVideoName.setText(mVideoName);
 
-         mImageViewMoviePoster = (ImageView) findViewById(R.id.ImageViewMoviePoster);
-         mTextViewMovieReleaseDate = (TextView) findViewById(R.id.TextViewMovieRelease);
-         mRatingBarMovieRating = (RatingBar) findViewById(R.id.RatingBarMovieRating);
-         mTextViewMovieOverview = (TextView) findViewById(R.id.TextViewMovieOverview);
-         mTextViewMovieRuntime = (TextView) findViewById(R.id.TextViewMovieRuntime);
-         mTextViewMovieActors = (TextView) findViewById(R.id.TextViewMovieActors);
+         mImageViewVideoPoster = (ImageView) findViewById(R.id.ImageViewMoviePoster);
+         mTextViewVideoReleaseDate = (TextView) findViewById(R.id.TextViewMovieRelease);
+         mRatingBarVideoRating = (RatingBar) findViewById(R.id.RatingBarMovieRating);
+         mTextViewVideoOverview = (TextView) findViewById(R.id.TextViewMovieOverview);
+         mTextViewVideoRuntime = (TextView) findViewById(R.id.TextViewMovieRuntime);
+         mTextViewVideoActors = (TextView) findViewById(R.id.TextViewMovieActors);
 
-         mImageViewMoviePoster.setOnClickListener(new OnClickListener() {
+         mImageViewVideoPoster.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                mService.playFileOnClient(mMovie.getFilename());
@@ -141,13 +141,13 @@ public class TabMovieDetailsActivity extends Activity {
 
          mImageHandler = new ImageHandler(this);
 
-         mLoadMovieTask = new LoadVideoDetailsTask(this);
-         mLoadMovieTask.execute(mMovieId);
+         mLoadVideoTask = new LoadMovieDetailsTask(this);
+         mLoadVideoTask.execute(mVideoId);
 
          // mPosterGallery.setSpacing(-10);
          // mPosterGallery.setAdapter(mAdapter);
 
-         mLoadingDialog = ProgressDialog.show(getParent(), " Loading Movie Details ",
+         mLoadingDialog = ProgressDialog.show(getParent(), " Loading Video Details ",
                " Loading. Please wait ... ", true);
          mLoadingDialog.setCancelable(true);
       } else {// activity called without movie id (shouldn't happen ;))

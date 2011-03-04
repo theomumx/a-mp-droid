@@ -42,7 +42,8 @@ import com.mediaportal.ampdroid.data.VideoShare;
 public class GmaJsonWebserviceApi implements IMediaAccessApi {
    private GmaJsonWebserviceMovieApi m_moviesAPI;
    private GmaJsonWebserviceSeriesApi m_seriesAPI;
-
+   private GmaJsonWebserviceVideoApi m_videosAPI;
+   
    private String mServer;
    private int mPort;
 
@@ -53,6 +54,7 @@ public class GmaJsonWebserviceApi implements IMediaAccessApi {
 
    private JsonClient mJsonClient;
    private ObjectMapper mJsonObjectMapper;
+   
 
    @SuppressWarnings("unchecked")
    public GmaJsonWebserviceApi(String _server, int _port) {
@@ -69,6 +71,7 @@ public class GmaJsonWebserviceApi implements IMediaAccessApi {
 
       m_moviesAPI = new GmaJsonWebserviceMovieApi(mJsonClient, mJsonObjectMapper);
       m_seriesAPI = new GmaJsonWebserviceSeriesApi(mJsonClient, mJsonObjectMapper);
+      m_videosAPI = new GmaJsonWebserviceVideoApi(mJsonClient, mJsonObjectMapper);
       // m_musicAPI = new GmaWebserviceMusicApi(m_wcfService,
       // mJsonObjectMapper);
    }
@@ -204,6 +207,26 @@ public class GmaJsonWebserviceApi implements IMediaAccessApi {
    @Override
    public List<Movie> getMovies(int _start, int _end) {
       return m_moviesAPI.getMovies(_start, _end);
+   }
+   
+   @Override
+   public List<Movie> getAllVideos() {
+      return m_videosAPI.getAllMovies();
+   }
+
+   @Override
+   public int getVideosCount() {
+      return m_videosAPI.getMovieCount();
+   }
+
+   @Override
+   public MovieFull getVideoDetails(int _movieId) {
+      return m_videosAPI.getMovieDetails(_movieId);
+   }
+
+   @Override
+   public List<Movie> getVideos(int _start, int _end) {
+      return m_videosAPI.getMovies(_start, _end);
    }
 
    @Override

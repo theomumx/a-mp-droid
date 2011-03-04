@@ -63,4 +63,12 @@ public interface IMediaAccessApi extends IApiInterface {
    List<FileInfo> getFilesForFolder(String _path);
 
    List<FileInfo> getFoldersForFolder(String _path);
+
+   List<Movie> getAllVideos();
+
+   int getVideosCount();
+
+   MovieFull getVideoDetails(int _movieId);
+
+   List<Movie> getVideos(int _start, int _end);
 }
