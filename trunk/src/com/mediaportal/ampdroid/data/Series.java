@@ -3,11 +3,10 @@ package com.mediaportal.ampdroid.data;
 import org.codehaus.jackson.annotate.JsonProperty;
 
 import com.mediaportal.ampdroid.database.ColumnProperty;
-import com.mediaportal.ampdroid.database.TableProperty;
 
-@TableProperty("Series")
 public class Series {
    public static final int CACHE_ID = 1;
+   public static final String TABLE_NAME = "Series";
    
    private int Id;
    private String PrettyName;

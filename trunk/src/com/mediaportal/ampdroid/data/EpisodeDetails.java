@@ -5,11 +5,9 @@ import java.util.Date;
 import org.codehaus.jackson.annotate.JsonProperty;
 
 import com.mediaportal.ampdroid.database.ColumnProperty;
-import com.mediaportal.ampdroid.database.TableProperty;
 
-@TableProperty("SeriesEpisodeDetails")
 public class EpisodeDetails extends SeriesEpisode {
-
+   public static final String TABLE_NAME = "SeriesEpisodeDetails";
    // Div Info
    private String Summary; // Summary
    private String GuestStarsString; // GuestStars

@@ -1,11 +1,13 @@
 package com.mediaportal.ampdroid.data;
 
 import com.mediaportal.ampdroid.database.ColumnProperty;
-import com.mediaportal.ampdroid.database.TableProperty;
 
-@TableProperty("RemoteClients")
 public class RemoteClientSetting {
+   public static final String TABLE_NAME = "RemoteClients";
+   
    private int mClientId;
+   
+   
    private String mClientName;
    private String mClientDescription;
    

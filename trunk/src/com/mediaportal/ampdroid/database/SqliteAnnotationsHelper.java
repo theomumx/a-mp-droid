@@ -21,14 +21,10 @@ public class SqliteAnnotationsHelper {
    public static HashMap<Integer, List<AccessHolder>> cachedSetterValues = new HashMap<Integer, List<AccessHolder>>();
    public static HashMap<Integer, List<AccessHolder>> contentValues = new HashMap<Integer, List<AccessHolder>>();
 
-   public static <T> String getCreateTableStringFromClass(Class<T> _class, boolean _hasClientId) {
-
-      TableProperty tableProp = _class.getAnnotation(TableProperty.class);
-      String tableName = tableProp.value();
-
+   public static <T> String getCreateTableStringFromClass(String _tableName, Class<T> _class, boolean _hasClientId) {
       Method[] methods = _class.getMethods();
 
-      String createString = "create table " + tableName
+      String createString = "create table " + _tableName
             + " ( RowId integer primary key autoincrement";
       if(_hasClientId){
          createString += ", ClientId integer";
@@ -49,32 +45,7 @@ public class SqliteAnnotationsHelper {
       return createString;
    }
 
-   public static <T> String getReadAllColumnsFromTableString(Class<T> _class) {
-      TableProperty tableProp = _class.getAnnotation(TableProperty.class);
-      String tableName = tableProp.value();
 
-      Method[] methods = _class.getMethods();
-
-      String createString = "create table " + tableName
-            + " ( RowId integer primary key autoincrement";
-      for (Method m : methods) {
-         if (!m.getReturnType().equals(Void.TYPE)) {
-            ColumnProperty column = m.getAnnotation(ColumnProperty.class);
-
-            if (column != null) {
-               String columnName = column.value();
-               String columnType = column.type();
-
-               columnType = replaceCustomTypes(columnType);
-
-               createString += ", " + columnName + " " + columnType;
-            }
-         }
-      }
-      createString += ");";
-
-      return createString;
-   }
 
    public static <T> List<T> getObjectsFromCursor(Cursor _cursor, Class<T> _class, int _limit) {
       try {

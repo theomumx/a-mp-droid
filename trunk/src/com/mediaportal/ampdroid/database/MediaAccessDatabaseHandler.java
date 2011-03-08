@@ -38,7 +38,7 @@ public class MediaAccessDatabaseHandler implements IMediaAccessDatabase {
 
    public MediaAccessDatabaseHandler(Context _context, int _clientId) {
       mContext = _context;
-      mDbHelper = new MediaDatabaseHelper(mContext, "ampdroid_media", null, 50);
+      mDbHelper = new MediaDatabaseHelper(mContext, "ampdroid_media", null, 60);
       mClientId = _clientId;
    }
 
@@ -158,7 +158,7 @@ public class MediaAccessDatabaseHandler implements IMediaAccessDatabase {
    @Override
    public MovieFull getMovieDetails(int _movieId) {
       try {
-         Cursor result = mDatabase.query("MovieDetails", null, CLIENT_ID + "=" + mClientId
+         Cursor result = mDatabase.query(MovieFull.TABLE_NAME, null, CLIENT_ID + "=" + mClientId
                + " AND Id=" + _movieId, null, null, null, null);
          MovieFull movie = null;
          if (result.getCount() == 1) {
@@ -183,22 +183,164 @@ public class MediaAccessDatabaseHandler implements IMediaAccessDatabase {
                MovieFull.class);
          dbValues.put(CLIENT_ID, mClientId);
 
-         int rows = mDatabase.update("MovieDetails", dbValues, CLIENT_ID + "=" + mClientId
+         int rows = mDatabase.update(MovieFull.TABLE_NAME, dbValues, CLIENT_ID + "=" + mClientId
                + " AND Id=" + _movie.getId(), null);
 
          if (rows != 1) {
-            mDatabase.insert("MovieDetails", null, dbValues);
+            mDatabase.insert(MovieFull.TABLE_NAME, null, dbValues);
          }
          return;
       } catch (Exception ex) {
          Log.e("Database", ex.getMessage());
       }
    }
+   
+
+
+   @Override
+   public List<Movie> getAllVideos() {
+      try {
+         Cursor result = mDatabase.query(Movie.TABLE_NAME_VIDEOS, null, CLIENT_ID + "=" + mClientId, null,
+               null, null, null);
+         ArrayList<Movie> movies = null;
+         if (result.moveToFirst()) {
+            movies = (ArrayList<Movie>) SqliteAnnotationsHelper.getObjectsFromCursor(result,
+                  Movie.class, 0);
+         }
+
+         result.close();
+         return movies;
+      } catch (Exception ex) {
+         Log.e("Database", ex.getMessage());
+      }
+      // something went wrong obviously
+      return null;
+   }
+   
+   @Override
+   public List<Movie> getVideos(int _start, int _end) {
+      try {
+         Cursor result = mDatabase.query(Movie.TABLE_NAME_VIDEOS, null, CLIENT_ID + "=" + mClientId, null,
+               null, null, null);
+         ArrayList<Movie> movies = null;
+         if (result.getCount() > _end) {
+            result.move(_start + 1);
+            movies = (ArrayList<Movie>) SqliteAnnotationsHelper.getObjectsFromCursor(result,
+                  Movie.class, _end - _start + 1);
+         }
+         result.close();
+         return movies;
+      } catch (Exception ex) {
+         Log.e("Database", ex.getMessage());
+      }
+      // something went wrong obviously
+      return null;
+   }
+
+   @Override
+   public void saveVideo(Movie _video) {
+      try {
+         ContentValues dbValues = SqliteAnnotationsHelper.getContentValuesFromObject(_video,
+               Movie.class);
+         dbValues.put(CLIENT_ID, mClientId);
+
+         int rows = mDatabase.update(Movie.TABLE_NAME_VIDEOS, dbValues, CLIENT_ID + "=" + mClientId
+               + " AND Id=" + _video.getId(), null);
+
+         if (rows != 1) {
+            mDatabase.insert(Movie.TABLE_NAME_VIDEOS, null, dbValues);
+         }
+         return;
+      } catch (Exception ex) {
+         Log.e("Database", ex.getMessage());
+      }
+      // something went wrong obviously
+      
+   }
+
+   @Override
+   public CacheItemsSetting getVideosCount() {
+      try {
+         Cursor result = mDatabase.query(CacheItemsSetting.TABLE_NAME, null, CLIENT_ID + "="
+               + mClientId + " AND CacheType=" + CacheItemsSetting.CACHE_ID_VIDEOS, null, null, null, null);
+
+         result.moveToFirst();
+         CacheItemsSetting setting = (CacheItemsSetting) SqliteAnnotationsHelper
+               .getObjectFromCursor(result, CacheItemsSetting.class);
+         result.close();
+         return setting;
+      } catch (Exception ex) {
+         Log.e("Database", ex.getMessage());
+      }
+      // something went wrong obviously
+      return null;
+   }
+
+   @Override
+   public CacheItemsSetting setVideosCount(int _videosCount) {
+      try {
+         CacheItemsSetting setting = new CacheItemsSetting(CacheItemsSetting.CACHE_ID_VIDEOS, _videosCount, new Date());
+         ContentValues dbValues = SqliteAnnotationsHelper.getContentValuesFromObject(setting,
+               CacheItemsSetting.class);
+         dbValues.put(CLIENT_ID, mClientId);
+
+         int rows = mDatabase.update(CacheItemsSetting.TABLE_NAME, dbValues, CLIENT_ID + "="
+               + mClientId + " AND CacheType=" + CacheItemsSetting.CACHE_ID_VIDEOS, null);
+
+         if (rows != 1) {
+            mDatabase.insert(CacheItemsSetting.TABLE_NAME, null, dbValues);
+         }
+         return setting;
+      } catch (Exception ex) {
+         Log.e("Database", ex.getMessage());
+      }
+      return null;
+   }
+
+   @Override
+   public MovieFull getVideoDetails(int _videoId) {
+      try {
+         Cursor result = mDatabase.query(MovieFull.TABLE_NAME_VIDEOS, null, CLIENT_ID + "=" + mClientId
+               + " AND Id=" + _videoId, null, null, null, null);
+         MovieFull movie = null;
+         if (result.getCount() == 1) {
+            result.moveToFirst();
+            movie = (MovieFull) SqliteAnnotationsHelper
+                  .getObjectFromCursor(result, MovieFull.class);
+         }
+
+         result.close();
+         return movie;
+      } catch (Exception ex) {
+         Log.e("Database", ex.getMessage());
+      }
+      // something went wrong obviously
+      return null;
+   }
+
+   @Override
+   public void saveVideoDetails(MovieFull _video) {
+      try {
+         ContentValues dbValues = SqliteAnnotationsHelper.getContentValuesFromObject(_video,
+               MovieFull.class);
+         dbValues.put(CLIENT_ID, mClientId);
+
+         int rows = mDatabase.update(MovieFull.TABLE_NAME_VIDEOS, dbValues, CLIENT_ID + "=" + mClientId
+               + " AND Id=" + _video.getId(), null);
+
+         if (rows != 1) {
+            mDatabase.insert(MovieFull.TABLE_NAME_VIDEOS, null, dbValues);
+         }
+         return;
+      } catch (Exception ex) {
+         Log.e("Database", ex.getMessage());
+      } 
+   }
 
    @Override
    public List<Series> getSeries(int _start, int _end) {
       try {
-         Cursor result = mDatabase.query("Series", null, CLIENT_ID + "=" + mClientId, null, null,
+         Cursor result = mDatabase.query(Series.TABLE_NAME, null, CLIENT_ID + "=" + mClientId, null, null,
                null, null);
          ArrayList<Series> series = null;
          if (result.getCount() > _end) {
@@ -223,11 +365,11 @@ public class MediaAccessDatabaseHandler implements IMediaAccessDatabase {
                Series.class);
          dbValues.put(CLIENT_ID, mClientId);
 
-         int rows = mDatabase.update("Series", dbValues, CLIENT_ID + "=" + mClientId + " AND Id="
+         int rows = mDatabase.update(Series.TABLE_NAME, dbValues, CLIENT_ID + "=" + mClientId + " AND Id="
                + _series.getId(), null);
 
          if (rows != 1) {
-            mDatabase.insert("Series", null, dbValues);
+            mDatabase.insert(Series.TABLE_NAME, null, dbValues);
          }
          return;
       } catch (Exception ex) {
@@ -239,7 +381,7 @@ public class MediaAccessDatabaseHandler implements IMediaAccessDatabase {
    @Override
    public List<Series> getAllSeries() {
       try {
-         Cursor result = mDatabase.query("Series", null, CLIENT_ID + "=" + mClientId, null, null,
+         Cursor result = mDatabase.query(Series.TABLE_NAME, null, CLIENT_ID + "=" + mClientId, null, null,
                null, null);
 
          result.moveToFirst();
@@ -298,7 +440,7 @@ public class MediaAccessDatabaseHandler implements IMediaAccessDatabase {
    @Override
    public SeriesFull getFullSeries(int _seriesId) {
       try {
-         Cursor result = mDatabase.query("SeriesDetails", null, CLIENT_ID + "=" + mClientId
+         Cursor result = mDatabase.query(SeriesFull.TABLE_NAME, null, CLIENT_ID + "=" + mClientId
                + " AND Id=" + _seriesId, null, null, null, null);
          SeriesFull series = null;
          if (result.getCount() == 1) {
@@ -322,11 +464,11 @@ public class MediaAccessDatabaseHandler implements IMediaAccessDatabase {
                SeriesFull.class);
          dbValues.put(CLIENT_ID, mClientId);
 
-         int rows = mDatabase.update("SeriesDetails", dbValues, CLIENT_ID + "=" + mClientId
+         int rows = mDatabase.update(SeriesFull.TABLE_NAME, dbValues, CLIENT_ID + "=" + mClientId
                + " AND Id=" + series.getId(), null);
 
          if (rows != 1) {
-            mDatabase.insert("SeriesDetails", null, dbValues);
+            mDatabase.insert(SeriesFull.TABLE_NAME, null, dbValues);
          }
       } catch (Exception ex) {
          Log.e("Database", ex.getMessage());
@@ -336,7 +478,7 @@ public class MediaAccessDatabaseHandler implements IMediaAccessDatabase {
    @Override
    public List<SeriesSeason> getAllSeasons(int _seriesId) {
       try {
-         Cursor result = mDatabase.query("SeriesSeasons", null, CLIENT_ID + "=" + mClientId
+         Cursor result = mDatabase.query(SeriesSeason.TABLE_NAME, null, CLIENT_ID + "=" + mClientId
                + " AND SeriesId=" + _seriesId, null, null, null, null);
 
          result.moveToFirst();
@@ -359,11 +501,11 @@ public class MediaAccessDatabaseHandler implements IMediaAccessDatabase {
                SeriesSeason.class);
          dbValues.put(CLIENT_ID, mClientId);
 
-         int rows = mDatabase.update("SeriesSeasons", dbValues, CLIENT_ID + "=" + mClientId
+         int rows = mDatabase.update(SeriesSeason.TABLE_NAME, dbValues, CLIENT_ID + "=" + mClientId
                + " AND Id=\"" + _season.getId() + "\"", null);
 
          if (rows != 1) {
-            mDatabase.insert("SeriesSeasons", null, dbValues);
+            mDatabase.insert(SeriesSeason.TABLE_NAME, null, dbValues);
          }
       } catch (Exception ex) {
          Log.e("Database", ex.getMessage());
@@ -373,7 +515,7 @@ public class MediaAccessDatabaseHandler implements IMediaAccessDatabase {
    @Override
    public List<SeriesEpisode> getAllEpisodes(int _seriesId) {
       try {
-         Cursor result = mDatabase.query("SeriesEpisodes", null, CLIENT_ID + "=" + mClientId
+         Cursor result = mDatabase.query(SeriesEpisode.TABLE_NAME, null, CLIENT_ID + "=" + mClientId
                + " AND SeriesId=" + _seriesId, null, null, null, null);
 
          result.moveToFirst();
@@ -397,11 +539,11 @@ public class MediaAccessDatabaseHandler implements IMediaAccessDatabase {
                SeriesEpisode.class);
          dbValues.put(CLIENT_ID, mClientId);
 
-         int rows = mDatabase.update("SeriesEpisodes", dbValues, CLIENT_ID + "=" + mClientId
+         int rows = mDatabase.update(SeriesEpisode.TABLE_NAME, dbValues, CLIENT_ID + "=" + mClientId
                + " AND SeriesId=" + _seriesId + " AND Id=" + _episode.getId(), null);
 
          if (rows != 1) {
-            mDatabase.insert("SeriesEpisodes", null, dbValues);
+            mDatabase.insert(SeriesEpisode.TABLE_NAME, null, dbValues);
          }
       } catch (Exception ex) {
          Log.e("Database", ex.getMessage());
@@ -411,7 +553,7 @@ public class MediaAccessDatabaseHandler implements IMediaAccessDatabase {
    @Override
    public List<SeriesEpisode> getAllEpisodesForSeason(int _seriesId, int _seasonNumber) {
       try {
-         Cursor result = mDatabase.query("SeriesEpisodes", null, CLIENT_ID + "=" + mClientId
+         Cursor result = mDatabase.query(SeriesEpisode.TABLE_NAME, null, CLIENT_ID + "=" + mClientId
                + " AND SeasonNumber=" + _seasonNumber + " AND SeriesId=" + _seriesId, null, null,
                null, null);
 
@@ -431,7 +573,7 @@ public class MediaAccessDatabaseHandler implements IMediaAccessDatabase {
    @Override
    public SupportedFunctions getSupportedFunctions() {
       try {
-         Cursor result = mDatabase.query("SupportedFunctions", null, CLIENT_ID + "=" + mClientId,
+         Cursor result = mDatabase.query(SupportedFunctions.TABLE_NAME, null, CLIENT_ID + "=" + mClientId,
                null, null, null, null);
 
          /*
@@ -468,11 +610,11 @@ public class MediaAccessDatabaseHandler implements IMediaAccessDatabase {
                SupportedFunctions.class);
          dbValues.put(CLIENT_ID, mClientId);
 
-         int rows = mDatabase.update("SupportedFunctions", dbValues, CLIENT_ID + "=" + mClientId,
+         int rows = mDatabase.update(SupportedFunctions.TABLE_NAME, dbValues, CLIENT_ID + "=" + mClientId,
                null);
 
          if (rows != 1) {
-            mDatabase.insert("SupportedFunctions", null, dbValues);
+            mDatabase.insert(SupportedFunctions.TABLE_NAME, null, dbValues);
          }
       } catch (Exception ex) {
          Log.e("Database", ex.getMessage());
@@ -483,7 +625,7 @@ public class MediaAccessDatabaseHandler implements IMediaAccessDatabase {
    @Override
    public EpisodeDetails getEpisodeDetails(int _seriesId, int _episodeId) {
       try {
-         Cursor result = mDatabase.query("SeriesEpisodeDetails", null, CLIENT_ID + "=" + mClientId
+         Cursor result = mDatabase.query(EpisodeDetails.TABLE_NAME, null, CLIENT_ID + "=" + mClientId
                + " AND SeriesId=" + _seriesId + " AND Id=" + _episodeId, null, null, null, null);
          EpisodeDetails episode = null;
          if (result.getCount() == 1) {
@@ -508,56 +650,16 @@ public class MediaAccessDatabaseHandler implements IMediaAccessDatabase {
                EpisodeDetails.class);
          dbValues.put(CLIENT_ID, mClientId);
 
-         int rows = mDatabase.update("SeriesEpisodeDetails", dbValues, CLIENT_ID + "=" + mClientId
+         int rows = mDatabase.update(EpisodeDetails.TABLE_NAME, dbValues, CLIENT_ID + "=" + mClientId
                + " AND SeriesId=" + _seriesId + " AND Id=" + _episode.getId(), null);
 
          if (rows != 1) {
-            mDatabase.insert("SeriesEpisodeDetails", null, dbValues);
+            mDatabase.insert(EpisodeDetails.TABLE_NAME, null, dbValues);
          }
       } catch (Exception ex) {
          Log.e("Database", ex.getMessage());
       }
    }
 
-   @Override
-   public MovieFull getVideoDetails(int _movieId) {
-      // TODO Auto-generated method stub
-      return null;
-   }
 
-   @Override
-   public List<Movie> getAllVideos() {
-      // TODO Auto-generated method stub
-      return null;
-   }
-
-   @Override
-   public void saveVideo(Movie m) {
-      // TODO Auto-generated method stub
-      
-   }
-
-   @Override
-   public CacheItemsSetting getVideosCount() {
-      // TODO Auto-generated method stub
-      return null;
-   }
-
-   @Override
-   public CacheItemsSetting setVideosCount(int movieCount) {
-      // TODO Auto-generated method stub
-      return null;
-   }
-
-   @Override
-   public List<Movie> getVideos(int _start, int _end) {
-      // TODO Auto-generated method stub
-      return null;
-   }
-
-   @Override
-   public void saveVideoDetails(MovieFull movie) {
-      // TODO Auto-generated method stub
-      
-   }
 }

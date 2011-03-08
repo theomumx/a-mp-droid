@@ -3,9 +3,7 @@ package com.mediaportal.ampdroid.data;
 import org.codehaus.jackson.annotate.JsonProperty;
 
 import com.mediaportal.ampdroid.database.ColumnProperty;
-import com.mediaportal.ampdroid.database.TableProperty;
 
-@TableProperty("SupportedFunctions")
 public class SupportedFunctions {
    public static final String TABLE_NAME = "SupportedFunctions";
    
@@ -81,62 +79,42 @@ public class SupportedFunctions {
       SupportsMovies = supportsMovies;
    }
 
-   @ColumnProperty(value="VideosFunction", type="boolean")
-   @JsonProperty("VideosFunction")
    public RemoteFunction getVideosFunction() {
       return VideosFunction;
    }
 
-   @ColumnProperty(value="VideosFunction", type="boolean")
-   @JsonProperty("VideosFunction")
    public void setVideosFunction(RemoteFunction videosFunction) {
       VideosFunction = videosFunction;
    }
 
-   @ColumnProperty(value="MusicFunction", type="boolean")
-   @JsonProperty("MusicFunction")
    public RemoteFunction getMusicFunction() {
       return MusicFunction;
    }
 
-   @ColumnProperty(value="MusicFunction", type="boolean")
-   @JsonProperty("MusicFunction")
    public void setMusicFunction(RemoteFunction musicFunction) {
       MusicFunction = musicFunction;
    }
 
-   @ColumnProperty(value="PicturesFunction", type="boolean")
-   @JsonProperty("PicturesFunction")
    public RemoteFunction getPicturesFunction() {
       return PicturesFunction;
    }
 
-   @ColumnProperty(value="PicturesFunction", type="boolean")
-   @JsonProperty("PicturesFunction")
    public void setPicturesFunction(RemoteFunction picturesFunction) {
       PicturesFunction = picturesFunction;
    }
 
-   @ColumnProperty(value="TvSeriesFunction", type="boolean")
-   @JsonProperty("TvSeriesFunction")
    public RemoteFunction getTvSeriesFunction() {
       return TvSeriesFunction;
    }
 
-   @ColumnProperty(value="TvSeriesFunction", type="boolean")
-   @JsonProperty("TvSeriesFunction")
    public void setTvSeriesFunction(RemoteFunction tvSeriesFunction) {
       TvSeriesFunction = tvSeriesFunction;
    }
 
-   @ColumnProperty(value="MoviesFunction", type="boolean")
-   @JsonProperty("MoviesFunction")
    public RemoteFunction getMoviesFunction() {
       return MoviesFunction;
    }
 
-   @ColumnProperty(value="MoviesFunction", type="boolean")
-   @JsonProperty("MoviesFunction")
    public void setMoviesFunction(RemoteFunction moviesFunction) {
       MoviesFunction = moviesFunction;
    }

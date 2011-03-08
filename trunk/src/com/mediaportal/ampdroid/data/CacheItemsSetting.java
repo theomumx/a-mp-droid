@@ -3,11 +3,11 @@ package com.mediaportal.ampdroid.data;
 import java.util.Date;
 
 import com.mediaportal.ampdroid.database.ColumnProperty;
-import com.mediaportal.ampdroid.database.TableProperty;
 
-@TableProperty("CacheSettings")
 public class CacheItemsSetting {
    public static final String TABLE_NAME = "CacheSettings";
+   
+   public static final int CACHE_ID_VIDEOS = 5;
    
    private int mCacheType;
    private int mCacheCount;

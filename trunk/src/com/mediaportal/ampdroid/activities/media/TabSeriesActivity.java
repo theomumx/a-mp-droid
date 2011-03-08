@@ -3,6 +3,7 @@ package com.mediaportal.ampdroid.activities.media;
 import java.util.List;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -28,6 +29,7 @@ import com.mediaportal.ampdroid.lists.views.SeriesPosterViewAdapterItem;
 import com.mediaportal.ampdroid.lists.views.SeriesTextViewAdapterItem;
 import com.mediaportal.ampdroid.lists.views.SeriesThumbViewAdapterItem;
 import com.mediaportal.ampdroid.lists.views.ViewTypes;
+import com.mediaportal.ampdroid.utils.Util;
 
 public class TabSeriesActivity extends Activity implements ILoadingListener {
    private ListView mListView;
@@ -39,6 +41,11 @@ public class TabSeriesActivity extends Activity implements ILoadingListener {
    private StatusBarActivityHandler mStatusBarHandler;
 
    private class LoadSeriesTask extends AsyncTask<Integer, List<Series>, Boolean> {
+      private Context mContext;
+      private LoadSeriesTask(Context _context){
+         mContext = _context;
+      }
+      
       @SuppressWarnings("unchecked")
       @Override
       protected Boolean doInBackground(Integer... _params) {
@@ -46,11 +53,17 @@ public class TabSeriesActivity extends Activity implements ILoadingListener {
          int loadItems = mSeriesLoaded + _params[0];
 
          while (mSeriesLoaded < loadItems) {
-            List<Series> series = mService.getSeries(mSeriesLoaded, mSeriesLoaded + 4);
+            int end = mSeriesLoaded + 4;
+            if(end >= seriesCount){
+               end = seriesCount - 1;
+            }
+            List<Series> series = mService.getSeries(mSeriesLoaded, end);
+            
+            publishProgress(series);
             if (series == null) {
                return false;
             }
-            publishProgress(series);
+            
             mSeriesLoaded += 5;
          }
 
@@ -76,7 +89,9 @@ public class TabSeriesActivity extends Activity implements ILoadingListener {
                         s));
                }
             } else {
-               mAdapter.setLoadingText("Loading failed, check your connection");
+               mAdapter.showLoadingItem(false);
+               //mAdapter.setLoadingText("Loading failed, check your connection");
+               Util.showToast(mContext, "Loading failed, check your connection");
             }
          }
 
@@ -88,6 +103,7 @@ public class TabSeriesActivity extends Activity implements ILoadingListener {
       protected void onPostExecute(Boolean _result) {
          if (_result) {
             mAdapter.showLoadingItem(false);
+            mAdapter.notifyDataSetChanged();
          }
          mStatusBarHandler.setLoading(false);
          mSeriesLoaderTask = null;
@@ -153,7 +169,7 @@ public class TabSeriesActivity extends Activity implements ILoadingListener {
 
    private void loadFurtherSeriesItems() {
       if (mSeriesLoaderTask == null) {
-         mSeriesLoaderTask = new LoadSeriesTask();
+         mSeriesLoaderTask = new LoadSeriesTask(this);
          mStatusBarHandler.setLoading(true);
          mSeriesLoaderTask.execute(20);
       }

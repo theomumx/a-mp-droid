@@ -14,8 +14,8 @@ public class SettingsDatabaseHelper extends SQLiteOpenHelper  {
    public SettingsDatabaseHelper(Context context, String name, CursorFactory factory, int version) {
       super(context, name, factory, version);
 
-      mRemoteClientTableString = SqliteAnnotationsHelper.getCreateTableStringFromClass(RemoteClientSetting.class, false);
-      mFunctionsTableString = SqliteAnnotationsHelper.getCreateTableStringFromClass(RemoteFunction.class, false);
+      mRemoteClientTableString = SqliteAnnotationsHelper.getCreateTableStringFromClass(RemoteClientSetting.TABLE_NAME, RemoteClientSetting.class, false);
+      mFunctionsTableString = SqliteAnnotationsHelper.getCreateTableStringFromClass(RemoteFunction.TABLE_NAME, RemoteFunction.class, false);
 
    }
 
