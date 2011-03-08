@@ -46,7 +46,7 @@ public class TabVideosActivityGroup extends ActivityGroup {
    }
 
    public void back() {
-      if (mHistory.size() > 0) {
+      if (mHistory.size() > 1) {
          mHistory.remove(mHistory.size() - 1);
          setContentView(mHistory.get(mHistory.size() - 1));
       } else {
