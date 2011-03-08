@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.List;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -49,6 +50,11 @@ public class TabVideosActivity extends Activity implements ILoadingListener {
    private StatusBarActivityHandler mStatusBarHandler;
 
    private class LoadVideosTask extends AsyncTask<Integer, List<Movie>, Boolean> {
+      private Context mContext;
+      private LoadVideosTask(Context _context){
+         mContext = _context;
+      }
+      
       @SuppressWarnings("unchecked")
       @Override
       protected Boolean doInBackground(Integer... _params) {
@@ -56,10 +62,15 @@ public class TabVideosActivity extends Activity implements ILoadingListener {
          int videosCount = mService.getVideosCount();
 
          while (mVideosLoaded < loadItems && mVideosLoaded < videosCount) {
-            List<Movie> videos = mService.getVideos(mVideosLoaded, mVideosLoaded + 4);
+            int end = mVideosLoaded + 4;
+            if(end >= videosCount){
+               end = videosCount - 1;
+            }
+            List<Movie> videos = mService.getVideos(mVideosLoaded, end);
+            
             publishProgress(videos);
             if (videos == null) {
-               break;
+               return false;
             }
             mVideosLoaded += 5;
          }
@@ -69,13 +80,6 @@ public class TabVideosActivity extends Activity implements ILoadingListener {
          } else {
             return true;// finished
          }
-
-         /*
-          * List<Movie> series = mService.getAllMovies();
-          * publishProgress(series);
-          * 
-          * return true;
-          */
       }
 
       @Override
@@ -90,7 +94,9 @@ public class TabVideosActivity extends Activity implements ILoadingListener {
                   mAdapter.addItem(ViewTypes.ThumbView.ordinal(), new MovieThumbViewAdapterItem(m));
                }
             } else {
-               mAdapter.setLoadingText("Loading failed, check your connection");
+               mAdapter.showLoadingItem(false);
+               //mAdapter.setLoadingText("Loading failed, check your connection");
+               Util.showToast(mContext, "Loading failed, check your connection");
             }
          }
          mAdapter.notifyDataSetChanged();
@@ -103,6 +109,7 @@ public class TabVideosActivity extends Activity implements ILoadingListener {
             mAdapter.showLoadingItem(false);
             mAdapter.notifyDataSetChanged();
          }
+         mStatusBarHandler.setLoading(false);
          mVideosLoaderTask = null;
       }
    }
@@ -261,7 +268,8 @@ public class TabVideosActivity extends Activity implements ILoadingListener {
 
    private void loadFurtherMovieItems() {
       if (mVideosLoaderTask == null) {
-         mVideosLoaderTask = new LoadVideosTask();
+         mVideosLoaderTask = new LoadVideosTask(this);
+         mStatusBarHandler.setLoading(true);
          mVideosLoaderTask.execute(20);
       }
    }

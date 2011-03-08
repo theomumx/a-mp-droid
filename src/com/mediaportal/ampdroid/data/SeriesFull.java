@@ -5,10 +5,9 @@ import java.util.Date;
 import org.codehaus.jackson.annotate.JsonProperty;
 
 import com.mediaportal.ampdroid.database.ColumnProperty;
-import com.mediaportal.ampdroid.database.TableProperty;
 
-@TableProperty("SeriesDetails")
 public class SeriesFull extends Series {
+   public static final String TABLE_NAME = "SeriesDetails";
    private String SortName;
    private String OrigName;
    private String Status;

@@ -3,10 +3,10 @@ package com.mediaportal.ampdroid.data;
 import org.codehaus.jackson.annotate.JsonProperty;
 
 import com.mediaportal.ampdroid.database.ColumnProperty;
-import com.mediaportal.ampdroid.database.TableProperty;
 
-@TableProperty("RemoteFunctions")
 public class RemoteFunction {
+   public static final String TABLE_NAME = "RemoteFunctions";
+   
    private int Id;
    private String Name;
    private String Description;

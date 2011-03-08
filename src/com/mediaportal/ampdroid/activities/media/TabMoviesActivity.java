@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.List;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -43,39 +44,40 @@ public class TabMoviesActivity extends Activity implements ILoadingListener {
    private ListView mListView;
    private LazyLoadingAdapter mAdapter;
    DataHandler mService;
-   private LoadMoviesTask mSeriesLoaderTask;
-   private int mSeriesLoaded = 0;
+   private LoadMoviesTask mMoviesLoaderTask;
+   private int mMoviesLoaded = 0;
    private BaseTabActivity mBaseActivity;
    private StatusBarActivityHandler mStatusBarHandler;
 
    private class LoadMoviesTask extends AsyncTask<Integer, List<Movie>, Boolean> {
+      private Context mContext;
+      private LoadMoviesTask(Context _context){
+         mContext = _context;
+      }
       @SuppressWarnings("unchecked")
       @Override
       protected Boolean doInBackground(Integer... _params) {
-         int loadItems = mSeriesLoaded + _params[0];
-         int seriesCount = mService.getMovieCount();
+         int loadItems = mMoviesLoaded + _params[0];
+         int moviesCount = mService.getMovieCount();
 
-         while (mSeriesLoaded < loadItems) {
-            List<Movie> series = mService.getMovies(mSeriesLoaded, mSeriesLoaded + 4);
+         while (mMoviesLoaded < loadItems) {
+            int end = mMoviesLoaded + 4;
+            if(end >= moviesCount){
+               end = moviesCount - 1;
+            }
+            List<Movie> series = mService.getMovies(mMoviesLoaded, end);
             publishProgress(series);
             if (series == null){
-               break;
+               return false;
             }
-            mSeriesLoaded += 5;
+            mMoviesLoaded += 5;
          }
-
          
-         if (mSeriesLoaded < seriesCount) {
+         if (mMoviesLoaded < moviesCount) {
             return false;// not yet finished;
          } else {
             return true;// finished
          }
-         
-         
-         /*List<Movie> series = mService.getAllMovies();
-         publishProgress(series);
-         
-         return true;*/
       }
 
       @Override
@@ -92,7 +94,9 @@ public class TabMoviesActivity extends Activity implements ILoadingListener {
                }
             }
             else{
-               mAdapter.setLoadingText("Loading failed, check your connection");
+               mAdapter.showLoadingItem(false);
+               //mAdapter.setLoadingText("Loading failed, check your connection");
+               Util.showToast(mContext, "Loading failed, check your connection");
             }
          }
          mAdapter.notifyDataSetChanged();
@@ -103,8 +107,10 @@ public class TabMoviesActivity extends Activity implements ILoadingListener {
       protected void onPostExecute(Boolean _result) {
          if (_result) {
             mAdapter.showLoadingItem(false);
+            mAdapter.notifyDataSetChanged();
          }
-         mSeriesLoaderTask = null;
+         mStatusBarHandler.setLoading(false);
+         mMoviesLoaderTask = null;
       }
    }
 
@@ -258,9 +264,10 @@ public class TabMoviesActivity extends Activity implements ILoadingListener {
    }
 
    private void loadFurtherMovieItems() {
-      if (mSeriesLoaderTask == null) {
-         mSeriesLoaderTask = new LoadMoviesTask();
-         mSeriesLoaderTask.execute(20);
+      if (mMoviesLoaderTask == null) {
+         mMoviesLoaderTask = new LoadMoviesTask(this);
+         mStatusBarHandler.setLoading(true);
+         mMoviesLoaderTask.execute(20);
       }
    }
 

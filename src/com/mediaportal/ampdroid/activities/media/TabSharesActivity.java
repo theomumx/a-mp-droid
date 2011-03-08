@@ -20,6 +20,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.mediaportal.ampdroid.R;
+import com.mediaportal.ampdroid.activities.BaseTabActivity;
+import com.mediaportal.ampdroid.activities.StatusBarActivityHandler;
 import com.mediaportal.ampdroid.api.DataHandler;
 import com.mediaportal.ampdroid.api.ItemDownloaderService;
 import com.mediaportal.ampdroid.data.FileInfo;
@@ -39,6 +41,8 @@ public class TabSharesActivity extends Activity {
    private DataHandler mService;
    private LoadFolderTask mFilesLoaderTask;
    private ProgressDialog mLoadingDialog;
+   private BaseTabActivity mBaseActivity;
+   private StatusBarActivityHandler mStatusBarHandler;
 
    private class LoadSharesTask extends AsyncTask<Integer, Integer, List<VideoShare>> {
       @Override
@@ -233,8 +237,10 @@ public class TabSharesActivity extends Activity {
       });
 
       mBreadCrumb = new ArrayList<String>();
-
+      
       mService = DataHandler.getCurrentRemoteInstance();
+      mStatusBarHandler = new StatusBarActivityHandler(this, mService);
+      mStatusBarHandler.setHome(false);
 
       loadShares();
    }

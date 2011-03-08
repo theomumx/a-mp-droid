@@ -50,6 +50,8 @@ public interface IMediaAccessDatabase {
    
    EpisodeDetails getEpisodeDetails(int _seriesId, int _episodeId);
    void saveEpisodeDetails(int _seriesId, EpisodeDetails episode);
+   
+   
    MovieFull getVideoDetails(int _movieId);
    List<Movie> getAllVideos();
    void saveVideo(Movie m);

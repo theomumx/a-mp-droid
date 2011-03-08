@@ -5,10 +5,11 @@ import java.util.Date;
 import org.codehaus.jackson.annotate.JsonProperty;
 
 import com.mediaportal.ampdroid.database.ColumnProperty;
-import com.mediaportal.ampdroid.database.TableProperty;
 
-@TableProperty("MovieDetails")
 public class MovieFull extends Movie {
+   public static final String TABLE_NAME = "MovieDetails";
+   public static final String TABLE_NAME_VIDEOS = "VideoDetails";
+   
    private String DiscId;
    private String Hash;
    private int Part;

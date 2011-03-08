@@ -5,10 +5,10 @@ import java.util.Date;
 import org.codehaus.jackson.annotate.JsonProperty;
 
 import com.mediaportal.ampdroid.database.ColumnProperty;
-import com.mediaportal.ampdroid.database.TableProperty;
 
-@TableProperty("SeriesEpisodes")
 public class SeriesEpisode {
+   public static final String TABLE_NAME = "SeriesEpisodes";
+   
    private int SeriesId;
 	private int Id;
 	private String Name;
