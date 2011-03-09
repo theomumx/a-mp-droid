@@ -2,7 +2,6 @@ package com.mediaportal.ampdroid.api.wifiremote;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
@@ -12,6 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.codehaus.jackson.JsonParseException;
+import org.codehaus.jackson.map.DeserializationConfig;
+import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import android.os.AsyncTask;
@@ -20,19 +22,27 @@ import com.google.myjson.Gson;
 import com.google.myjson.GsonBuilder;
 import com.mediaportal.ampdroid.api.IClientControlApi;
 import com.mediaportal.ampdroid.api.IClientControlListener;
+import com.mediaportal.ampdroid.api.PowerModes;
 import com.mediaportal.ampdroid.data.ClientPlugin;
+import com.mediaportal.ampdroid.data.NowPlaying;
 import com.mediaportal.ampdroid.data.commands.RemoteKey;
+import com.mediaportal.ampdroid.remote.RemoteNowPlaying;
+import com.mediaportal.ampdroid.remote.RemotePlugin;
+import com.mediaportal.ampdroid.remote.RemotePluginMessage;
+import com.mediaportal.ampdroid.remote.RemoteStatusMessage;
+import com.mediaportal.ampdroid.remote.RemoteWelcomeMessage;
 
 public class WifiRemoteMpController implements IClientControlApi {
    private String server;
    private int port;
    private Socket socket;
-   DataInputStream instream;
-   DataOutputStream outstream;
-   TcpListenerTask tcpreader;
-   List<IClientControlListener> listeners;
+   private DataInputStream instream;
+   private DataOutputStream outstream;
+   private TcpListenerTask tcpreader;
+   private List<IClientControlListener> listeners;
+   private ObjectMapper mJsonObjectMapper;
 
-   private class TcpListenerTask extends AsyncTask<DataInputStream, String, String> {
+   private class TcpListenerTask extends AsyncTask<DataInputStream, Object, String> {
       private List<IClientControlListener> listeners;
       private boolean listening = false;;
 
@@ -47,16 +57,35 @@ public class WifiRemoteMpController implements IClientControlApi {
       public TcpListenerTask(List<IClientControlListener> _listeners) {
          listeners = _listeners;
       }
-    
 
       @Override
+      @SuppressWarnings("unchecked")
       protected String doInBackground(DataInputStream... params) {
          listening = true;
          while (listening) {
             try {
                String response = instream.readLine();
-               
-               publishProgress(response);
+
+               ObjectMapper mapper = new ObjectMapper();
+               Map<String, Object> userData = mapper.readValue(response, Map.class);
+               if (userData.containsKey("Type")) {
+                  String type = (String) userData.get("Type");
+                  if (type != null) {
+                     if (type.equals("status")) {
+                        Object returnObject = mJsonObjectMapper.readValue(response, RemoteStatusMessage.class);
+                        publishProgress(returnObject);
+                     } else if (type.equals("nowplaying")) {
+                        Object returnObject = mJsonObjectMapper.readValue(response, RemoteNowPlaying.class);
+                        publishProgress(returnObject);
+                     }else if (type.equals("plugins")){
+                        Object returnObject = mJsonObjectMapper.readValue(response, RemotePluginMessage.class);
+                        publishProgress(returnObject);
+                     }else if (type.equals("welcome")){
+                        Object returnObject = mJsonObjectMapper.readValue(response, RemoteWelcomeMessage.class);
+                        publishProgress(returnObject);
+                     }
+                  }
+               }
             } catch (IOException e) {
                e.printStackTrace();
                listening = false;
@@ -96,7 +125,7 @@ public class WifiRemoteMpController implements IClientControlApi {
        * @see android.os.AsyncTask#onProgressUpdate(Progress[])
        */
       @Override
-      protected void onProgressUpdate(String... values) {
+      protected void onProgressUpdate(Object... values) {
          // Things to be done while execution of long running operation is in
          // progress. For example updating ProgessDialog
          for (IClientControlListener l : listeners) {
@@ -110,8 +139,11 @@ public class WifiRemoteMpController implements IClientControlApi {
       this.server = _server;
       this.port = _port;
       this.listeners = new ArrayList<IClientControlListener>();
+      
+      mJsonObjectMapper = new ObjectMapper();
+      mJsonObjectMapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
    }
-   
+
    @Override
    public String getServer() {
       return server;
@@ -121,12 +153,12 @@ public class WifiRemoteMpController implements IClientControlApi {
    public int getPort() {
       return port;
    }
-   
+
    @Override
    public String getAddress() {
       return server;
    }
-   
+
    @Override
    public int getTimeOut() {
       // TODO Auto-generated method stub
@@ -136,7 +168,7 @@ public class WifiRemoteMpController implements IClientControlApi {
    @Override
    public void setTimeOut(int timeout) {
       // TODO Auto-generated method stub
-      
+
    }
 
    /**
@@ -153,7 +185,6 @@ public class WifiRemoteMpController implements IClientControlApi {
          outstream = new DataOutputStream(socket.getOutputStream());
          instream = new DataInputStream(socket.getInputStream());
 
-         
          tcpreader = new TcpListenerTask(listeners);
          tcpreader.execute(instream);
 
@@ -196,29 +227,42 @@ public class WifiRemoteMpController implements IClientControlApi {
    public void sendKeyCommand(RemoteKey _key) {
       GsonBuilder gsonb = new GsonBuilder();
       Gson gson = gsonb.create();
-      //String msgString = gson.toJson(new WifiRemoteMessage("command","", _key.getAction()));
+      // String msgString = gson.toJson(new WifiRemoteMessage("command","",
+      // _key.getAction()));
       String msgString = gson.toJson(new WifiRemoteMessageKey(_key));
       writeLine(msgString);
    }
-   
+
    @Override
    public void sendKeyDownCommand(RemoteKey _key, int _timeout) {
       GsonBuilder gsonb = new GsonBuilder();
       Gson gson = gsonb.create();
-      //String msgString = gson.toJson(new WifiRemoteMessage("command","", _key.getAction()));
+      // String msgString = gson.toJson(new WifiRemoteMessage("command","",
+      // _key.getAction()));
       String msgString = gson.toJson(new WifiRemoteKeyDownMessage(_key, _timeout));
       writeLine(msgString);
    }
-   
+
    @Override
    public void sendKeyUpCommand() {
       GsonBuilder gsonb = new GsonBuilder();
       Gson gson = gsonb.create();
-      //String msgString = gson.toJson(new WifiRemoteMessage("command","", _key.getAction()));
+      // String msgString = gson.toJson(new WifiRemoteMessage("command","",
+      // _key.getAction()));
       String msgString = gson.toJson(new WifiRemoteKeyUpMessage());
       writeLine(msgString);
    }
-   
+
+   @Override
+   public void sendPowerMode(PowerModes _mode) {
+      GsonBuilder gsonb = new GsonBuilder();
+      Gson gson = gsonb.create();
+      // String msgString = gson.toJson(new WifiRemoteMessage("command","",
+      // _key.getAction()));
+      String msgString = gson.toJson(new WifiRemotePowermodeMessage(_mode));
+      writeLine(msgString);
+   }
+
    @Override
    public void sendPlayFileCommand(String _file) {
       GsonBuilder gsonb = new GsonBuilder();
@@ -232,7 +276,7 @@ public class WifiRemoteMpController implements IClientControlApi {
       try {
          if (outstream != null) {
             byte[] buffer = msgString.getBytes();
-            outstream.write(buffer,0, buffer.length);
+            outstream.write(buffer, 0, buffer.length);
             // outstream.writeUTF(msgString);
             // outstream.writeChars(msgString);
             outstream.writeByte(13);
@@ -241,7 +285,8 @@ public class WifiRemoteMpController implements IClientControlApi {
             outstream.flush();
             return true;
          }
-      } catch (IOException e) {}
+      } catch (IOException e) {
+      }
       return false;
    }
 
@@ -266,7 +311,7 @@ public class WifiRemoteMpController implements IClientControlApi {
    }
 
    @Override
-   public void startVideo(String _path){
+   public void startVideo(String _path) {
       GsonBuilder gsonb = new GsonBuilder();
       Gson gson = gsonb.create();
       String msgString = gson.toJson(new WifiRemotePlayFileMessage(_path));
@@ -280,19 +325,25 @@ public class WifiRemoteMpController implements IClientControlApi {
       Gson gson = gsonb.create();
       String msgString = gson.toJson(new WifiRemoteStartTvMessage(_channel));
 
-      writeLine(msgString);      
+      writeLine(msgString);
    }
 
    @Override
-   public List<ClientPlugin> getPlugins(){
-      
-      return null;
-   }
-   
-   @Override
-   public void openPlugin(ClientPlugin _plugin){
-      
+   public void requestPlugins() {
+      GsonBuilder gsonb = new GsonBuilder();
+      Gson gson = gsonb.create();
+      String msgString = gson.toJson(new WifiRemoteMessage("plugins"));
+
+      writeLine(msgString);
    }
 
+   @Override
+   public void openWindow(int _windowId, String _parameter) {
+      GsonBuilder gsonb = new GsonBuilder();
+      Gson gson = gsonb.create();
+      String msgString = gson.toJson(new WifiRemoteOpenWindowMessage(_windowId));
+
+      writeLine(msgString);
+   }
 
 }

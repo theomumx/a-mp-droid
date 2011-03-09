@@ -77,4 +77,15 @@
 	<string name="tvserver_program_end">End Time</string>
 	<string name="tvserver_program_duration">Duration</string>
 	<string name="tvserver_program_desc">Description</string>
+	
+	<string name="remote_menu_morecommands">More Commands</string>
+	<string name="remote_menu_plugins">Plugins</string>
+	<string name="remote_menu_powermodes">Powermodes</string>
+	
+	<string name="remote_logoff">Description</string>
+	<string name="remote_suspend">Suspend</string>
+	<string name="remote_hibernate">Hibernate</string>
+	<string name="remote_reboot">Reboot</string>
+	<string name="remote_shutdown">Shutdown</string>
+	<string name="remote_exit">Exit</string>
 </resources>

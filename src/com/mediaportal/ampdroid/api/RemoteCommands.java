@@ -18,8 +18,8 @@ public class RemoteCommands {
    public static RemoteKey switchFullscreenButton = new RemoteKey(10, "Switch Fullscreen", "red", "");
    public static RemoteKey subtitlesButton = new RemoteKey(8, "Subtitles", "subtitles", "");
    public static RemoteKey audioTrackButton = new RemoteKey(9, "Audio Tracks", "audiotracks", "");
-   public static RemoteKey menuButton = new RemoteKey(9, "Menu", "menu", "");
-   public static RemoteKey channelUpButton = new RemoteKey(9, "Channel Up", "chup", "");
-   public static RemoteKey channelDownButton = new RemoteKey(9, "Channel Down", "chdown", "");
-
+   public static RemoteKey menuButton = new RemoteKey(10, "Menu", "menu", "");
+   public static RemoteKey channelUpButton = new RemoteKey(11, "Channel Up", "chup", "");
+   public static RemoteKey channelDownButton = new RemoteKey(12, "Channel Down", "chdown", "");
+   public static RemoteKey recordingButton = new RemoteKey(13, "Recording", "record", "");
 }
