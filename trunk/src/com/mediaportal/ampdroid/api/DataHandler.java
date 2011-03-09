@@ -562,6 +562,11 @@ public class DataHandler {
       ITvServiceApi tvApi = client.getTvControlApi();
       tvApi.cancelScheduleByScheduleId(_scheduleId);
    }
+   
+   public TvProgram getTvEpgDetails(Integer _id) {
+      ITvServiceApi tvApi = client.getTvControlApi();
+      return tvApi.GetProgramById(_id);
+   }
 
    public void setFunctions(RemoteFunctions functions) {
       this.functions = functions;
@@ -620,9 +625,16 @@ public class DataHandler {
    public void playChannelOnClient(int _channel) {
       client.getClientControlApi().playChannelOnClient(_channel);
    }
-
-   public TvProgram getTvEpgDetails(Integer _id) {
-      return client.getTvControlApi().GetProgramById(_id);
+   
+   public void sendSetPowerModeCommand(PowerModes _mode) {
+      client.getClientControlApi().sendPowerMode(_mode);
    }
 
+   public void sendOpenWindowMessage(int _windowId, String _parameter) {
+      client.getClientControlApi().openWindow(_windowId, _parameter);
+   }
+
+   public void requestPlugins() {
+      client.getClientControlApi().requestPlugins();
+   }
 }

@@ -1,12 +1,5 @@
 package com.mediaportal.ampdroid.activities;
 
-import java.io.IOException;
-import java.util.Map;
-
-import org.codehaus.jackson.JsonParseException;
-import org.codehaus.jackson.map.JsonMappingException;
-import org.codehaus.jackson.map.ObjectMapper;
-
 import android.content.Context;
 import android.graphics.PixelFormat;
 import android.os.AsyncTask;
@@ -25,9 +18,12 @@ import android.widget.TextView;
 import com.mediaportal.ampdroid.R;
 import com.mediaportal.ampdroid.api.DataHandler;
 import com.mediaportal.ampdroid.api.IClientControlListener;
+import com.mediaportal.ampdroid.api.PowerModes;
 import com.mediaportal.ampdroid.api.RemoteCommands;
-import com.mediaportal.ampdroid.data.NowPlaying;
 import com.mediaportal.ampdroid.data.commands.RemoteKey;
+import com.mediaportal.ampdroid.remote.RemoteNowPlaying;
+import com.mediaportal.ampdroid.remote.RemotePlugin;
+import com.mediaportal.ampdroid.remote.RemoteStatusMessage;
 import com.mediaportal.ampdroid.utils.Util;
 
 public class RemoteControlActivity extends BaseActivity implements IClientControlListener {
@@ -190,8 +186,8 @@ public class RemoteControlActivity extends BaseActivity implements IClientContro
          public boolean onTouch(View _view, MotionEvent _event) {
             if (_event.getAction() == MotionEvent.ACTION_DOWN) {
                Util.Vibrate(_view.getContext(), 30);
-               
-               //new SendKeyTask(_view.getContext(), mService).execute(RemoteCommands.homeButton);
+
+               new SendKeyTask(_view.getContext(), mService).execute(RemoteCommands.homeButton);
                homeButton.setImageResource(R.drawable.remote_home_sel);
                return true;
             }
@@ -219,22 +215,25 @@ public class RemoteControlActivity extends BaseActivity implements IClientContro
                switch (index) {
                case 0:
                   remote.setImageResource(R.drawable.remote_left);
-                  if (task != null){
+                  if (task != null) {
                      task.setRepeat(false);
                   }
-                  task = (SendKeyTask) new SendKeyTask(_view.getContext(), mService).execute(RemoteCommands.leftButton);
+                  task = (SendKeyTask) new SendKeyTask(_view.getContext(), mService)
+                        .execute(RemoteCommands.leftButton);
                   break;
                case 1:
                   remote.setImageResource(R.drawable.remote_right);
-                  if (task != null){
+                  if (task != null) {
                      task.setRepeat(false);
                   }
-                  task = (SendKeyTask) new SendKeyTask(_view.getContext(), mService).execute(RemoteCommands.rightButton);
+                  task = (SendKeyTask) new SendKeyTask(_view.getContext(), mService)
+                        .execute(RemoteCommands.rightButton);
                   break;
                case 2:
                   remote.setImageResource(R.drawable.remote_up);
-                  //mService.sendRemoteButtonDown(RemoteCommands.upButton, 100);
-                  if (task != null){
+                  // mService.sendRemoteButtonDown(RemoteCommands.upButton,
+                  // 100);
+                  if (task != null) {
                      task.setRepeat(false);
                   }
                   task = (SendKeyTask) new SendKeyTask(_view.getContext(), mService, true)
@@ -242,8 +241,9 @@ public class RemoteControlActivity extends BaseActivity implements IClientContro
                   break;
                case 3:
                   remote.setImageResource(R.drawable.remote_down);
-                  //mService.sendRemoteButtonDown(RemoteCommands.downButton, 100);
-                  if (task != null){
+                  // mService.sendRemoteButtonDown(RemoteCommands.downButton,
+                  // 100);
+                  if (task != null) {
                      task.setRepeat(false);
                   }
                   task = (SendKeyTask) new SendKeyTask(_view.getContext(), mService, true)
@@ -257,11 +257,11 @@ public class RemoteControlActivity extends BaseActivity implements IClientContro
 
             }
             if (_event.getAction() == MotionEvent.ACTION_UP) {
-               if (task != null){
+               if (task != null) {
                   task.setRepeat(false);
                }
                new SendKeyUpTask(_view.getContext(), mService).execute();
-               //mService.sendRemoteButtonUp();
+               // mService.sendRemoteButtonUp();
                remote.setImageResource(R.drawable.remote_default);
             }
             return false;
@@ -299,36 +299,24 @@ public class RemoteControlActivity extends BaseActivity implements IClientContro
 
    @SuppressWarnings("unchecked")
    @Override
-   public void messageReceived(String _message) {
-      ObjectMapper mapper = new ObjectMapper();
-      try {
-         Map<String, Object> userData = mapper.readValue(_message, Map.class);
-         if (userData.containsKey("Type")) {
-            String type = (String) userData.get("Type");
-            if (type != null) {
-               if (type.equals("status")) {
+   public void messageReceived(Object _message) {
 
-                  if (userData.containsKey("CurrentModule")) {
-                     String module = (String) userData.get("CurrentModule");
-                     mStatusLabel.setText(module);
-
-                     mStatusBarHandler.setStatusText("Change module to " + module);
-                  }
-               } else if (type.equals("nowplaying")) {
-                  NowPlaying nowPlayingMessage = new NowPlaying();
-                  nowPlayingMessage.setTitle("");
-
-                  mStatusBarHandler.setNowPlaying(nowPlayingMessage);
-               }
-            }
+      if(_message != null){
+         if(_message.getClass().equals(RemoteStatusMessage.class)){
+            String module = ((RemoteStatusMessage) _message).getCurrentModule();
+            mStatusLabel.setText(module);
+            mStatusBarHandler.setStatusText("Change module to " + module);
          }
-      } catch (JsonParseException e) {
-         e.printStackTrace();
-      } catch (JsonMappingException e) {
-         e.printStackTrace();
-      } catch (IOException e) {
-         e.printStackTrace();
+         else if(_message.getClass().equals(RemoteNowPlaying.class)){
+            //String module = (String) userData.get("CurrentModule");
+            //mStatusLabel.setText(module);
+         }
+         else if(_message.getClass().equals(RemotePlugin[].class)){
+            
+         }
       }
+
+      
    }
 
    @Override
@@ -338,9 +326,97 @@ public class RemoteControlActivity extends BaseActivity implements IClientContro
 
    @Override
    public boolean onCreateOptionsMenu(Menu _menu) {
-      SubMenu viewItem = _menu.addSubMenu(0, Menu.FIRST + 1, Menu.NONE, "More Commands");
+      SubMenu viewItem = _menu.addSubMenu(0, Menu.FIRST + 1, Menu.NONE, getString(R.string.remote_menu_morecommands));
+      createMoreCommandsMen8(viewItem);
 
-      MenuItem switchFullscreenSettingsItem = viewItem.add(0, Menu.FIRST + 1, Menu.NONE,
+      SubMenu powerItem = _menu.addSubMenu(0, Menu.FIRST + 2, Menu.NONE, getString(R.string.remote_menu_powermodes));
+      createPowerModeMenu(powerItem);
+      
+      SubMenu pluginsItem = _menu.addSubMenu(0, Menu.FIRST + 3, Menu.NONE, getString(R.string.remote_menu_plugins));
+      createPluginsMenu(pluginsItem);
+
+      return true;
+   }
+
+   private void createPluginsMenu(SubMenu _menu) {
+      MenuItem stopSettingsItem = _menu.add(0, Menu.FIRST, Menu.NONE, "List of all plugins");
+      stopSettingsItem.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+         @Override
+         public boolean onMenuItemClick(MenuItem item) {
+            mService.requestPlugins();
+            return false;
+         }
+      });
+      
+   }
+
+   private void createPowerModeMenu(SubMenu _powerItem) {
+      MenuItem logoffSettingsItem = _powerItem.add(0, Menu.FIRST, Menu.NONE, getString(R.string.remote_logoff));
+      logoffSettingsItem.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+         @Override
+         public boolean onMenuItemClick(MenuItem item) {
+            mService.sendSetPowerModeCommand(PowerModes.Logoff);
+            return true;
+         }
+      });
+      
+      MenuItem suspendSettingsItem = _powerItem.add(0, Menu.FIRST, Menu.NONE, getString(R.string.remote_suspend));
+      suspendSettingsItem.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+         @Override
+         public boolean onMenuItemClick(MenuItem item) {
+            mService.sendSetPowerModeCommand(PowerModes.Suspend);
+            return true;
+         }
+      });
+      
+      MenuItem hibernateSettingsItem = _powerItem.add(0, Menu.FIRST, Menu.NONE, getString(R.string.remote_hibernate));
+      hibernateSettingsItem.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+         @Override
+         public boolean onMenuItemClick(MenuItem item) {
+            mService.sendSetPowerModeCommand(PowerModes.Hibernate);
+            return true;
+         }
+      });
+      
+      MenuItem rebootSettingsItem = _powerItem.add(0, Menu.FIRST, Menu.NONE, getString(R.string.remote_reboot));
+      rebootSettingsItem.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+         @Override
+         public boolean onMenuItemClick(MenuItem item) {
+            mService.sendSetPowerModeCommand(PowerModes.Reboot);
+            return true;
+         }
+      });
+      
+      MenuItem shutdownSettingsItem = _powerItem.add(0, Menu.FIRST, Menu.NONE, getString(R.string.remote_shutdown));
+      shutdownSettingsItem.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+         @Override
+         public boolean onMenuItemClick(MenuItem item) {
+            mService.sendSetPowerModeCommand(PowerModes.Shutdown);
+            return true;
+         }
+      });
+      
+      MenuItem exitSettingsItem = _powerItem.add(0, Menu.FIRST, Menu.NONE, getString(R.string.remote_exit));
+      exitSettingsItem.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+         @Override
+         public boolean onMenuItemClick(MenuItem item) {
+            mService.sendSetPowerModeCommand(PowerModes.Exit);
+            return true;
+         }
+      });
+   }
+
+   private void createMoreCommandsMen8(SubMenu _menu) {
+      MenuItem stopSettingsItem = _menu.add(0, Menu.FIRST, Menu.NONE, "Stop");
+      stopSettingsItem.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+         @Override
+         public boolean onMenuItemClick(MenuItem item) {
+            mService.sendRemoteButton(RemoteCommands.stopButton);
+            return true;
+         }
+      });
+
+      MenuItem switchFullscreenSettingsItem = _menu.add(0, Menu.FIRST + 1, Menu.NONE,
             "Switch Fullscreen");
       switchFullscreenSettingsItem.setOnMenuItemClickListener(new OnMenuItemClickListener() {
          @Override
@@ -350,7 +426,7 @@ public class RemoteControlActivity extends BaseActivity implements IClientContro
          }
       });
 
-      MenuItem subtitlesSettingsItem = viewItem.add(0, Menu.FIRST + 2, Menu.NONE, "Subtitles");
+      MenuItem subtitlesSettingsItem = _menu.add(0, Menu.FIRST + 2, Menu.NONE, "Subtitles");
       subtitlesSettingsItem.setOnMenuItemClickListener(new OnMenuItemClickListener() {
          @Override
          public boolean onMenuItemClick(MenuItem item) {
@@ -359,17 +435,17 @@ public class RemoteControlActivity extends BaseActivity implements IClientContro
          }
       });
 
-      MenuItem switchAudioTrackSettingsItem = viewItem.add(0, Menu.FIRST + 3, Menu.NONE,
+      MenuItem switchAudioTrackSettingsItem = _menu.add(0, Menu.FIRST + 3, Menu.NONE,
             "Switch Audio Tracks");
       switchAudioTrackSettingsItem.setOnMenuItemClickListener(new OnMenuItemClickListener() {
          @Override
          public boolean onMenuItemClick(MenuItem item) {
-            mService.sendRemoteButton(RemoteCommands.switchFullscreenButton);
+            mService.sendRemoteButton(RemoteCommands.audioTrackButton);
             return true;
          }
       });
 
-      MenuItem menuSettingsItem = viewItem.add(0, Menu.FIRST + 4, Menu.NONE, "Menu");
+      MenuItem menuSettingsItem = _menu.add(0, Menu.FIRST + 4, Menu.NONE, "Menu");
       menuSettingsItem.setOnMenuItemClickListener(new OnMenuItemClickListener() {
          @Override
          public boolean onMenuItemClick(MenuItem item) {
@@ -378,7 +454,7 @@ public class RemoteControlActivity extends BaseActivity implements IClientContro
          }
       });
 
-      MenuItem channelUpSettingsItem = viewItem.add(0, Menu.FIRST + 5, Menu.NONE, "Channel Up");
+      MenuItem channelUpSettingsItem = _menu.add(0, Menu.FIRST + 5, Menu.NONE, "Channel Up");
       channelUpSettingsItem.setOnMenuItemClickListener(new OnMenuItemClickListener() {
          @Override
          public boolean onMenuItemClick(MenuItem item) {
@@ -387,7 +463,7 @@ public class RemoteControlActivity extends BaseActivity implements IClientContro
          }
       });
 
-      MenuItem channelDownSettingsItem = viewItem.add(0, Menu.FIRST + 1, Menu.NONE, "Channel Down");
+      MenuItem channelDownSettingsItem = _menu.add(0, Menu.FIRST + 6, Menu.NONE, "Channel Down");
       channelDownSettingsItem.setOnMenuItemClickListener(new OnMenuItemClickListener() {
          @Override
          public boolean onMenuItemClick(MenuItem item) {
@@ -396,7 +472,14 @@ public class RemoteControlActivity extends BaseActivity implements IClientContro
          }
       });
 
-      return true;
+      MenuItem recordingSettingsItem = _menu.add(0, Menu.FIRST + 7, Menu.NONE, "Recording");
+      recordingSettingsItem.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+         @Override
+         public boolean onMenuItemClick(MenuItem item) {
+            mService.sendRemoteButton(RemoteCommands.recordingButton);
+            return true;
+         }
+      });
    }
 
    @Override

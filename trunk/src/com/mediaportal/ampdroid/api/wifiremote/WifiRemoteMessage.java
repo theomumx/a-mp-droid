@@ -5,5 +5,9 @@ public class WifiRemoteMessage {
       
    }
    
+   public WifiRemoteMessage(String _type){
+      this.Type = _type;
+   }
+   
    public String Type;
 }
