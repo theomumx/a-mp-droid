@@ -30,6 +30,7 @@ import com.mediaportal.ampdroid.remote.RemoteNowPlaying;
 import com.mediaportal.ampdroid.remote.RemotePlugin;
 import com.mediaportal.ampdroid.remote.RemotePluginMessage;
 import com.mediaportal.ampdroid.remote.RemoteStatusMessage;
+import com.mediaportal.ampdroid.remote.RemoteVolumeMessage;
 import com.mediaportal.ampdroid.remote.RemoteWelcomeMessage;
 
 public class WifiRemoteMpController implements IClientControlApi {
@@ -82,6 +83,9 @@ public class WifiRemoteMpController implements IClientControlApi {
                         publishProgress(returnObject);
                      }else if (type.equals("welcome")){
                         Object returnObject = mJsonObjectMapper.readValue(response, RemoteWelcomeMessage.class);
+                        publishProgress(returnObject);
+                     }else if(type.equals("volume")){
+                        Object returnObject = mJsonObjectMapper.readValue(response, RemoteVolumeMessage.class);
                         publishProgress(returnObject);
                      }
                   }
