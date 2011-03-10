@@ -22,4 +22,5 @@ public class RemoteCommands {
    public static RemoteKey channelUpButton = new RemoteKey(11, "Channel Up", "chup", "");
    public static RemoteKey channelDownButton = new RemoteKey(12, "Channel Down", "chdown", "");
    public static RemoteKey recordingButton = new RemoteKey(13, "Recording", "record", "");
+   public static RemoteKey muteButton = new RemoteKey(13, "Mute", "volmute", "");
 }

@@ -88,4 +88,6 @@
 	<string name="remote_reboot">Reboot</string>
 	<string name="remote_shutdown">Shutdown</string>
 	<string name="remote_exit">Exit</string>
+	<string name="slider_remote_controls">Remote Controls</string>
+	<string name="slider_position_label">Position</string>
 </resources>

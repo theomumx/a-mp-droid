@@ -24,6 +24,8 @@ import com.mediaportal.ampdroid.data.commands.RemoteKey;
 import com.mediaportal.ampdroid.remote.RemoteNowPlaying;
 import com.mediaportal.ampdroid.remote.RemotePlugin;
 import com.mediaportal.ampdroid.remote.RemoteStatusMessage;
+import com.mediaportal.ampdroid.remote.RemoteVolumeMessage;
+import com.mediaportal.ampdroid.remote.RemoteWelcomeMessage;
 import com.mediaportal.ampdroid.utils.Util;
 
 public class RemoteControlActivity extends BaseActivity implements IClientControlListener {
@@ -306,13 +308,23 @@ public class RemoteControlActivity extends BaseActivity implements IClientContro
             String module = ((RemoteStatusMessage) _message).getCurrentModule();
             mStatusLabel.setText(module);
             mStatusBarHandler.setStatusText("Change module to " + module);
+            mStatusBarHandler.setStatus((RemoteStatusMessage)_message);
          }
          else if(_message.getClass().equals(RemoteNowPlaying.class)){
             //String module = (String) userData.get("CurrentModule");
             //mStatusLabel.setText(module);
+            mStatusBarHandler.setNowPlaying((RemoteNowPlaying) _message);
          }
          else if(_message.getClass().equals(RemotePlugin[].class)){
             
+         }
+         else if(_message.getClass().equals(RemoteWelcomeMessage.class)){
+            RemoteVolumeMessage vol = ((RemoteWelcomeMessage) _message).getVolume();
+            mStatusBarHandler.setVolume(vol);
+         }
+         else if(_message.getClass().equals(RemoteVolumeMessage.class)){
+            RemoteVolumeMessage vol = ((RemoteVolumeMessage) _message);
+            mStatusBarHandler.setVolume(vol);
          }
       }
 
