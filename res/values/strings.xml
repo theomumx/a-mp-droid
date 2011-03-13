@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-	<string name="hello">Hello World, WelcomeScreenActivity!</string>
 	<string name="app_name">aMPdroid</string>
-
 	<string name="app_desc">Control MP from your Android phone</string>
+	
 	<string name="actionbar_activity_not_found">Failed to open intent...</string>
 	<string name="welcome_choose_client">Choose client:</string>
 	<string name="welcome_auto_connect">Connect on startup</string>
+	<string name="welcome_no_client">Please select client...</string>
 	<string name="welcome_connect">Connect</string>
+	
 	<string name="series_actors">Actors</string>
 	<string name="series_seasons">Seasons</string>
 	<string name="series_release">Release Date</string>
@@ -25,10 +25,70 @@
 	<string name="button_next">Next</string>
 	<string name="button_earlier">Earlier</string>
 	<string name="button_later">Later</string>
+
+
+	<string name="title_home">MediaPortal for Android</string>
+	<string name="title_tvserver">TvServer</string>
+	<string name="title_tvserver_state">Manual Control</string>
+	<string name="title_tvserver_channels">Channels</string>
+	<string name="title_tvserver_recordings">Recordings</string>
+	<string name="title_tvserver_schedules">Schedules</string>
+	<string name="title_tvserver_epg">Program Guide</string>
+	<string name="title_media">Media Browsing</string>
+
+	<string name="media_tabs_shares">Shares</string>
+	<string name="media_tabs_videos">Videos</string>
+	<string name="media_tabs_movies">Series</string>
+	<string name="media_tabs_series">Movies</string>
+
+	<string name="days_yesterday">Yesterday</string>
+	<string name="days_today">Today</string>
+	<string name="days_tomorrow">Tomorrow</string>
+	<string name="state_recording">Recording</string>
+	<string name="state_timeshifting">Timeshifting</string>
+	<string name="state_grabbingEpg">Grabbing EPG</string>
+
+
+	<string name="tvserver_manual_title">Manual Control</string>
+	<string name="tvserver_manual_desc">Current state of the tv service and the tv cards.</string>
+	<string name="tvserver_epg_title">EPG</string>
+	<string name="tvserver_epg_desc">Electronic Program Guide.</string>
+	<string name="tvserver_channel_title">Channels</string>
+	<string name="tvserver_channel_desc">All available Channels on the server.</string>
+	<string name="tvserver_schedules_title">Schedules</string>
+	<string name="tvserver_schedules_desc">All scheduled recordings on the server.</string>
+	<string name="tvserver_recordings_title">Recordings</string>
+	<string name="tvserver_recordings_desc">All recordings on the server.</string>
+	<string name="tvserver_noconnection_tvserver_title">No connection</string>
+	<string name="tvserver_noconnection_tvserver_desc">Couldn\'t connect to Tv Server</string>
+
+	<string name="tvserver_program_start">Start Time</string>
+	<string name="tvserver_program_end">End Time</string>
+	<string name="tvserver_program_duration">Duration</string>
+	<string name="tvserver_program_desc">Description</string>
+
+	<string name="remote_menu_morecommands">More Commands</string>
+	<string name="remote_menu_plugins">Plugins</string>
+	<string name="remote_menu_powermodes">Powermodes</string>
+
+	<string name="remote_logoff">Description</string>
+	<string name="remote_suspend">Suspend</string>
+	<string name="remote_hibernate">Hibernate</string>
+	<string name="remote_reboot">Reboot</string>
+	<string name="remote_shutdown">Shutdown</string>
+	<string name="remote_exit">Exit</string>
+
+	<string name="slider_remote_controls">Remote Controls</string>
+	<string name="slider_position_label">Position</string>
+
 	<string name="settings_categories_clients">Clients</string>
 	<string name="settings_category_general">General</string>
 	<string name="settings_category_tvserver">Tv Server</string>
 	<string name="settings_category_media">Media Browsing</string>
+
+	<string name="settings_general_fullscreen">Fullscreen</string>
+	<string name="settings_general_fullscreen_desc">Hide titlebar. Restart app for changes to take
+		affect)</string>
 	<string name="settings_preference_vibrate_title">Vibrate on Touch</string>
 	<string name="settings_preference_vibrate_desc">Screen vibrates on user interaction</string>
 	<string name="settings_tvserver_showall_title">Show "All Channel" Group</string>
@@ -45,49 +105,76 @@
 	<string name="settings_media_cachevalid_title">Cache valid</string>
 	<string name="settings_media_cachevalid_desc">Cached items should be refreshed if older then
 	</string>
-	<string-array name="settings_media_default_view_text">
+	<string-array name="settings_media_defaultview_series_text">
 		<item>Text</item>
 		<item>Poster</item>
 		<item>Banner</item>
 		<item>Thumb</item>
-
 	</string-array>
-	<string-array name="settings_media_default_view_values">
+	<string-array name="settings_media_defaultview_series_values">
 		<item>0</item>
 		<item>1</item>
 		<item>2</item>
 		<item>3</item>
 	</string-array>
+	<string-array name="settings_media_defaultview_movies_text">
+		<item>Text</item>
+		<item>Poster</item>
+		<item>Thumb</item>
+	</string-array>
+	<string-array name="settings_media_defaultview_movies_values">
+		<item>0</item>
+		<item>1</item>
+		<item>3</item>
+	</string-array>
+	<string-array name="settings_media_defaultview_videos_text">
+		<item>Text</item>
+		<item>Poster</item>
+		<item>Thumb</item>
+	</string-array>
+	<string-array name="settings_media_defaultview_videos_values">
+		<item>0</item>
+		<item>1</item>
+		<item>3</item>
+	</string-array>
+	<string-array name="settings_media_defaultview_shares_text">
+		<item>Text</item>
+	</string-array>
+	<string-array name="settings_media_defaultview_shares_values">
+		<item>0</item>
+	</string-array>
+	<string name="settings_categories_clients_desc">Edit Clients</string>
+	<string name="settings_clients_newclient_title">Clients</string>
+	<string name="settings_clients_newclient_desc">Add, edit, remove clients</string>
+	<string name="settings_general_preloaditems_title">Items to preload</string>
+	<string name="settings_general_preloaditems_desc">Number of items that are loaded when end of list is
+		reached</string>
+	<string name="settings_media_defaultview_series_title">Default View Series</string>
+	<string name="settings_media_defaultview_series_desc">Default View for browsing your tv shows</string>
+	<string name="settings_media_defaultview_movies_title">Default View Movies</string>
+	<string name="settings_media_defaultview_movies_desc">Default View for browsing your movies</string>
+	<string name="settings_media_defaultview_videos_title">Default View Videos</string>
+	<string name="settings_media_defaultview_videos_desc">Default View for browsing your videos</string>
+	<string name="settings_media_defaultview_shares_title">Default View Shares</string>
+	<string name="settings_media_defaultview_shares_desc">Default View browsing your video shares</string>
 
-	<string name="title_home">MediaPortal for Android</string>
-	<string name="title_tvserver">TvServer</string>
-	<string name="title_tvserver_state">Manual Control</string>
-	<string name="title_tvserver_channels">Channels</string>
-	<string name="title_tvserver_recordings">Recordings</string>
-	<string name="title_tvserver_schedules">Schedules</string>
-	<string name="title_tvserver_epg">Program Guide</string>
-	<string name="days_yesterday">Yesterday</string>
-	<string name="days_today">Today</string>
-	<string name="days_tomorrow">Tomorrow</string>
-	<string name="state_recording">Recording</string>
-	<string name="state_timeshifting">Timeshifting</string>
-	<string name="state_grabbingEpg">Grabbing EPG</string>
+	<string name="info_not_implemented">Not implemented yet</string>
+	<string name="info_no_connection">No connection to service</string>
+	<string name="info_remote_notconnected">Remote not connected</string>
 
-	<string name="tvserver_program_start">Start Time</string>
-	<string name="tvserver_program_end">End Time</string>
-	<string name="tvserver_program_duration">Duration</string>
-	<string name="tvserver_program_desc">Description</string>
+	<string name="menu_clients">Clients</string>
+	<string name="menu_settings">Settings</string>
 	
-	<string name="remote_menu_morecommands">More Commands</string>
-	<string name="remote_menu_plugins">Plugins</string>
-	<string name="remote_menu_powermodes">Powermodes</string>
+	<string name="dialog_ok">Ok</string>
+	<string name="dialog_yes">Yes</string>
+	<string name="dialog_no">No</string>
+	<string name="dialog_cancel">Cancel</string>
 	
-	<string name="remote_logoff">Description</string>
-	<string name="remote_suspend">Suspend</string>
-	<string name="remote_hibernate">Hibernate</string>
-	<string name="remote_reboot">Reboot</string>
-	<string name="remote_shutdown">Shutdown</string>
-	<string name="remote_exit">Exit</string>
-	<string name="slider_remote_controls">Remote Controls</string>
-	<string name="slider_position_label">Position</string>
+	<string name="quickactions_playclient">Play on PC</string>
+	<string name="quickactions_playdevice">Play locally</string>
+	<string name="quickactions_downloadsd">Download</string>
+	<string name="quickactions_starttimeshift">Cancel</string>
+	<string name="quickactions_stoptimeshift">Cancel</string>
+	<string name="quickactions_record">Record</string>
+	<string name="quickactions_cancelrecord">Cancel Rec.</string>
 </resources>

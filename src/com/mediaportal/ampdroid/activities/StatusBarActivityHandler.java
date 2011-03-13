@@ -16,10 +16,8 @@ import android.widget.TextView;
 
 import com.mediaportal.ampdroid.R;
 import com.mediaportal.ampdroid.activities.actionbar.ActionBar;
-import com.mediaportal.ampdroid.activities.settings.SettingsActivity;
 import com.mediaportal.ampdroid.api.DataHandler;
 import com.mediaportal.ampdroid.api.RemoteCommands;
-import com.mediaportal.ampdroid.data.NowPlaying;
 import com.mediaportal.ampdroid.data.commands.RemoteKey;
 import com.mediaportal.ampdroid.remote.RemoteNowPlaying;
 import com.mediaportal.ampdroid.remote.RemoteStatusMessage;
@@ -171,7 +169,7 @@ public class StatusBarActivityHandler {
             public void onStartTrackingTouch(SeekBar _seekBar) {
                mVolumeSeekBarChanging = true;
                if (!mRemote.isClientControlConnected()) {
-                  Util.showToast(mParent, "Remote not connected");
+                  Util.showToast(mParent, mParent.getString(R.string.info_remote_notconnected));
                }
             }
 
@@ -243,18 +241,12 @@ public class StatusBarActivityHandler {
       actionBar.setLoading(_loading);
    }
 
-   private void startSettings() {
-      Intent settingsIntent = new Intent(mParent, SettingsActivity.class);
-      mParent.startActivity(settingsIntent);
-      // startActivityForResult(settingsIntent, 0);
-   }
-
    private void sendRemoteKey(RemoteKey _button) {
       Util.Vibrate(mParent, 50);
       if (mRemote.isClientControlConnected()) {
          mRemote.sendRemoteButton(_button);
       } else {
-         Util.showToast(mParent, "Remote not connected");
+         Util.showToast(mParent, mParent.getString(R.string.info_remote_notconnected));
       }
 
    }
@@ -300,8 +292,8 @@ public class StatusBarActivityHandler {
          if (mRemote.isClientControlConnected() || mRemote.connectClientControl()) {
             // statusText.setText("Remote connected...");
          } else {
-            Util.showToast(mParent, "Remote not connected");
-            StatusBarActivityHandler.statusString = "Remote not connected...";
+            Util.showToast(mParent, mParent.getString(R.string.info_remote_notconnected));
+            StatusBarActivityHandler.statusString = mParent.getString(R.string.info_remote_notconnected);
          }
          mStatusText.setText(StatusBarActivityHandler.statusString);
       }
@@ -348,7 +340,6 @@ public class StatusBarActivityHandler {
             else{
                mVolumeButton.setImageResource(R.drawable.button_volume);
             }
-            
          }
       }
    }

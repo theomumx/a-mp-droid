@@ -24,6 +24,7 @@ import com.mediaportal.ampdroid.activities.settings.SettingsActivity;
 import com.mediaportal.ampdroid.api.DataHandler;
 import com.mediaportal.ampdroid.data.RemoteClient;
 import com.mediaportal.ampdroid.database.RemoteClientsDatabaseHandler;
+import com.mediaportal.ampdroid.settings.PreferencesManager;
 import com.mediaportal.ampdroid.utils.Util;
 
 public class WelcomeScreenActivity extends Activity {
@@ -38,11 +39,13 @@ public class WelcomeScreenActivity extends Activity {
       @Override
       protected Boolean doInBackground(RemoteClient... _clients) {
 
+         PreferencesManager.intitialisePreferencesManager(mContext);
+
          DataHandler.setupRemoteHandler(_clients[0], mContext, false);
 
          try {
-            Thread.sleep(0);// for testing, show welcomescreen longer than
-            // necessary
+            // for testing, show welcomescreen longer than necessary
+            Thread.sleep(0);
          } catch (InterruptedException e) {
             e.printStackTrace();
          }
@@ -67,7 +70,7 @@ public class WelcomeScreenActivity extends Activity {
    public void onCreate(Bundle _savedInstanceState) {
       super.onCreate(_savedInstanceState);
       setContentView(R.layout.welcomescreen);
-      
+
       // RemoteClientFactory.openDatabase(this);
       // Client for diebagger -> until setting screen ready
       // final RemoteClient client = new RemoteClient(0, "Bagga Server");
@@ -113,24 +116,10 @@ public class WelcomeScreenActivity extends Activity {
                progress.setIndeterminate(true);
                connectButton.setEnabled(false);
             } else {
-               Util.showToast(_view.getContext(), "Please select client");
+               Util.showToast(_view.getContext(), getString(R.string.welcome_no_client));
             }
          }
       });
-
-      /*RemoteClient client = new RemoteClient(0, "Bagga Server");
-
-      GmaJsonWebserviceApi api = new GmaJsonWebserviceApi("10.1.0.166", 4322);
-      client.setRemoteAccessApi(api);
-
-      Tv4HomeJsonApi tvApi = new Tv4HomeJsonApi("10.1.0.166", 4321);
-      client.setTvControlApi(tvApi);
-
-      WifiRemoteMpController clientApi = new WifiRemoteMpController("10.1.0.247", 8017);
-      client.setClientControlApi(clientApi);
-      
-      clients = new ArrayList<RemoteClient>();
-      clients.add(client);*/
 
       if (clients != null && clients.size() > 0) {
          ArrayAdapter<RemoteClient> adapter = new ArrayAdapter<RemoteClient>(this,
@@ -144,7 +133,8 @@ public class WelcomeScreenActivity extends Activity {
 
    @Override
    public boolean onCreateOptionsMenu(Menu _menu) {
-      MenuItem settingsItem = _menu.add(0, Menu.FIRST, Menu.NONE, "Settings");
+      MenuItem settingsItem = _menu
+            .add(0, Menu.FIRST, Menu.NONE, getString(R.string.menu_settings));
       settingsItem.setOnMenuItemClickListener(new OnMenuItemClickListener() {
          @Override
          public boolean onMenuItemClick(MenuItem item) {

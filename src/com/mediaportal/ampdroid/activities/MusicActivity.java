@@ -12,7 +12,11 @@ public class MusicActivity extends Activity {
       super.onCreate(_savedInstanceState);
       setContentView(R.layout.musicactivity);
 
-      /*RemoteHandler service = RemoteHandler.getCurrentRemoteInstance();
+      /*
+      
+      
+      RemoteHandler service = RemoteHandler.getCurrentRemoteInstance();
+       
 
       
       URL url = service.getDownloadUri("C:\\Users\\DieBagger\\Torrents\\the.big.bang.theory.s04e11.hdtv.xvid-fever.avi");

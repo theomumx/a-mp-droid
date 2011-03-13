@@ -4,10 +4,14 @@ import android.content.Context;
 import android.os.Vibrator;
 import android.widget.Toast;
 
+import com.mediaportal.ampdroid.settings.PreferencesManager;
+
 public class Util {
    public static void Vibrate(Context _context, int _time) {
-      Vibrator v = (Vibrator) _context.getSystemService(Context.VIBRATOR_SERVICE);
-      v.vibrate(_time);
+      if(PreferencesManager.isVibrating()){
+         Vibrator v = (Vibrator) _context.getSystemService(Context.VIBRATOR_SERVICE);
+         v.vibrate(_time);
+      }
    }
 
    public static Toast toast;

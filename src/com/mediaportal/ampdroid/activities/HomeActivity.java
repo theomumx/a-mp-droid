@@ -1,16 +1,12 @@
 package com.mediaportal.ampdroid.activities;
 
-import java.util.List;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
 import com.mediaportal.ampdroid.R;
 import com.mediaportal.ampdroid.api.DataHandler;
-import com.mediaportal.ampdroid.data.Movie;
 import com.mediaportal.ampdroid.utils.Util;
 
 public class HomeActivity extends BaseActivity {
@@ -40,9 +36,8 @@ public class HomeActivity extends BaseActivity {
       buttonMusic.setOnClickListener(new View.OnClickListener() {
          public void onClick(View _view) {
             Util.Vibrate(_view.getContext(), 50);
-            Toast toast = Toast.makeText(_view.getContext(), "Music not implemented yet",
-                  Toast.LENGTH_SHORT);
-            toast.show();
+            Util.showToast(_view.getContext(), getString(R.string.info_not_implemented));
+            
             Intent myIntent = new Intent(_view.getContext(), MusicActivity.class);
             startActivity(myIntent);
          }
@@ -70,16 +65,7 @@ public class HomeActivity extends BaseActivity {
       buttonPictures.setOnClickListener(new View.OnClickListener() {
          public void onClick(View _view) {
             Util.Vibrate(_view.getContext(), 50);
-            Toast toast = Toast.makeText(_view.getContext(), "Pictures not implemented yet",
-                  Toast.LENGTH_SHORT);
-            toast.show();
-            //Intent myIntent = new Intent(_view.getContext(), PicturesActivity.class);
-            //startActivity(myIntent);
-
-            List<Movie> movies = mService.getMovies(0, 20);
-            List<Movie> movies2 = mService.getAllMovies();
-            Movie m2 = movies.get(0);
-            Movie m3 = movies2.get(0);
+            Util.showToast(_view.getContext(), getString(R.string.info_not_implemented));
          }
       });
 
@@ -87,14 +73,7 @@ public class HomeActivity extends BaseActivity {
       buttonPlugins.setOnClickListener(new View.OnClickListener() {
          public void onClick(View _view) {
             Util.Vibrate(_view.getContext(), 50);
-            // Toast toast = Toast.makeText(_view.getContext(),
-            // "Plugins not implemented yet",
-            // Toast.LENGTH_SHORT);
-            // toast.show();
-
-            // Intent settingsIntent = new Intent(_view.getContext(),
-            // SettingsActivity.class);
-            // startActivity(settingsIntent);
+            Util.showToast(_view.getContext(), getString(R.string.info_not_implemented));
          }
       });
    }

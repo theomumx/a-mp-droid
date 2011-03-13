@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 	<PreferenceCategory android:title="@string/settings_categories_clients"
-		android:key="cat_clients" android:summary="Edit Clients">
-		<PreferenceScreen android:title="Clients"
-			android:summary="Add, edit, remove clients">
+		android:key="cat_clients" android:summary="@string/settings_categories_clients_desc">
+		<PreferenceScreen android:summary="@string/settings_clients_newclient_desc"
+			android:title="@string/settings_clients_newclient_title">
 			<intent android:action="android.intent.action.MAIN"
 				android:data="" android:targetPackage="com.mediaportal.ampdroid"
 				android:targetClass="com.mediaportal.ampdroid.activities.settings.ClientSettingsActivity" />
@@ -14,21 +14,52 @@
 		<CheckBoxPreference android:summary="@string/settings_preference_vibrate_desc"
 			android:title="@string/settings_preference_vibrate_title"
 			android:key="general_vibrate"></CheckBoxPreference>
-		<CheckBoxPreference android:title="Load all items at once"
-			android:key="listview_load_all"
-			android:summary="If checked, will load all items of a listview at once, otherwise only loads further items  on demand"></CheckBoxPreference>
-		<CheckBoxPreference android:title="Items to preload"
-			android:key="listview_preload_number"
-			android:summary="Number of items that are loaded when end of list is reached"></CheckBoxPreference>
+		<CheckBoxPreference android:key="listview_preload_number"
+			android:summary="@string/settings_general_preloaditems_desc"
+			android:title="@string/settings_general_preloaditems_title"></CheckBoxPreference>
+		<CheckBoxPreference android:key="general_fullscreen"
+			android:summary="@string/settings_general_fullscreen_desc"
+			android:title="@string/settings_general_fullscreen" android:enabled="true"></CheckBoxPreference>
 	</PreferenceCategory>
 	<PreferenceCategory android:title="@string/settings_category_tvserver"
 		android:key="cat_tvserver">
 		<CheckBoxPreference android:summary="@string/settings_tvserver_showall_desc"
 			android:title="@string/settings_tvserver_showall_title" android:key="tvserver_showall"></CheckBoxPreference>
-	<EditTextPreference android:title="@string/settings_tvserver_clientname_title" android:key="tvserver_clientname" android:summary="@string/settings_tvserver_clientname_desc" android:dialogTitle="@string/settings_tvserver_clientname_title" android:defaultValue="android2"></EditTextPreference>
-</PreferenceCategory>
-	<PreferenceCategory android:title="@string/settings_category_media" android:key="cat_media"><EditTextPreference android:title="@string/settings_media_cachevalid_title" android:key="media_cache_valid" android:summary="@string/settings_media_cachevalid_desc"></EditTextPreference>
-<CheckBoxPreference android:key="media_load_details" android:summary="@string/settings_media_loaddetails_desc" android:title="@string/settings_media_loaddetails_title"></CheckBoxPreference>
-<ListPreference android:title="Default View" android:key="media_default_view" android:entries="@array/settings_media_default_view_text" android:entryValues="@array/settings_media_default_view_values" android:summary="Default View for media browsing"></ListPreference>
-</PreferenceCategory>
+		<EditTextPreference android:title="@string/settings_tvserver_clientname_title"
+			android:key="tvserver_clientname" android:summary="@string/settings_tvserver_clientname_desc"
+			android:dialogTitle="@string/settings_tvserver_clientname_title"
+			android:defaultValue="android2"></EditTextPreference>
+	</PreferenceCategory>
+	<PreferenceCategory android:title="@string/settings_category_media"
+		android:key="cat_media">
+		<EditTextPreference android:title="@string/settings_media_cachevalid_title"
+			android:key="media_cache_valid" android:summary="@string/settings_media_cachevalid_desc"></EditTextPreference>
+		<CheckBoxPreference android:key="media_load_details"
+			android:summary="@string/settings_media_loaddetails_desc"
+			android:title="@string/settings_media_loaddetails_title"></CheckBoxPreference>
+		<ListPreference android:key="media_default_view_series"
+			android:entries="@array/settings_media_defaultview_series_text"
+			android:entryValues="@array/settings_media_defaultview_series_values"
+			android:title="@string/settings_media_defaultview_series_title"
+			android:summary="@string/settings_media_defaultview_series_desc">
+		</ListPreference>
+		<ListPreference android:key="media_default_view_movies"
+			android:entries="@array/settings_media_defaultview_movies_text"
+			android:entryValues="@array/settings_media_defaultview_movies_values"
+			android:title="@string/settings_media_defaultview_movies_title"
+			android:summary="@string/settings_media_defaultview_movies_desc">
+		</ListPreference>
+		<ListPreference android:key="media_default_view_videos"
+			android:entries="@array/settings_media_defaultview_videos_text"
+			android:entryValues="@array/settings_media_defaultview_videos_values"
+			android:title="@string/settings_media_defaultview_videos_title"
+			android:summary="@string/settings_media_defaultview_videos_desc">
+		</ListPreference>
+		<ListPreference android:key="media_default_view_shares"
+			android:entries="@array/settings_media_defaultview_shares_text"
+			android:entryValues="@array/settings_media_defaultview_shares_values"
+			android:title="@string/settings_media_defaultview_shares_title"
+			android:summary="@string/settings_media_defaultview_shares_desc">
+		</ListPreference>
+	</PreferenceCategory>
 </PreferenceScreen>
