@@ -67,28 +67,28 @@ public class TvServerOverviewActivity extends BaseActivity {
          });
 
          mFeaturesAdapter = new TvServerFeaturesAdapter(this);
-         mFeaturesAdapter.addFeature(new TvServerFeature("Manual Control",
-               "Current state of the tv service and the tv cards.", R.drawable.tvserver_manual));
-         mFeaturesAdapter.addFeature(new TvServerFeature("EPG", "Electronic Program Guide",
-               R.drawable.tvserver_tv));
-         mFeaturesAdapter.addFeature(new TvServerFeature("Channels",
-               "All available Channels on the server", R.drawable.tvserver_tv));
-         mFeaturesAdapter.addFeature(new TvServerFeature("Schedules",
-               "All scheduled recordings on the server", R.drawable.tvserver_schedules));
-         mFeaturesAdapter.addFeature(new TvServerFeature("Recordings",
-               "All recordings on the server", R.drawable.tvserver_recordings));
+         mFeaturesAdapter.addFeature(new TvServerFeature(getString(R.string.tvserver_manual_title),
+               getString(R.string.tvserver_manual_desc), R.drawable.tvserver_manual));
+         mFeaturesAdapter.addFeature(new TvServerFeature(getString(R.string.tvserver_epg_title),
+               getString(R.string.tvserver_epg_desc), R.drawable.tvserver_tv));
+         mFeaturesAdapter.addFeature(new TvServerFeature(getString(R.string.tvserver_channel_title),
+               getString(R.string.tvserver_channel_desc), R.drawable.tvserver_tv));
+         mFeaturesAdapter.addFeature(new TvServerFeature(getString(R.string.tvserver_schedules_title),
+               getString(R.string.tvserver_schedules_desc), R.drawable.tvserver_schedules));
+         mFeaturesAdapter.addFeature(new TvServerFeature(getString(R.string.tvserver_recordings_title),
+               getString(R.string.tvserver_recordings_desc), R.drawable.tvserver_recordings));
 
          mListView.setAdapter(mFeaturesAdapter);
       } else {
          AlertDialog.Builder builder = new AlertDialog.Builder(this);
-         builder.setTitle("Couldn't connect to tv server!");
-         builder.setMessage("Couldn't connect to tv server!");
+         builder.setTitle(getString(R.string.tvserver_noconnection_tvserver_title));
+         builder.setMessage(getString(R.string.tvserver_noconnection_tvserver_desc));
          builder.setCancelable(false);
-         builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                         TvServerOverviewActivity.this.finish();
-                    }
-                });
+         builder.setPositiveButton(getString(R.string.dialog_ok), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+               TvServerOverviewActivity.this.finish();
+            }
+         });
 
          AlertDialog alert = builder.create();
          alert.show();

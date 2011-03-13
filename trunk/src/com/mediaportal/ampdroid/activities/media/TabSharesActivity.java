@@ -51,7 +51,7 @@ public class TabSharesActivity extends Activity {
 
          return shares;
       }
-
+ 
       @Override
       protected void onPostExecute(List<VideoShare> _result) {
          mListItems.clear();
@@ -238,9 +238,13 @@ public class TabSharesActivity extends Activity {
 
       mBreadCrumb = new ArrayList<String>();
       
+      mBaseActivity = (BaseTabActivity) getParent().getParent();
       mService = DataHandler.getCurrentRemoteInstance();
-      mStatusBarHandler = new StatusBarActivityHandler(this, mService);
-      mStatusBarHandler.setHome(false);
+      
+      if (mBaseActivity != null && mService != null) {
+         mStatusBarHandler = new StatusBarActivityHandler(mBaseActivity, mService);
+         mStatusBarHandler.setHome(false);
+      }
 
       loadShares();
    }

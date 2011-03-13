@@ -77,7 +77,7 @@ public class RemoteControlActivity extends BaseActivity implements IClientContro
              */
             return null;
          } else {
-            return "Remote not connected";
+            return getString(R.string.info_remote_notconnected);
          }
       }
 
@@ -299,36 +299,30 @@ public class RemoteControlActivity extends BaseActivity implements IClientContro
 
    }
 
-   @SuppressWarnings("unchecked")
    @Override
    public void messageReceived(Object _message) {
 
-      if(_message != null){
-         if(_message.getClass().equals(RemoteStatusMessage.class)){
+      if (_message != null) {
+         if (_message.getClass().equals(RemoteStatusMessage.class)) {
             String module = ((RemoteStatusMessage) _message).getCurrentModule();
             mStatusLabel.setText(module);
-            mStatusBarHandler.setStatusText("Change module to " + module);
-            mStatusBarHandler.setStatus((RemoteStatusMessage)_message);
-         }
-         else if(_message.getClass().equals(RemoteNowPlaying.class)){
-            //String module = (String) userData.get("CurrentModule");
-            //mStatusLabel.setText(module);
+            mStatusBarHandler.setStatusText(module);
+            mStatusBarHandler.setStatus((RemoteStatusMessage) _message);
+         } else if (_message.getClass().equals(RemoteNowPlaying.class)) {
+            // String module = (String) userData.get("CurrentModule");
+            // mStatusLabel.setText(module);
             mStatusBarHandler.setNowPlaying((RemoteNowPlaying) _message);
-         }
-         else if(_message.getClass().equals(RemotePlugin[].class)){
-            
-         }
-         else if(_message.getClass().equals(RemoteWelcomeMessage.class)){
+         } else if (_message.getClass().equals(RemotePlugin[].class)) {
+
+         } else if (_message.getClass().equals(RemoteWelcomeMessage.class)) {
             RemoteVolumeMessage vol = ((RemoteWelcomeMessage) _message).getVolume();
             mStatusBarHandler.setVolume(vol);
-         }
-         else if(_message.getClass().equals(RemoteVolumeMessage.class)){
+         } else if (_message.getClass().equals(RemoteVolumeMessage.class)) {
             RemoteVolumeMessage vol = ((RemoteVolumeMessage) _message);
             mStatusBarHandler.setVolume(vol);
          }
       }
 
-      
    }
 
    @Override
@@ -338,19 +332,24 @@ public class RemoteControlActivity extends BaseActivity implements IClientContro
 
    @Override
    public boolean onCreateOptionsMenu(Menu _menu) {
-      SubMenu viewItem = _menu.addSubMenu(0, Menu.FIRST + 1, Menu.NONE, getString(R.string.remote_menu_morecommands));
+      SubMenu viewItem = _menu.addSubMenu(0, Menu.FIRST + 1, Menu.NONE,
+            getString(R.string.remote_menu_morecommands));
       createMoreCommandsMen8(viewItem);
 
-      SubMenu powerItem = _menu.addSubMenu(0, Menu.FIRST + 2, Menu.NONE, getString(R.string.remote_menu_powermodes));
+      SubMenu powerItem = _menu.addSubMenu(0, Menu.FIRST + 2, Menu.NONE,
+            getString(R.string.remote_menu_powermodes));
       createPowerModeMenu(powerItem);
-      
-      SubMenu pluginsItem = _menu.addSubMenu(0, Menu.FIRST + 3, Menu.NONE, getString(R.string.remote_menu_plugins));
+
+      SubMenu pluginsItem = _menu.addSubMenu(0, Menu.FIRST + 3, Menu.NONE,
+            getString(R.string.remote_menu_plugins));
       createPluginsMenu(pluginsItem);
 
       return true;
    }
 
    private void createPluginsMenu(SubMenu _menu) {
+      // TODO: show a list of all plugins and if clicked -> open them on the
+      // client
       MenuItem stopSettingsItem = _menu.add(0, Menu.FIRST, Menu.NONE, "List of all plugins");
       stopSettingsItem.setOnMenuItemClickListener(new OnMenuItemClickListener() {
          @Override
@@ -359,11 +358,12 @@ public class RemoteControlActivity extends BaseActivity implements IClientContro
             return false;
          }
       });
-      
+
    }
 
    private void createPowerModeMenu(SubMenu _powerItem) {
-      MenuItem logoffSettingsItem = _powerItem.add(0, Menu.FIRST, Menu.NONE, getString(R.string.remote_logoff));
+      MenuItem logoffSettingsItem = _powerItem.add(0, Menu.FIRST, Menu.NONE,
+            getString(R.string.remote_logoff));
       logoffSettingsItem.setOnMenuItemClickListener(new OnMenuItemClickListener() {
          @Override
          public boolean onMenuItemClick(MenuItem item) {
@@ -371,8 +371,9 @@ public class RemoteControlActivity extends BaseActivity implements IClientContro
             return true;
          }
       });
-      
-      MenuItem suspendSettingsItem = _powerItem.add(0, Menu.FIRST, Menu.NONE, getString(R.string.remote_suspend));
+
+      MenuItem suspendSettingsItem = _powerItem.add(0, Menu.FIRST, Menu.NONE,
+            getString(R.string.remote_suspend));
       suspendSettingsItem.setOnMenuItemClickListener(new OnMenuItemClickListener() {
          @Override
          public boolean onMenuItemClick(MenuItem item) {
@@ -380,8 +381,9 @@ public class RemoteControlActivity extends BaseActivity implements IClientContro
             return true;
          }
       });
-      
-      MenuItem hibernateSettingsItem = _powerItem.add(0, Menu.FIRST, Menu.NONE, getString(R.string.remote_hibernate));
+
+      MenuItem hibernateSettingsItem = _powerItem.add(0, Menu.FIRST, Menu.NONE,
+            getString(R.string.remote_hibernate));
       hibernateSettingsItem.setOnMenuItemClickListener(new OnMenuItemClickListener() {
          @Override
          public boolean onMenuItemClick(MenuItem item) {
@@ -389,8 +391,9 @@ public class RemoteControlActivity extends BaseActivity implements IClientContro
             return true;
          }
       });
-      
-      MenuItem rebootSettingsItem = _powerItem.add(0, Menu.FIRST, Menu.NONE, getString(R.string.remote_reboot));
+
+      MenuItem rebootSettingsItem = _powerItem.add(0, Menu.FIRST, Menu.NONE,
+            getString(R.string.remote_reboot));
       rebootSettingsItem.setOnMenuItemClickListener(new OnMenuItemClickListener() {
          @Override
          public boolean onMenuItemClick(MenuItem item) {
@@ -398,8 +401,9 @@ public class RemoteControlActivity extends BaseActivity implements IClientContro
             return true;
          }
       });
-      
-      MenuItem shutdownSettingsItem = _powerItem.add(0, Menu.FIRST, Menu.NONE, getString(R.string.remote_shutdown));
+
+      MenuItem shutdownSettingsItem = _powerItem.add(0, Menu.FIRST, Menu.NONE,
+            getString(R.string.remote_shutdown));
       shutdownSettingsItem.setOnMenuItemClickListener(new OnMenuItemClickListener() {
          @Override
          public boolean onMenuItemClick(MenuItem item) {
@@ -407,8 +411,9 @@ public class RemoteControlActivity extends BaseActivity implements IClientContro
             return true;
          }
       });
-      
-      MenuItem exitSettingsItem = _powerItem.add(0, Menu.FIRST, Menu.NONE, getString(R.string.remote_exit));
+
+      MenuItem exitSettingsItem = _powerItem.add(0, Menu.FIRST, Menu.NONE,
+            getString(R.string.remote_exit));
       exitSettingsItem.setOnMenuItemClickListener(new OnMenuItemClickListener() {
          @Override
          public boolean onMenuItemClick(MenuItem item) {
@@ -419,7 +424,8 @@ public class RemoteControlActivity extends BaseActivity implements IClientContro
    }
 
    private void createMoreCommandsMen8(SubMenu _menu) {
-      MenuItem stopSettingsItem = _menu.add(0, Menu.FIRST, Menu.NONE, "Stop");
+      MenuItem stopSettingsItem = _menu.add(0, Menu.FIRST, Menu.NONE,
+            RemoteCommands.stopButton.getName());
       stopSettingsItem.setOnMenuItemClickListener(new OnMenuItemClickListener() {
          @Override
          public boolean onMenuItemClick(MenuItem item) {
@@ -429,7 +435,7 @@ public class RemoteControlActivity extends BaseActivity implements IClientContro
       });
 
       MenuItem switchFullscreenSettingsItem = _menu.add(0, Menu.FIRST + 1, Menu.NONE,
-            "Switch Fullscreen");
+            RemoteCommands.switchFullscreenButton.getName());
       switchFullscreenSettingsItem.setOnMenuItemClickListener(new OnMenuItemClickListener() {
          @Override
          public boolean onMenuItemClick(MenuItem item) {
@@ -438,7 +444,8 @@ public class RemoteControlActivity extends BaseActivity implements IClientContro
          }
       });
 
-      MenuItem subtitlesSettingsItem = _menu.add(0, Menu.FIRST + 2, Menu.NONE, "Subtitles");
+      MenuItem subtitlesSettingsItem = _menu.add(0, Menu.FIRST + 2, Menu.NONE,
+            RemoteCommands.subtitlesButton.getName());
       subtitlesSettingsItem.setOnMenuItemClickListener(new OnMenuItemClickListener() {
          @Override
          public boolean onMenuItemClick(MenuItem item) {
@@ -448,7 +455,7 @@ public class RemoteControlActivity extends BaseActivity implements IClientContro
       });
 
       MenuItem switchAudioTrackSettingsItem = _menu.add(0, Menu.FIRST + 3, Menu.NONE,
-            "Switch Audio Tracks");
+            RemoteCommands.audioTrackButton.getName());
       switchAudioTrackSettingsItem.setOnMenuItemClickListener(new OnMenuItemClickListener() {
          @Override
          public boolean onMenuItemClick(MenuItem item) {
@@ -457,7 +464,8 @@ public class RemoteControlActivity extends BaseActivity implements IClientContro
          }
       });
 
-      MenuItem menuSettingsItem = _menu.add(0, Menu.FIRST + 4, Menu.NONE, "Menu");
+      MenuItem menuSettingsItem = _menu.add(0, Menu.FIRST + 4, Menu.NONE,
+            RemoteCommands.menuButton.getName());
       menuSettingsItem.setOnMenuItemClickListener(new OnMenuItemClickListener() {
          @Override
          public boolean onMenuItemClick(MenuItem item) {
@@ -466,7 +474,8 @@ public class RemoteControlActivity extends BaseActivity implements IClientContro
          }
       });
 
-      MenuItem channelUpSettingsItem = _menu.add(0, Menu.FIRST + 5, Menu.NONE, "Channel Up");
+      MenuItem channelUpSettingsItem = _menu.add(0, Menu.FIRST + 5, Menu.NONE,
+            RemoteCommands.channelUpButton.getName());
       channelUpSettingsItem.setOnMenuItemClickListener(new OnMenuItemClickListener() {
          @Override
          public boolean onMenuItemClick(MenuItem item) {
@@ -475,7 +484,8 @@ public class RemoteControlActivity extends BaseActivity implements IClientContro
          }
       });
 
-      MenuItem channelDownSettingsItem = _menu.add(0, Menu.FIRST + 6, Menu.NONE, "Channel Down");
+      MenuItem channelDownSettingsItem = _menu.add(0, Menu.FIRST + 6, Menu.NONE,
+            RemoteCommands.channelDownButton.getName());
       channelDownSettingsItem.setOnMenuItemClickListener(new OnMenuItemClickListener() {
          @Override
          public boolean onMenuItemClick(MenuItem item) {
@@ -484,7 +494,8 @@ public class RemoteControlActivity extends BaseActivity implements IClientContro
          }
       });
 
-      MenuItem recordingSettingsItem = _menu.add(0, Menu.FIRST + 7, Menu.NONE, "Recording");
+      MenuItem recordingSettingsItem = _menu.add(0, Menu.FIRST + 7, Menu.NONE,
+            RemoteCommands.recordingButton.getName());
       recordingSettingsItem.setOnMenuItemClickListener(new OnMenuItemClickListener() {
          @Override
          public boolean onMenuItemClick(MenuItem item) {

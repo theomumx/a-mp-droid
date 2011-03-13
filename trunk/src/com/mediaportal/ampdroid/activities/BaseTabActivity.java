@@ -10,13 +10,16 @@ import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.WindowManager;
 import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.View;
 import android.view.Window;
 
+import com.mediaportal.ampdroid.R;
 import com.mediaportal.ampdroid.activities.settings.SettingsActivity;
 import com.mediaportal.ampdroid.data.RemoteClient;
 import com.mediaportal.ampdroid.database.RemoteClientsDatabaseHandler;
+import com.mediaportal.ampdroid.settings.PreferencesManager;
 import com.mediaportal.ampdroid.utils.Util;
 
 public class BaseTabActivity extends TabActivity {
@@ -24,17 +27,22 @@ public class BaseTabActivity extends TabActivity {
    @Override
    public void onCreate(Bundle _savedInstanceState) {
       super.onCreate(_savedInstanceState);
+
+      if (PreferencesManager.isFullscreen()) {
+         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+               WindowManager.LayoutParams.FLAG_FULLSCREEN);
+      }
    }
 
    @Override
    protected void onStart() {
       super.onStart();
    }
-
+   
    @Override
    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
       super.onCreateContextMenu(menu, v, menuInfo);
-      menu.setHeaderTitle("Client");
+      menu.setHeaderTitle(getString(R.string.menu_clients));
 
       RemoteClientsDatabaseHandler remoteClientsDb = new RemoteClientsDatabaseHandler(this);
       remoteClientsDb.open();
@@ -44,11 +52,11 @@ public class BaseTabActivity extends TabActivity {
       for (int i = 0; i < clients.size(); i++) {
          MenuItem item = menu.add(0, Menu.FIRST, Menu.NONE, clients.get(i).getClientName());
          item.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-            
+
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                notImplemented();
-               //TODO: Client switching
+               // TODO: Client switching
                return false;
             }
          });
@@ -56,7 +64,7 @@ public class BaseTabActivity extends TabActivity {
    }
 
    protected void notImplemented() {
-      Util.showToast(this, "Not implemented yet");
+      Util.showToast(this, getString(R.string.info_not_implemented));
    }
 
    @Override
@@ -68,7 +76,7 @@ public class BaseTabActivity extends TabActivity {
 
    @Override
    public boolean onCreateOptionsMenu(Menu _menu) {
-      MenuItem settingsItem = _menu.add(0, Menu.FIRST, Menu.NONE, "Settings");
+      MenuItem settingsItem = _menu.add(0, Menu.FIRST, Menu.NONE, getString(R.string.menu_settings));
       settingsItem.setOnMenuItemClickListener(new OnMenuItemClickListener() {
          @Override
          public boolean onMenuItemClick(MenuItem item) {

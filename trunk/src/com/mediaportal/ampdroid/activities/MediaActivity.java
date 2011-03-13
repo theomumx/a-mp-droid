@@ -30,7 +30,7 @@ public class MediaActivity extends BaseTabActivity {
       setContentView(R.layout.mediaactivity);
       
       ActionBar actionBar = (ActionBar) findViewById(R.id.actionbar);
-      actionBar.setTitle("Media Browsing");
+      actionBar.setTitle(getString(R.string.title_media));
 
       DataHandler service = DataHandler.getCurrentRemoteInstance();
       SupportedFunctions functions = service.getSupportedFunctions();
@@ -47,34 +47,32 @@ public class MediaActivity extends BaseTabActivity {
          if (functions.supportsVideo()) {
             /** tid1 is firstTabSpec Id. Its used to access outside. */
             TabSpec sharesTabSpec = mTabHost.newTabSpec("tid0");
-            View tab = createTabView(this, "Shares");
+            View tab = createTabView(this, getString(R.string.media_tabs_shares));
             sharesTabSpec.setIndicator(tab);
             sharesTabSpec.setContent(new Intent(this, TabSharesActivity.class));
             mTabHost.addTab(sharesTabSpec);
 
             TabSpec videosTabSpec = mTabHost.newTabSpec("tid1");
-            videosTabSpec.setIndicator(createTabView(this, "Videos"));
+            videosTabSpec.setIndicator(createTabView(this, getString(R.string.media_tabs_videos)));
             videosTabSpec.setContent(new Intent(this, TabVideosActivityGroup.class));
             mTabHost.addTab(videosTabSpec);
          }
 
          if (functions.supportsTvSeries()) {
             TabSpec seriesTabSpec = mTabHost.newTabSpec("tid2");
-            seriesTabSpec.setIndicator(createTabView(this, "Series"));
-            // TabActivityGroup seriesActivityGroup = new
-            // TabActivityGroup(TabSeriesActivity.class);
+            seriesTabSpec.setIndicator(createTabView(this, getString(R.string.media_tabs_series)));
             seriesTabSpec.setContent(new Intent(this, TabSeriesActivityGroup.class));
             mTabHost.addTab(seriesTabSpec);
          }
 
          if (functions.supportsMovies()) {
             TabSpec moviesTabSpec = mTabHost.newTabSpec("tid3");
-            moviesTabSpec.setIndicator(createTabView(this, "Movies"));
+            moviesTabSpec.setIndicator(createTabView(this, getString(R.string.media_tabs_movies)));
             moviesTabSpec.setContent(new Intent(this, TabMoviesActivityGroup.class));
             mTabHost.addTab(moviesTabSpec);
          }
       } else {
-         Toast toast = Toast.makeText(this, "No connection to service", Toast.LENGTH_SHORT);
+         Toast toast = Toast.makeText(this, getString(R.string.info_no_connection), Toast.LENGTH_SHORT);
          toast.show();
       }
    }
