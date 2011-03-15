@@ -147,7 +147,7 @@ public class TabVideoDetailsActivity extends Activity {
          // mPosterGallery.setSpacing(-10);
          // mPosterGallery.setAdapter(mAdapter);
 
-         mLoadingDialog = ProgressDialog.show(getParent(), getString(R.string.media_movie_loadmoviedetails),
+         mLoadingDialog = ProgressDialog.show(getParent(), getString(R.string.media_videos_loadvideodetails),
                getString(R.string.info_loading_title), true);
          mLoadingDialog.setCancelable(true);
       } else {// activity called without movie id (shouldn't happen ;))
