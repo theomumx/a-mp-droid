@@ -41,6 +41,21 @@
 	<string name="media_tabs_movies">Series</string>
 	<string name="media_tabs_series">Movies</string>
 
+	<string name="media_season">Season</string>
+	<string name="media_episodes">Episodes</string>
+	<string name="media_episodes_loading">Loading Episodes ...</string>
+	<string name="media_episodes_nofile">No local file available for this episode</string>
+	<string name="media_series_loadingerror">Couldn\'t load series </string>
+	<string name="media_series_loadmultiplewarning_title">Downloading multiple episodes!</string>
+	<string name="media_series_loadmultiplewarning_text_begin">Do you really want to download </string>
+	<string name="media_series_loadmultiplewarning_text_end"> episodes?</string>
+	<string name="media_series_loadseriesdetails">Loading Series Details ...</string>
+	<string name="media_series_loadepisodedetails">Loading Episode Details ...</string>
+	<string name="media_shares_loadshares">Loading Video Shares ...</string>
+	<string name="media_shares_loadfiles">Loading Files ...</string>
+	<string name="media_movie_loadingerror">Couldn\'t load movie</string>
+	<string name="media_movie_loadmoviedetails">Couldn\'t load movie details</string>
+	
 	<string name="days_yesterday">Yesterday</string>
 	<string name="days_today">Today</string>
 	<string name="days_tomorrow">Tomorrow</string>
@@ -161,6 +176,7 @@
 	<string name="info_not_implemented">Not implemented yet</string>
 	<string name="info_no_connection">No connection to service</string>
 	<string name="info_remote_notconnected">Remote not connected</string>
+	<string name="info_loading_title">Loading. Please wait ...</string>
 
 	<string name="menu_clients">Clients</string>
 	<string name="menu_settings">Settings</string>

@@ -103,7 +103,7 @@ public class TabEpisodesActivity extends Activity {
          mSeasonNumber = extras.getInt("season_number");
 
          mTextViewSeriesName.setText(mSeriesName);
-         mTextViewSeason.setText("Season " + mSeasonNumber);
+         mTextViewSeason.setText(getString(R.string.media_season) + " " + mSeasonNumber);
          mService = DataHandler.getCurrentRemoteInstance();
 
          mAdapter = new LazyLoadingAdapter(this);
@@ -164,7 +164,7 @@ public class TabEpisodesActivity extends Activity {
                   if (localFileName.exists()) {
                      ActionItem playItemAction = new ActionItem();
 
-                     playItemAction.setTitle("Play episode");
+                     playItemAction.setTitle(getString(R.string.quickactions_playdevice));
                      playItemAction
                            .setIcon(getResources().getDrawable(R.drawable.quickaction_play));
                      playItemAction.setOnClickListener(new OnClickListener() {
@@ -181,7 +181,7 @@ public class TabEpisodesActivity extends Activity {
                      qa.addActionItem(playItemAction);
                   } else {
                      ActionItem sdCardAction = new ActionItem();
-                     sdCardAction.setTitle("Download to sd card");
+                     sdCardAction.setTitle(getString(R.string.quickactions_downloadsd));
                      sdCardAction
                            .setIcon(getResources().getDrawable(R.drawable.quickaction_sdcard));
                      sdCardAction.setOnClickListener(new OnClickListener() {
@@ -209,7 +209,7 @@ public class TabEpisodesActivity extends Activity {
                   if (mService.isClientControlConnected()) {
                      ActionItem playOnClientAction = new ActionItem();
 
-                     playOnClientAction.setTitle("Play on Client");
+                     playOnClientAction.setTitle(getString(R.string.quickactions_playclient));
                      playOnClientAction.setIcon(getResources().getDrawable(
                            R.drawable.quickaction_play_device));
                      playOnClientAction.setOnClickListener(new OnClickListener() {
@@ -227,7 +227,7 @@ public class TabEpisodesActivity extends Activity {
 
                   qa.show();
                } else {
-                  Util.showToast(_view.getContext(), "No local file available for this episode");
+                  Util.showToast(_view.getContext(), getString(R.string.media_episodes_nofile));
                }
                return true;
             } catch (Exception ex) {
@@ -238,7 +238,7 @@ public class TabEpisodesActivity extends Activity {
    }
 
    private void refreshEpisodes() {
-      mAdapter.setLoadingText("Loading Episodes ...");
+      mAdapter.setLoadingText(getString(R.string.media_episodes_loading));
       mAdapter.showLoadingItem(true);
       mEpisodesLoaderTask = new LoadEpisodesTask();
       mEpisodesLoaderTask.execute(0);

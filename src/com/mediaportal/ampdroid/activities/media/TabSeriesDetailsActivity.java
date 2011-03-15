@@ -43,6 +43,7 @@ import com.mediaportal.ampdroid.lists.LazyLoadingImage;
 import com.mediaportal.ampdroid.lists.Utils;
 import com.mediaportal.ampdroid.quickactions.ActionItem;
 import com.mediaportal.ampdroid.quickactions.QuickAction;
+import com.mediaportal.ampdroid.utils.DateTimeHelper;
 import com.mediaportal.ampdroid.utils.DownloaderUtils;
 import com.mediaportal.ampdroid.utils.Util;
 
@@ -85,7 +86,7 @@ public class TabSeriesDetailsActivity extends Activity {
                   season.getSeasonNumber(), i, i + 1);
             SeriesEpisode ep = episodes.get(0);
             String epFile = ep.getFileName();
-            
+
             String url = mService.getDownloadUri(epFile);
             FileInfo info = mService.getFileInfo(epFile);
             String dirName = DownloaderUtils.getTvEpisodePath(mSeries.getPrettyName(), ep);
@@ -153,8 +154,7 @@ public class TabSeriesDetailsActivity extends Activity {
             Date firstAired = _result.getFirstAired();
 
             if (firstAired != null) {
-               String date = (String) android.text.format.DateFormat.format("yyyy-MM-dd",
-                     firstAired);
+               String date = DateTimeHelper.getDateString(firstAired, false);
                mSeriesReleaseDate.setText(date);
             }
 
@@ -184,7 +184,7 @@ public class TabSeriesDetailsActivity extends Activity {
          } else {
             mLoadingDialog.cancel();
             Dialog diag = new Dialog(getParent());
-            diag.setTitle(" Couldn't load series ");
+            diag.setTitle(getString(R.string.media_series_loadingerror));
             diag.setCancelable(true);
 
             diag.show();
@@ -288,18 +288,22 @@ public class TabSeriesDetailsActivity extends Activity {
                            final QuickAction qa = new QuickAction(_view);
 
                            ActionItem sdCardAction = new ActionItem();
-                           sdCardAction.setTitle("Download to sd card");
+                           sdCardAction.setTitle(getString(R.string.quickactions_downloadsd));
                            sdCardAction.setIcon(getResources().getDrawable(
                                  R.drawable.quickaction_sdcard));
                            sdCardAction.setOnClickListener(new OnClickListener() {
                               @Override
                               public void onClick(final View _view) {
-                                 AlertDialog.Builder builder = new AlertDialog.Builder(mBaseActivity);
-                                 builder.setTitle("Downloading multiple episodes!");
-                                 builder.setMessage("Do you really want to download "
-                                       + s.getEpisodesCount() + " Episodes?");
+                                 AlertDialog.Builder builder = new AlertDialog.Builder(
+                                       mBaseActivity);
+                                 builder
+                                       .setTitle(getString(R.string.media_series_loadmultiplewarning_title));
+                                 builder
+                                       .setMessage(getString(R.string.media_series_loadmultiplewarning_text_begin)
+                                             + s.getEpisodesCount()
+                                             + getString(R.string.media_series_loadmultiplewarning_text_end));
                                  builder.setCancelable(false);
-                                 builder.setPositiveButton("Yes",
+                                 builder.setPositiveButton(getString(R.string.dialog_yes),
                                        new DialogInterface.OnClickListener() {
                                           public void onClick(DialogInterface dialog, int id) {
                                              mSeasonDownloaderTask = new DownloadSeasonTask(_view
@@ -308,10 +312,10 @@ public class TabSeriesDetailsActivity extends Activity {
                                           }
                                        });
 
-                                 builder.setNegativeButton("No",
+                                 builder.setNegativeButton(getString(R.string.dialog_no),
                                        new DialogInterface.OnClickListener() {
                                           public void onClick(DialogInterface dialog, int id) {
-                                               dialog.dismiss();
+                                             dialog.dismiss();
                                           }
                                        });
                                  AlertDialog alert = builder.create();
@@ -325,7 +329,7 @@ public class TabSeriesDetailsActivity extends Activity {
                            if (mService.isClientControlConnected()) {
                               ActionItem playOnClientAction = new ActionItem();
 
-                              playOnClientAction.setTitle("Play on Client");
+                              playOnClientAction.setTitle(getString(R.string.quickactions_playclient));
                               playOnClientAction.setIcon(getResources().getDrawable(
                                     R.drawable.quickaction_play_device));
                               playOnClientAction.setOnClickListener(new OnClickListener() {
@@ -333,7 +337,7 @@ public class TabSeriesDetailsActivity extends Activity {
                                  public void onClick(View _view) {
                                     // TODO: Add all files to playlist and start
                                     // playback
-                                    Util.showToast(_view.getContext(), "Not implemented yet");
+                                    Util.showToast(_view.getContext(), getString(R.string.info_not_implemented));
                                     // mService.playFileOnClient(epFile);
 
                                     qa.dismiss();
@@ -347,7 +351,7 @@ public class TabSeriesDetailsActivity extends Activity {
                            qa.show();
                         } else {
                            Util.showToast(_view.getContext(),
-                                 "No local file available for this episode");
+                                 getString(R.string.media_episodes_nofile));
                         }
                         return true;
                      } catch (Exception ex) {
@@ -356,8 +360,8 @@ public class TabSeriesDetailsActivity extends Activity {
                   }
                });
 
-               text.setText("Season " + s.getSeasonNumber());
-               subtext.setText(s.getEpisodesCount() + " Episodes");
+               text.setText(getString(R.string.media_season) + " " + s.getSeasonNumber());
+               subtext.setText(s.getEpisodesCount() + " " + getString(R.string.media_episodes));
                view.setTag(s);
 
                mSeasonLayout.addView(view);
@@ -381,7 +385,7 @@ public class TabSeriesDetailsActivity extends Activity {
       mSeriesActors = (TextView) findViewById(R.id.TextViewSeriesActors);
       mSeriesRating = (RatingBar) findViewById(R.id.RatingBarSeriesRating);
       mSeriesRating.setNumStars(10);
-      
+
       mBaseActivity = (BaseTabActivity) getParent().getParent();
 
       Bundle extras = getIntent().getExtras();
@@ -399,8 +403,8 @@ public class TabSeriesDetailsActivity extends Activity {
          // mPosterGallery.setSpacing(-10);
          // mPosterGallery.setAdapter(mAdapter);
 
-         mLoadingDialog = ProgressDialog.show(getParent(), " Loading Series Details ",
-               " Loading. Please wait ... ", true);
+         mLoadingDialog = ProgressDialog.show(getParent(), getString(R.string.media_series_loadseriesdetails),
+               getString(R.string.info_loading_title), true);
          mLoadingDialog.setCancelable(true);
       } else {// activity called without movie id (shouldn't happen ;))
 
