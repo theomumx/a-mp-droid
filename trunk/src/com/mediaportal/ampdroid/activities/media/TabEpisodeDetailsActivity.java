@@ -121,7 +121,7 @@ public class TabEpisodeDetailsActivity extends Activity {
          } else {
             mLoadingDialog.cancel();
             Dialog diag = new Dialog(getParent());
-            diag.setTitle(" Couldn't load series ");
+            diag.setTitle(getString(R.string.media_series_loadingerror));
             diag.setCancelable(true);
             
             diag.show();
@@ -172,8 +172,8 @@ public class TabEpisodeDetailsActivity extends Activity {
          mLoadSeriesTask = new LoadSeriesDetailsTask(this);
          mLoadSeriesTask.execute(mSeriesId, mEpisodeId);
 
-         mLoadingDialog = ProgressDialog.show(getParent(), " Loading Episode Details ",
-               " Loading. Please wait ... ", true);
+         mLoadingDialog = ProgressDialog.show(getParent(), getString(R.string.media_series_loadepisodedetails),
+               getString(R.string.info_loading_title), true);
          mLoadingDialog.setCancelable(true);
       }
    }

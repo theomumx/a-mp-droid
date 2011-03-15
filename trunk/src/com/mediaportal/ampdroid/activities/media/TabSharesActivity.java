@@ -166,7 +166,7 @@ public class TabSharesActivity extends Activity {
                   if (localFileName.exists()) {
                      ActionItem playItemAction = new ActionItem();
 
-                     playItemAction.setTitle("Play episode");
+                     playItemAction.setTitle(getString(R.string.quickactions_playdevice));
                      playItemAction.setIcon(getResources().getDrawable(
                            R.drawable.quickaction_play));
                      playItemAction.setOnClickListener(new OnClickListener() {
@@ -184,7 +184,7 @@ public class TabSharesActivity extends Activity {
                   }
                   else{
                      ActionItem sdCardAction = new ActionItem();
-                     sdCardAction.setTitle("Download to sd card");
+                     sdCardAction.setTitle(getString(R.string.quickactions_downloadsd));
                      sdCardAction.setIcon(getResources().getDrawable(R.drawable.quickaction_sdcard));
                      sdCardAction.setOnClickListener(new OnClickListener() {
                         @Override
@@ -211,7 +211,7 @@ public class TabSharesActivity extends Activity {
                   if(mService.isClientControlConnected()){
                      ActionItem playOnClientAction = new ActionItem();
 
-                     playOnClientAction.setTitle("Play on Client");
+                     playOnClientAction.setTitle(getString(R.string.quickactions_playclient));
                      playOnClientAction.setIcon(getResources().getDrawable(
                            R.drawable.quickaction_play_device));
                      playOnClientAction.setOnClickListener(new OnClickListener() {
@@ -250,8 +250,8 @@ public class TabSharesActivity extends Activity {
    }
 
    private void loadShares() {
-      mLoadingDialog = ProgressDialog.show(getParent(), " Loading Video Shares ",
-            " Loading. Please wait ... ", true);
+      mLoadingDialog = ProgressDialog.show(getParent(), getString(R.string.media_shares_loadshares),
+            getString(R.string.info_loading_title), true);
       mLoadingDialog.setCancelable(true);
 
       mSeriesLoaderTask = new LoadSharesTask();
@@ -259,8 +259,8 @@ public class TabSharesActivity extends Activity {
    }
 
    protected void loadFiles(String _path) {
-      mLoadingDialog = ProgressDialog.show(getParent(), " Loading Files ",
-            " Loading. Please wait ... ", true);
+      mLoadingDialog = ProgressDialog.show(getParent(), getString(R.string.media_shares_loadfiles),
+            getString(R.string.info_loading_title), true);
       mLoadingDialog.setCancelable(true);
       mBreadCrumb.add(_path);
 
