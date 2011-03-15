@@ -96,7 +96,7 @@ public class TabMoviesActivity extends Activity implements ILoadingListener {
             else{
                mAdapter.showLoadingItem(false);
                //mAdapter.setLoadingText("Loading failed, check your connection");
-               Util.showToast(mContext, "Loading failed, check your connection");
+               Util.showToast(mContext, getString(R.string.info_loading_failed));
             }
          }
          mAdapter.notifyDataSetChanged();
@@ -181,7 +181,7 @@ public class TabMoviesActivity extends Activity implements ILoadingListener {
                   if (localFileName.exists()) {
                      ActionItem playItemAction = new ActionItem();
 
-                     playItemAction.setTitle("Play movie");
+                     playItemAction.setTitle(getString(R.string.quickactions_playdevice));
                      playItemAction
                            .setIcon(getResources().getDrawable(R.drawable.quickaction_play));
                      playItemAction.setOnClickListener(new OnClickListener() {
@@ -198,7 +198,7 @@ public class TabMoviesActivity extends Activity implements ILoadingListener {
                      qa.addActionItem(playItemAction);
                   } else {
                      ActionItem sdCardAction = new ActionItem();
-                     sdCardAction.setTitle("Download to sd card");
+                     sdCardAction.setTitle(getString(R.string.quickactions_downloadsd));
                      sdCardAction
                            .setIcon(getResources().getDrawable(R.drawable.quickaction_sdcard));
                      sdCardAction.setOnClickListener(new OnClickListener() {
@@ -226,7 +226,7 @@ public class TabMoviesActivity extends Activity implements ILoadingListener {
                   if (mService.isClientControlConnected()) {
                      ActionItem playOnClientAction = new ActionItem();
 
-                     playOnClientAction.setTitle("Play on Client");
+                     playOnClientAction.setTitle(getString(R.string.quickactions_playclient));
                      playOnClientAction.setIcon(getResources().getDrawable(
                            R.drawable.quickaction_play_device));
                      playOnClientAction.setOnClickListener(new OnClickListener() {
@@ -244,7 +244,7 @@ public class TabMoviesActivity extends Activity implements ILoadingListener {
 
                   qa.show();
                } else {
-                  Util.showToast(_view.getContext(), "No local file available for this movie");
+                  Util.showToast(_view.getContext(), getString(R.string.media_nofile));
                }
                return true;
             } catch (Exception ex) {
@@ -253,7 +253,7 @@ public class TabMoviesActivity extends Activity implements ILoadingListener {
          }
       });
 
-      mAdapter.setLoadingText("Loading Movies ...");
+      mAdapter.setLoadingText(getString(R.string.media_movies_loading));
       mAdapter.showLoadingItem(true);
       loadFurtherMovieItems();
    }
@@ -274,11 +274,11 @@ public class TabMoviesActivity extends Activity implements ILoadingListener {
    @Override
    public boolean onCreateOptionsMenu(Menu _menu) {
       super.onCreateOptionsMenu(_menu);
-      SubMenu viewItem = _menu.addSubMenu(0, Menu.FIRST + 1, Menu.NONE, "Views");
+      SubMenu viewItem = _menu.addSubMenu(0, Menu.FIRST + 1, Menu.NONE, getString(R.string.media_views));
 
-      MenuItem textSettingsItem = viewItem.add(0, Menu.FIRST + 1, Menu.NONE, "Text");
-      MenuItem posterSettingsItem = viewItem.add(0, Menu.FIRST + 2, Menu.NONE, "Poster");
-      MenuItem thumbsSettingsItem = viewItem.add(0, Menu.FIRST + 3, Menu.NONE, "Thumbs");
+      MenuItem textSettingsItem = viewItem.add(0, Menu.FIRST + 1, Menu.NONE, getString(R.string.media_views_text));
+      MenuItem posterSettingsItem = viewItem.add(0, Menu.FIRST + 2, Menu.NONE, getString(R.string.media_views_poster));
+      MenuItem thumbsSettingsItem = viewItem.add(0, Menu.FIRST + 3, Menu.NONE, getString(R.string.media_views_thumbs));
 
       textSettingsItem.setOnMenuItemClickListener(new OnMenuItemClickListener() {
          @Override

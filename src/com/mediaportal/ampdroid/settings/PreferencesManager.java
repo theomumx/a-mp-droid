@@ -23,10 +23,19 @@ public class PreferencesManager {
 
    public static boolean isVibrating() {
       if (Preferences != null) {
-         return Preferences.getBoolean("general_vibrate", true);
+         return Preferences.getBoolean("general_vibrate", false);
       } else {
          Log.w("aMPdroid", "PreferencesManager not initialised");
          return false;
+      }
+   }
+
+   public static String getTvClientName() {
+      if (Preferences != null) {
+         return Preferences.getString("tvserver_clientname", "unknown");
+      } else {
+         Log.w("aMPdroid", "PreferencesManager not initialised");
+         return "unknown";
       }
    }
 

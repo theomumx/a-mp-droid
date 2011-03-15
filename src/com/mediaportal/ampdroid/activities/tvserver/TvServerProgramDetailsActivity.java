@@ -59,7 +59,7 @@ public class TvServerProgramDetailsActivity extends BaseActivity {
          } else {
             mLoadingDialog.cancel();
             Dialog diag = new Dialog(mContext);
-            diag.setTitle(" Couldn't load program details ");
+            diag.setTitle(getString(R.string.tvserver_loadprogramdetails_failed));
             diag.setCancelable(true);
             
             diag.show();
@@ -102,8 +102,8 @@ public class TvServerProgramDetailsActivity extends BaseActivity {
          mLoadProgramTask = new LoadProgramDetailsTask(this);
          mLoadProgramTask.execute(mProgramId);
 
-         mLoadingDialog = ProgressDialog.show(this, " Loading Program Details ",
-               " Loading. Please wait ... ", true);
+         mLoadingDialog = ProgressDialog.show(this, getString(R.string.tvserver_loadprogramdetails),
+               getString(R.string.info_loading_title), true);
          mLoadingDialog.setCancelable(true);
       } else {// activity called without movie id (shouldn't happen ;))
 

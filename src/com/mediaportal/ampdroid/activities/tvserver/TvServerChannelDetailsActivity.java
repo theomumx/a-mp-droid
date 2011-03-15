@@ -80,7 +80,7 @@ public class TvServerChannelDetailsActivity extends BaseActivity {
       protected void onPostExecute(List<TvProgramBase> _result) {
          int selectedPos = 0;
          if (_result != null) {
-            Util.showToast(mContext, "Finished loading programs ...");
+            Util.showToast(mContext, getString(R.string.tvserver_loadepg_finished));
 
             for (TvProgramBase p : _result) {
                Date begin = p.getStartTime();
@@ -254,7 +254,7 @@ public class TvServerChannelDetailsActivity extends BaseActivity {
 
                if (program.isIsScheduled()) {
                   ActionItem addScheduleAction = new ActionItem();
-                  addScheduleAction.setTitle("Cancel Recording");
+                  addScheduleAction.setTitle(getString(R.string.tvserver_cancel_recording));
                   addScheduleAction.setIcon(getResources().getDrawable(R.drawable.bubble_del));
                   addScheduleAction.setOnClickListener(new OnClickListener() {
                      @Override
@@ -269,7 +269,7 @@ public class TvServerChannelDetailsActivity extends BaseActivity {
                   qa.addActionItem(addScheduleAction);
                } else {
                   ActionItem addScheduleAction = new ActionItem();
-                  addScheduleAction.setTitle("Record this");
+                  addScheduleAction.setTitle(getString(R.string.tvserver_record_this));
                   addScheduleAction.setIcon(getResources().getDrawable(
                         R.drawable.quickaction_recording));
                   addScheduleAction.setOnClickListener(new OnClickListener() {

@@ -28,7 +28,7 @@
 		<EditTextPreference android:title="@string/settings_tvserver_clientname_title"
 			android:key="tvserver_clientname" android:summary="@string/settings_tvserver_clientname_desc"
 			android:dialogTitle="@string/settings_tvserver_clientname_title"
-			android:defaultValue="android2"></EditTextPreference>
+			android:defaultValue="aMPdroid"></EditTextPreference>
 	</PreferenceCategory>
 	<PreferenceCategory android:title="@string/settings_category_media"
 		android:key="cat_media">

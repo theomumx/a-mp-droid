@@ -95,7 +95,7 @@ public class TabVideoDetailsActivity extends Activity {
          } else {
             mLoadingDialog.cancel();
             Dialog diag = new Dialog(getParent());
-            diag.setTitle(" Couldn't load video ");
+            diag.setTitle(getString(R.string.media_videos_loadingerror));
             diag.setCancelable(true);
 
             diag.show();
@@ -147,8 +147,8 @@ public class TabVideoDetailsActivity extends Activity {
          // mPosterGallery.setSpacing(-10);
          // mPosterGallery.setAdapter(mAdapter);
 
-         mLoadingDialog = ProgressDialog.show(getParent(), " Loading Video Details ",
-               " Loading. Please wait ... ", true);
+         mLoadingDialog = ProgressDialog.show(getParent(), getString(R.string.media_movie_loadmoviedetails),
+               getString(R.string.info_loading_title), true);
          mLoadingDialog.setCancelable(true);
       } else {// activity called without movie id (shouldn't happen ;))
 

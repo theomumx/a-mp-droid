@@ -52,11 +52,11 @@ public class TvServerSchedulesActivity extends BaseActivity {
       @Override
       protected void onPostExecute(Boolean _result) {
          if (_result) {
-            Util.showToast(mContext, "Schedule cancelled");
+            Util.showToast(mContext, getString(R.string.tvserver_schedulecanceled));
 
             mAdapter.notifyDataSetChanged();
          } else {
-            Util.showToast(mContext, "Couldn't cancel schedule");
+            Util.showToast(mContext, getString(R.string.tvserver_schedulecancel_failed));
          }
       }
    }
@@ -116,7 +116,7 @@ public class TvServerSchedulesActivity extends BaseActivity {
             final QuickAction qa = new QuickAction(_view);
 
             ActionItem addScheduleAction = new ActionItem();
-            addScheduleAction.setTitle("Cancel Recording");
+            addScheduleAction.setTitle(getString(R.string.tvserver_cancel_recording));
             addScheduleAction.setIcon(getResources().getDrawable(R.drawable.quickaction_delete));
             addScheduleAction.setOnClickListener(new OnClickListener() {
                @Override
@@ -137,7 +137,7 @@ public class TvServerSchedulesActivity extends BaseActivity {
 
    private void refreshSchedules() {
       mAdapter.showLoadingItem(true);
-      mAdapter.setLoadingText("Loading Schedules ...");
+      mAdapter.setLoadingText(getString(R.string.tvserver_loadschedules));
       mRecordingsUpdater = new UpdateSchedulesTask();
       mRecordingsUpdater.execute(0);
    }

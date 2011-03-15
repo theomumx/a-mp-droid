@@ -85,7 +85,7 @@ public class TvServerRecordingsActivity extends BaseActivity {
 
    private void refreshRecordings() {
       mAdapter.showLoadingItem(true);
-      mAdapter.setLoadingText("Loading Recordings ...");
+      mAdapter.setLoadingText(getString(R.string.tvserver_loadrecordings));
       mRecordingsUpdater = new UpdateRecordingsTask();
       mRecordingsUpdater.execute(0);
    }
