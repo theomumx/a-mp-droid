@@ -8,6 +8,7 @@ import android.preference.PreferenceScreen;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.mediaportal.ampdroid.R;
 import com.mediaportal.ampdroid.data.RemoteClient;
 import com.mediaportal.ampdroid.database.RemoteClientsDatabaseHandler;
 import com.mediaportal.ampdroid.utils.Util;
@@ -60,7 +61,7 @@ public class ClientSettingsActivity extends PreferenceActivity {
 
    @Override
    public boolean onCreateOptionsMenu(Menu menu) {
-      menu.addSubMenu(0, MENU_ADD_HOST, 0, "Add Host");// .setIcon(R.drawable.menu_add_host);
+      menu.addSubMenu(0, MENU_ADD_HOST, 0, getString(R.string.menu_addhost));// .setIcon(R.drawable.menu_add_host);
       //menu.addSubMenu(0, MENU_ADD_HOST_WIZARD, 0, "Host Wizard");// .setIcon(R.drawable.menu_add_host);
       //menu.addSubMenu(0, MENU_EXIT, 0, "Exit");// .setIcon(R.drawable.menu_exit);
 

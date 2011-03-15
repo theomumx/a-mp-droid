@@ -112,7 +112,7 @@ public class TabEpisodeDetailsActivity extends Activity {
             
             EpisodeFile epFile = _result.getEpisodeFile();
             if(epFile != null){
-               mTextViewRuntime.setText(String.valueOf((int)(epFile.getDuration() / 60000)) + " minutes");
+               mTextViewRuntime.setText(String.valueOf((int)(epFile.getDuration() / 60000)) + getString(R.string.media_episodes_minutes));
             }
 
             mTextViewEpisodeOverview.setText(_result.getSummary());

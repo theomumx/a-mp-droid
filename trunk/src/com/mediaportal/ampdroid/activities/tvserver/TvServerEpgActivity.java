@@ -123,7 +123,7 @@ public class TvServerEpgActivity extends BaseActivity {
 
       @Override
       protected void onPostExecute(List<TvProgramBase> _result) {
-         Util.showToast(mContext, "Finished loading epg");
+         Util.showToast(mContext, getString(R.string.tvserver_loadepg_finished));
          mLoadingDialog.cancel();
       }
    }
@@ -197,7 +197,7 @@ public class TvServerEpgActivity extends BaseActivity {
 
                if (program.isIsScheduled()) {
                   ActionItem addScheduleAction = new ActionItem();
-                  addScheduleAction.setTitle("Cancel Recording");
+                  addScheduleAction.setTitle(getString(R.string.tvserver_cancel_recording));
                   addScheduleAction.setIcon(getResources().getDrawable(R.drawable.bubble_del));
                   addScheduleAction.setOnClickListener(new OnClickListener() {
                      private CancelScheduleTask mCancelScheduleTask;
@@ -214,7 +214,7 @@ public class TvServerEpgActivity extends BaseActivity {
                   qa.addActionItem(addScheduleAction);
                } else {
                   ActionItem addScheduleAction = new ActionItem();
-                  addScheduleAction.setTitle("Record this");
+                  addScheduleAction.setTitle(getString(R.string.tvserver_record_this));
                   addScheduleAction.setIcon(getResources().getDrawable(
                         R.drawable.quickaction_recording));
                   addScheduleAction.setOnClickListener(new OnClickListener() {
@@ -271,8 +271,8 @@ public class TvServerEpgActivity extends BaseActivity {
    }
 
    private void refreshGroups() {
-      mLoadingDialog = ProgressDialog.show(TvServerEpgActivity.this, " Loading Groups ",
-            " Loading. Please wait ... ", true);
+      mLoadingDialog = ProgressDialog.show(TvServerEpgActivity.this, getString(R.string.tvserver_loadgroups),
+            getString(R.string.info_loading_title), true);
       mLoadingDialog.setCancelable(true);
 
       mGroupsUpdater = new UpdateGroupsTask();
@@ -281,8 +281,8 @@ public class TvServerEpgActivity extends BaseActivity {
 
    private void refreshEpg(TvChannelGroup _group) {
       mLoadingDialog.cancel();
-      mLoadingDialog = ProgressDialog.show(TvServerEpgActivity.this, " Loading EPG ",
-            " Loading. Please wait ... ", true);
+      mLoadingDialog = ProgressDialog.show(TvServerEpgActivity.this, getString(R.string.tvserver_loadepg),
+            getString(R.string.info_loading_title), true);
       mLoadingDialog.setCancelable(true);
       mEpgAdapter.clear();
       mEpgAdapter.showLoadingItem(true);

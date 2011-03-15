@@ -25,6 +25,7 @@ import com.mediaportal.ampdroid.data.TvChannel;
 import com.mediaportal.ampdroid.data.TvChannelGroup;
 import com.mediaportal.ampdroid.quickactions.ActionItem;
 import com.mediaportal.ampdroid.quickactions.QuickAction;
+import com.mediaportal.ampdroid.settings.PreferencesManager;
 import com.mediaportal.ampdroid.utils.Util;
 
 public class TvServerChannelsActivity extends BaseActivity {
@@ -137,34 +138,31 @@ public class TvServerChannelsActivity extends BaseActivity {
             final QuickAction qa = new QuickAction(_view);
             mSelectedChannel = (TvChannel) mListView.getItemAtPosition(_pos);
 
-            //start channel on device -> not working yet on plugin-side
+            // start channel on device -> not working yet on plugin-side
             /*
-            ActionItem playOnClientAction = new ActionItem();
-            playOnClientAction.setTitle("Play on Client");
-            playOnClientAction
-                  .setIcon(getResources().getDrawable(R.drawable.quickaction_play));
-            playOnClientAction.setOnClickListener(new OnClickListener() {
-               @Override
-               public void onClick(View _view) {
-                  TvChannel channel = mSelectedChannel;
-                  mService.playChannelOnClient(channel.getIdChannel());
-
-                  qa.dismiss();
-               }
-            });
-            qa.addActionItem(playOnClientAction);
-            */
+             * ActionItem playOnClientAction = new ActionItem();
+             * playOnClientAction.setTitle("Play on Client"); playOnClientAction
+             * .
+             * setIcon(getResources().getDrawable(R.drawable.quickaction_play));
+             * playOnClientAction.setOnClickListener(new OnClickListener() {
+             * 
+             * @Override public void onClick(View _view) { TvChannel channel =
+             * mSelectedChannel;
+             * mService.playChannelOnClient(channel.getIdChannel());
+             * 
+             * qa.dismiss(); } }); qa.addActionItem(playOnClientAction);
+             */
 
             ActionItem playOnDeviceAction = new ActionItem();
-            playOnDeviceAction.setTitle("Play on Device");
-            playOnDeviceAction
-                  .setIcon(getResources().getDrawable(R.drawable.quickaction_play));
+            playOnDeviceAction.setTitle(getString(R.string.quickactions_playdevice));
+            playOnDeviceAction.setIcon(getResources().getDrawable(R.drawable.quickaction_play));
             playOnDeviceAction.setOnClickListener(new OnClickListener() {
                @Override
                public void onClick(View _view) {
                   TvChannel channel = mSelectedChannel;
 
-                  mPlayingUrl = mService.startTimeshift(channel.getIdChannel(), "aMPdroid");
+                  mPlayingUrl = mService.startTimeshift(channel.getIdChannel(),
+                        PreferencesManager.getTvClientName());
                   mPlayingUrl = mPlayingUrl.replace("bagga-server", "10.1.0.166");
 
                   Intent i = new Intent(Intent.ACTION_VIEW);
@@ -186,8 +184,8 @@ public class TvServerChannelsActivity extends BaseActivity {
    }
 
    private void refreshGroups() {
-      mLoadingDialog = ProgressDialog.show(TvServerChannelsActivity.this, " Loading Groups ",
-            " Loading. Please wait ... ", true);
+      mLoadingDialog = ProgressDialog.show(TvServerChannelsActivity.this, getString(R.string.tvserver_loadgroups),
+            getString(R.string.info_loading_title), true);
       mLoadingDialog.setCancelable(true);
 
       mGroupsUpdater = new UpdateGroupsTask();
@@ -196,8 +194,8 @@ public class TvServerChannelsActivity extends BaseActivity {
 
    private void refreshChannelList(TvChannelGroup _group) {
       mLoadingDialog.cancel();
-      mLoadingDialog = ProgressDialog.show(TvServerChannelsActivity.this, " Loading Channels ",
-            " Loading. Please wait ... ", true);
+      mLoadingDialog = ProgressDialog.show(TvServerChannelsActivity.this, getString(R.string.tvserver_loadchannels),
+            getString(R.string.info_loading_title), true);
       mLoadingDialog.setCancelable(true);
 
       mChannelUpdater = new UpdateChannelsTask();
@@ -208,12 +206,12 @@ public class TvServerChannelsActivity extends BaseActivity {
    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
       if (requestCode == 1) {
          if (resultCode < 0) {
-            Util.showToast(this, "Error playing " + mPlayingUrl + ", ResultCode: " + resultCode);
+            Util.showToast(this, getString(R.string.tvserver_errorplaying) + mPlayingUrl
+                  + getString(R.string.tvserver_errorplaying_resultcode) + resultCode);
+         } else {
+            Util.showToast(this, getString(R.string.tvserver_finishedplaying) + mPlayingUrl);
          }
-         else{
-            Util.showToast(this, "Finished playing " + mPlayingUrl);
-         }
-         mService.stopTimeshift("aMPdroid");
+         mService.stopTimeshift(PreferencesManager.getTvClientName());
       }
 
       super.onActivityResult(requestCode, resultCode, data);

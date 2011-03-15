@@ -351,7 +351,7 @@ public class TabSeriesDetailsActivity extends Activity {
                            qa.show();
                         } else {
                            Util.showToast(_view.getContext(),
-                                 getString(R.string.media_episodes_nofile));
+                                 getString(R.string.media_nofile));
                         }
                         return true;
                      } catch (Exception ex) {
@@ -360,7 +360,7 @@ public class TabSeriesDetailsActivity extends Activity {
                   }
                });
 
-               text.setText(getString(R.string.media_season) + " " + s.getSeasonNumber());
+               text.setText(getString(R.string.media_series_season) + " " + s.getSeasonNumber());
                subtext.setText(s.getEpisodesCount() + " " + getString(R.string.media_episodes));
                view.setTag(s);
 

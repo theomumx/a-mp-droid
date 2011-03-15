@@ -2,13 +2,13 @@
 <resources>
 	<string name="app_name">aMPdroid</string>
 	<string name="app_desc">Control MP from your Android phone</string>
-	
+
 	<string name="actionbar_activity_not_found">Failed to open intent...</string>
 	<string name="welcome_choose_client">Choose client:</string>
 	<string name="welcome_auto_connect">Connect on startup</string>
 	<string name="welcome_no_client">Please select client...</string>
 	<string name="welcome_connect">Connect</string>
-	
+
 	<string name="series_actors">Actors</string>
 	<string name="series_seasons">Seasons</string>
 	<string name="series_release">Release Date</string>
@@ -36,26 +36,39 @@
 	<string name="title_tvserver_epg">Program Guide</string>
 	<string name="title_media">Media Browsing</string>
 
+	<string name="media_views">Views</string>
+	<string name="media_views_text">Text</string>
+	<string name="media_views_poster">Poster</string>
+	<string name="media_views_thumbs">Thumbs</string>
+	<string name="media_views_banner">Banner</string>
+
 	<string name="media_tabs_shares">Shares</string>
 	<string name="media_tabs_videos">Videos</string>
-	<string name="media_tabs_movies">Series</string>
-	<string name="media_tabs_series">Movies</string>
+	<string name="media_tabs_movies">Movies</string>
+	<string name="media_tabs_series">Series</string>
 
-	<string name="media_season">Season</string>
-	<string name="media_episodes">Episodes</string>
-	<string name="media_episodes_loading">Loading Episodes ...</string>
-	<string name="media_episodes_nofile">No local file available for this episode</string>
-	<string name="media_series_loadingerror">Couldn\'t load series </string>
+	<string name="media_nofile">No local file available for this item</string>
+
+	<string name="media_series_loadingerror">Couldn\'t load series</string>
 	<string name="media_series_loadmultiplewarning_title">Downloading multiple episodes!</string>
 	<string name="media_series_loadmultiplewarning_text_begin">Do you really want to download </string>
 	<string name="media_series_loadmultiplewarning_text_end"> episodes?</string>
+	<string name="media_series_season">Season</string>
+	<string name="media_series_loadseries">Loading Series ...</string>
 	<string name="media_series_loadseriesdetails">Loading Series Details ...</string>
 	<string name="media_series_loadepisodedetails">Loading Episode Details ...</string>
+	<string name="media_episodes">Episodes</string>
+	<string name="media_episodes_loading">Loading Episodes ...</string>
+	<string name="media_episodes_minutes"> minutes</string>
 	<string name="media_shares_loadshares">Loading Video Shares ...</string>
 	<string name="media_shares_loadfiles">Loading Files ...</string>
 	<string name="media_movie_loadingerror">Couldn\'t load movie</string>
 	<string name="media_movie_loadmoviedetails">Couldn\'t load movie details</string>
-	
+	<string name="media_movies_loading">Loading Movies ...</string>
+	<string name="media_videos_loadingerror">Couldn\'t load video</string>
+	<string name="media_videos_loadvideodetails">Loading Video Details</string>
+	<string name="media_videos_loadvideos">Loading Videos ...</string>
+
 	<string name="days_yesterday">Yesterday</string>
 	<string name="days_today">Today</string>
 	<string name="days_tomorrow">Tomorrow</string>
@@ -65,7 +78,8 @@
 
 
 	<string name="tvserver_manual_title">Manual Control</string>
-	<string name="tvserver_manual_desc">Current state of the tv service and the tv cards.</string>
+	<string name="tvserver_manual_desc">Current state of the tv service and the tv cards.
+	</string>
 	<string name="tvserver_epg_title">EPG</string>
 	<string name="tvserver_epg_desc">Electronic Program Guide.</string>
 	<string name="tvserver_channel_title">Channels</string>
@@ -74,8 +88,28 @@
 	<string name="tvserver_schedules_desc">All scheduled recordings on the server.</string>
 	<string name="tvserver_recordings_title">Recordings</string>
 	<string name="tvserver_recordings_desc">All recordings on the server.</string>
+	<string name="tvserver_record_this">All recordings on the server.</string>
 	<string name="tvserver_noconnection_tvserver_title">No connection</string>
 	<string name="tvserver_noconnection_tvserver_desc">Couldn\'t connect to Tv Server</string>
+	<string name="tvserver_starttimeshift_failed">Couldn\'t start timeshift</string>
+	<string name="tvserver_stoptimeshift_failed">Couldn\'t stop timeshift</string>
+	<string name="tvserver_stoptimeshift">Stop timeshift</string>
+	<string name="tvserver_loadgroups">Loading Groups</string>
+	<string name="tvserver_loadchannels">Loading Channels</string>
+	<string name="tvserver_schedulecanceled">Schedule canceled</string>
+	<string name="tvserver_schedulecancel_failed">Couldn\'t cancel schedule</string>
+	<string name="tvserver_cancel_schedule">Cancel Schedule</string>
+	<string name="tvserver_cancel_recording">Cancel Recording</string>
+	<string name="tvserver_loadschedules">Loading Schedules ...</string>
+	<string name="tvserver_loadrecordings">Loading Recordings ...</string>
+	<string name="tvserver_loadprogramdetails_failed">Couldn\'t load program details</string>
+	<string name="tvserver_loadprogramdetails">Loading Program Details</string>
+	<string name="tvserver_loadepg_finished">Finished loading epg</string>
+	<string name="tvserver_loadepg">Loading Electronic Program Guide</string>
+	<string name="tvserver_errorplaying">Error playing </string>
+	<string name="tvserver_errorplaying_resultcode">, ResultCode: </string>
+	<string name="tvserver_finishedplaying">Finished playing  </string>
+
 
 	<string name="tvserver_program_start">Start Time</string>
 	<string name="tvserver_program_end">End Time</string>
@@ -120,6 +154,47 @@
 	<string name="settings_media_cachevalid_title">Cache valid</string>
 	<string name="settings_media_cachevalid_desc">Cached items should be refreshed if older then
 	</string>
+
+	<string name="settings_categories_clients_desc">Edit Clients</string>
+	<string name="settings_clients_newclient_title">Clients</string>
+	<string name="settings_clients_newclient_desc">Add, edit, remove clients</string>
+	<string name="settings_general_preloaditems_title">Items to preload</string>
+	<string name="settings_general_preloaditems_desc">Number of items that are loaded when end of list is
+		reached</string>
+	<string name="settings_media_defaultview_series_title">Default View Series</string>
+	<string name="settings_media_defaultview_series_desc">Default View for browsing your tv shows</string>
+	<string name="settings_media_defaultview_movies_title">Default View Movies</string>
+	<string name="settings_media_defaultview_movies_desc">Default View for browsing your movies</string>
+	<string name="settings_media_defaultview_videos_title">Default View Videos</string>
+	<string name="settings_media_defaultview_videos_desc">Default View for browsing your videos</string>
+	<string name="settings_media_defaultview_shares_title">Default View Shares</string>
+	<string name="settings_media_defaultview_shares_desc">Default View browsing your video shares</string>
+
+	<string name="info_not_implemented">Not implemented yet</string>
+	<string name="info_no_connection">No connection to service</string>
+	<string name="info_remote_notconnected">Remote not connected</string>
+	<string name="info_loading_title">Loading. Please wait ...</string>
+	<string name="info_loading_failed">Loading failed, check your connection</string>
+
+	<string name="menu_clients">Clients</string>
+	<string name="menu_settings">Settings</string>
+	<string name="menu_refresh">Refresh</string>
+	<string name="menu_addhost">Add host</string>
+
+	<string name="dialog_ok">Ok</string>
+	<string name="dialog_yes">Yes</string>
+	<string name="dialog_no">No</string>
+	<string name="dialog_cancel">Cancel</string>
+	<string name="dialog_title_addhost">Add new host</string>
+
+	<string name="quickactions_playclient">Play on PC</string>
+	<string name="quickactions_playdevice">Play locally</string>
+	<string name="quickactions_downloadsd">Download</string>
+	<string name="quickactions_starttimeshift">Cancel</string>
+	<string name="quickactions_stoptimeshift">Cancel</string>
+	<string name="quickactions_record">Record</string>
+	<string name="quickactions_cancelrecord">Cancel Rec.</string>
+
 	<string-array name="settings_media_defaultview_series_text">
 		<item>Text</item>
 		<item>Poster</item>
@@ -158,39 +233,4 @@
 	<string-array name="settings_media_defaultview_shares_values">
 		<item>0</item>
 	</string-array>
-	<string name="settings_categories_clients_desc">Edit Clients</string>
-	<string name="settings_clients_newclient_title">Clients</string>
-	<string name="settings_clients_newclient_desc">Add, edit, remove clients</string>
-	<string name="settings_general_preloaditems_title">Items to preload</string>
-	<string name="settings_general_preloaditems_desc">Number of items that are loaded when end of list is
-		reached</string>
-	<string name="settings_media_defaultview_series_title">Default View Series</string>
-	<string name="settings_media_defaultview_series_desc">Default View for browsing your tv shows</string>
-	<string name="settings_media_defaultview_movies_title">Default View Movies</string>
-	<string name="settings_media_defaultview_movies_desc">Default View for browsing your movies</string>
-	<string name="settings_media_defaultview_videos_title">Default View Videos</string>
-	<string name="settings_media_defaultview_videos_desc">Default View for browsing your videos</string>
-	<string name="settings_media_defaultview_shares_title">Default View Shares</string>
-	<string name="settings_media_defaultview_shares_desc">Default View browsing your video shares</string>
-
-	<string name="info_not_implemented">Not implemented yet</string>
-	<string name="info_no_connection">No connection to service</string>
-	<string name="info_remote_notconnected">Remote not connected</string>
-	<string name="info_loading_title">Loading. Please wait ...</string>
-
-	<string name="menu_clients">Clients</string>
-	<string name="menu_settings">Settings</string>
-	
-	<string name="dialog_ok">Ok</string>
-	<string name="dialog_yes">Yes</string>
-	<string name="dialog_no">No</string>
-	<string name="dialog_cancel">Cancel</string>
-	
-	<string name="quickactions_playclient">Play on PC</string>
-	<string name="quickactions_playdevice">Play locally</string>
-	<string name="quickactions_downloadsd">Download</string>
-	<string name="quickactions_starttimeshift">Cancel</string>
-	<string name="quickactions_stoptimeshift">Cancel</string>
-	<string name="quickactions_record">Record</string>
-	<string name="quickactions_cancelrecord">Cancel Rec.</string>
 </resources>

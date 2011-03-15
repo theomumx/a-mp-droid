@@ -42,7 +42,7 @@ public class ClientPreference extends DialogPreference {
       mContext = context;
 
       setDialogLayoutResource(R.layout.preference_host_simple);
-      setDialogTitle("Add new host");
+      setDialogTitle(mContext.getString(R.string.dialog_title_addhost));
       setDialogIcon(R.drawable.bubble_add);
    }
 

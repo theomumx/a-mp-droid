@@ -103,7 +103,7 @@ public class TabEpisodesActivity extends Activity {
          mSeasonNumber = extras.getInt("season_number");
 
          mTextViewSeriesName.setText(mSeriesName);
-         mTextViewSeason.setText(getString(R.string.media_season) + " " + mSeasonNumber);
+         mTextViewSeason.setText(getString(R.string.media_series_season) + " " + mSeasonNumber);
          mService = DataHandler.getCurrentRemoteInstance();
 
          mAdapter = new LazyLoadingAdapter(this);
@@ -227,7 +227,7 @@ public class TabEpisodesActivity extends Activity {
 
                   qa.show();
                } else {
-                  Util.showToast(_view.getContext(), getString(R.string.media_episodes_nofile));
+                  Util.showToast(_view.getContext(), getString(R.string.media_nofile));
                }
                return true;
             } catch (Exception ex) {

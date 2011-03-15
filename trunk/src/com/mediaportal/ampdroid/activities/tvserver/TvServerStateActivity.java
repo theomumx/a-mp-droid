@@ -36,6 +36,7 @@ import com.mediaportal.ampdroid.lists.LazyLoadingAdapter;
 import com.mediaportal.ampdroid.lists.views.VirtualCardStateAdapterItem;
 import com.mediaportal.ampdroid.quickactions.ActionItem;
 import com.mediaportal.ampdroid.quickactions.QuickAction;
+import com.mediaportal.ampdroid.settings.PreferencesManager;
 import com.mediaportal.ampdroid.utils.Util;
 
 public class TvServerStateActivity extends BaseActivity {
@@ -135,7 +136,7 @@ public class TvServerStateActivity extends BaseActivity {
       @Override
       protected String doInBackground(TvChannel... _params) {
          if (_params != null) {
-            String url = mService.startTimeshift(_params[0].getIdChannel(), "Android2");
+            String url = mService.startTimeshift(_params[0].getIdChannel(), PreferencesManager.getTvClientName());
             return url;
          }
          return null;
@@ -146,7 +147,7 @@ public class TvServerStateActivity extends BaseActivity {
          if (_result != null) {
             Util.showToast(mContext, _result);
          } else {
-            Util.showToast(mContext, "Couldn't start timeshift");
+            Util.showToast(mContext, getString(R.string.tvserver_starttimeshift_failed));
          }
          refreshActiveCards();
       }
@@ -169,9 +170,9 @@ public class TvServerStateActivity extends BaseActivity {
       @Override
       protected void onPostExecute(Boolean _result) {
          if (_result) {
-            Util.showToast(mContext, "Stop timeshift");
+            Util.showToast(mContext, getString(R.string.tvserver_stoptimeshift));
          } else {
-            Util.showToast(mContext, "Couldn't stop timeshift");
+            Util.showToast(mContext, getString(R.string.tvserver_stoptimeshift_failed));
          }
          refreshActiveCards();
       }
@@ -218,7 +219,7 @@ public class TvServerStateActivity extends BaseActivity {
             final QuickAction qa = new QuickAction(_view);
             ActionItem sdCardAction = new ActionItem();
 
-            sdCardAction.setTitle("Stop Timeshift");
+            sdCardAction.setTitle(getString(R.string.tvserver_stoptimeshift));
             sdCardAction.setIcon(getResources().getDrawable(R.drawable.bubble_del));
 
             VirtualCardStateAdapterItem selected = (VirtualCardStateAdapterItem) mListView
@@ -235,12 +236,14 @@ public class TvServerStateActivity extends BaseActivity {
             qa.addActionItem(sdCardAction);
 
             ActionItem playOnDeviceAction = new ActionItem();
-            playOnDeviceAction.setTitle("Play on Device");
+            playOnDeviceAction.setTitle(getString(R.string.quickactions_playdevice));
             playOnDeviceAction.setIcon(getResources().getDrawable(R.drawable.quickaction_play));
             playOnDeviceAction.setOnClickListener(new OnClickListener() {
                @Override
                public void onClick(View _view) {
                   String playingUrl = card.getRTSPUrl();
+                  
+                  //TODO: temporary fix for me, remove when releasing
                   playingUrl = playingUrl.replace("bagga-server", "10.1.0.166");
 
                   Intent i = new Intent(Intent.ACTION_VIEW);
@@ -298,8 +301,8 @@ public class TvServerStateActivity extends BaseActivity {
    }
 
    private void refreshGroups() {
-      mLoadingDialog = ProgressDialog.show(TvServerStateActivity.this, " Loading Groups ",
-            " Loading. Please wait ... ", true);
+      mLoadingDialog = ProgressDialog.show(TvServerStateActivity.this, getString(R.string.tvserver_loadgroups),
+            getString(R.string.info_loading_title), true);
       mLoadingDialog.setCancelable(true);
 
       mGroupsUpdater = new UpdateGroupsTask();
@@ -324,13 +327,13 @@ public class TvServerStateActivity extends BaseActivity {
    }
 
    private void startRecording() {
-      Util.showToast(this, "Not implemented yet...");
+      Util.showToast(this, getString(R.string.info_not_implemented));
    }
 
    private void fillChannelList(TvChannelGroup _group) {
       mLoadingDialog.cancel();
-      mLoadingDialog = ProgressDialog.show(TvServerStateActivity.this, " Loading Channels ",
-            " Loading. Please wait ... ", true);
+      mLoadingDialog = ProgressDialog.show(TvServerStateActivity.this, getString(R.string.tvserver_loadchannels),
+            getString(R.string.info_loading_title), true);
       mLoadingDialog.setCancelable(true);
 
       mChannelUpdater = new UpdateChannelsTask();
@@ -344,7 +347,7 @@ public class TvServerStateActivity extends BaseActivity {
 
    @Override
    public boolean onCreateOptionsMenu(Menu _menu) {
-      MenuItem settingsItem = _menu.add(0, Menu.FIRST, Menu.NONE, "Refresh");
+      MenuItem settingsItem = _menu.add(0, Menu.FIRST, Menu.NONE, getString(R.string.menu_refresh));
       settingsItem.setOnMenuItemClickListener(new OnMenuItemClickListener() {
          @Override
          public boolean onMenuItemClick(MenuItem item) {

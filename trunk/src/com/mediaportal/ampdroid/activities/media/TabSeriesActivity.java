@@ -91,7 +91,7 @@ public class TabSeriesActivity extends Activity implements ILoadingListener {
             } else {
                mAdapter.showLoadingItem(false);
                //mAdapter.setLoadingText("Loading failed, check your connection");
-               Util.showToast(mContext, "Loading failed, check your connection");
+               Util.showToast(mContext, getString(R.string.info_loading_failed));
             }
          }
 
@@ -161,7 +161,7 @@ public class TabSeriesActivity extends Activity implements ILoadingListener {
          }
       });
 
-      mAdapter.setLoadingText("Loading Series ...");
+      mAdapter.setLoadingText(getString(R.string.media_series_loadseries));
       mAdapter.showLoadingItem(true);
 
       loadFurtherSeriesItems();
@@ -178,13 +178,14 @@ public class TabSeriesActivity extends Activity implements ILoadingListener {
    @Override
    public boolean onCreateOptionsMenu(Menu _menu) {
       super.onCreateOptionsMenu(_menu);
-      SubMenu viewItem = _menu.addSubMenu(0, Menu.FIRST + 1, Menu.NONE, "Views");
 
-      MenuItem textSettingsItem = viewItem.add(0, Menu.FIRST + 1, Menu.NONE, "Text");
-      MenuItem posterSettingsItem = viewItem.add(0, Menu.FIRST + 2, Menu.NONE, "Poster");
-      MenuItem thumbsSettingsItem = viewItem.add(0, Menu.FIRST + 3, Menu.NONE, "Thumbs");
-      MenuItem bannerSettingsItem = viewItem.add(0, Menu.FIRST + 4, Menu.NONE, "Banner");
+      SubMenu viewItem = _menu.addSubMenu(0, Menu.FIRST + 1, Menu.NONE, getString(R.string.media_views));
 
+      MenuItem textSettingsItem = viewItem.add(0, Menu.FIRST + 1, Menu.NONE, getString(R.string.media_views_text));
+      MenuItem posterSettingsItem = viewItem.add(0, Menu.FIRST + 2, Menu.NONE, getString(R.string.media_views_poster));
+      MenuItem thumbsSettingsItem = viewItem.add(0, Menu.FIRST + 3, Menu.NONE, getString(R.string.media_views_thumbs));
+      MenuItem bannerSettingsItem = viewItem.add(0, Menu.FIRST + 4, Menu.NONE, getString(R.string.media_views_banner));
+      
       textSettingsItem.setOnMenuItemClickListener(new OnMenuItemClickListener() {
          @Override
          public boolean onMenuItemClick(MenuItem item) {
