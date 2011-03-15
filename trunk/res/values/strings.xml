@@ -63,7 +63,7 @@
 	<string name="media_shares_loadshares">Loading Video Shares ...</string>
 	<string name="media_shares_loadfiles">Loading Files ...</string>
 	<string name="media_movie_loadingerror">Couldn\'t load movie</string>
-	<string name="media_movie_loadmoviedetails">Couldn\'t load movie details</string>
+	<string name="media_movie_loadmoviedetails">Loading movie details</string>
 	<string name="media_movies_loading">Loading Movies ...</string>
 	<string name="media_videos_loadingerror">Couldn\'t load video</string>
 	<string name="media_videos_loadvideodetails">Loading Video Details</string>
