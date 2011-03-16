@@ -238,7 +238,7 @@ public class TabSharesActivity extends Activity {
 
       mBreadCrumb = new ArrayList<String>();
       
-      mBaseActivity = (BaseTabActivity) getParent().getParent();
+      mBaseActivity = (BaseTabActivity) getParent();
       mService = DataHandler.getCurrentRemoteInstance();
       
       if (mBaseActivity != null && mService != null) {
