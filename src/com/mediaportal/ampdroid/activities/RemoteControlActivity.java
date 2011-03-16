@@ -1,5 +1,7 @@
 package com.mediaportal.ampdroid.activities;
 
+import java.util.ArrayList;
+
 import android.content.Context;
 import android.graphics.PixelFormat;
 import android.os.AsyncTask;
@@ -16,6 +18,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.mediaportal.ampdroid.R;
+import com.mediaportal.ampdroid.activities.RemoteControlActivity.RequestPluginsTask;
 import com.mediaportal.ampdroid.api.DataHandler;
 import com.mediaportal.ampdroid.api.IClientControlListener;
 import com.mediaportal.ampdroid.api.PowerModes;
@@ -23,6 +26,7 @@ import com.mediaportal.ampdroid.api.RemoteCommands;
 import com.mediaportal.ampdroid.data.commands.RemoteKey;
 import com.mediaportal.ampdroid.remote.RemoteNowPlaying;
 import com.mediaportal.ampdroid.remote.RemotePlugin;
+import com.mediaportal.ampdroid.remote.RemotePluginMessage;
 import com.mediaportal.ampdroid.remote.RemoteStatusMessage;
 import com.mediaportal.ampdroid.remote.RemoteVolumeMessage;
 import com.mediaportal.ampdroid.remote.RemoteWelcomeMessage;
@@ -128,10 +132,32 @@ public class RemoteControlActivity extends BaseActivity implements IClientContro
          return null;
       }
    }
+   
+   protected class RequestPluginsTask extends AsyncTask<Void, String, String> {
+      private DataHandler mController;
+      private Context mContext;
+
+      protected RequestPluginsTask(Context _parent) {
+         mContext = _parent;
+      }
+
+      private RequestPluginsTask(Context _parent, DataHandler _controller) {
+         this(_parent);
+         mController = _controller;
+      }
+
+      @Override
+      protected String doInBackground(Void... _keys) {
+         mController.requestPlugins();
+         return null;
+      }
+   }
 
    private StatusBarActivityHandler mStatusBarHandler;
    private TextView mStatusLabel;
    private DataHandler mService;
+   private RequestPluginsTask mRequestPluginsTask;
+   private RemotePlugin[] mRemotePlugins;
 
    @Override
    public void onCreate(Bundle _savedInstanceState) {
@@ -143,6 +169,9 @@ public class RemoteControlActivity extends BaseActivity implements IClientContro
 
       mStatusBarHandler = new StatusBarActivityHandler(this, mService);
       mStatusBarHandler.setupRemoteStatus();
+      
+      mRequestPluginsTask = new RequestPluginsTask(this, mService);
+      mRequestPluginsTask.execute();
 
       mStatusLabel = (TextView) findViewById(R.id.TextViewRemoteState);
 
@@ -309,11 +338,9 @@ public class RemoteControlActivity extends BaseActivity implements IClientContro
             mStatusBarHandler.setStatusText(module);
             mStatusBarHandler.setStatus((RemoteStatusMessage) _message);
          } else if (_message.getClass().equals(RemoteNowPlaying.class)) {
-            // String module = (String) userData.get("CurrentModule");
-            // mStatusLabel.setText(module);
             mStatusBarHandler.setNowPlaying((RemoteNowPlaying) _message);
-         } else if (_message.getClass().equals(RemotePlugin[].class)) {
-
+         } else if (_message.getClass().equals(RemotePluginMessage.class)) {
+            mRemotePlugins = ((RemotePluginMessage)_message).getPlugins();
          } else if (_message.getClass().equals(RemoteWelcomeMessage.class)) {
             RemoteVolumeMessage vol = ((RemoteWelcomeMessage) _message).getVolume();
             mStatusBarHandler.setVolume(vol);
@@ -348,16 +375,19 @@ public class RemoteControlActivity extends BaseActivity implements IClientContro
    }
 
    private void createPluginsMenu(SubMenu _menu) {
-      // TODO: show a list of all plugins and if clicked -> open them on the
-      // client
-      MenuItem stopSettingsItem = _menu.add(0, Menu.FIRST, Menu.NONE, "List of all plugins");
-      stopSettingsItem.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-         @Override
-         public boolean onMenuItemClick(MenuItem item) {
-            mService.requestPlugins();
-            return false;
+      if(mRemotePlugins != null){
+         for(final RemotePlugin p : mRemotePlugins){
+            MenuItem pluginItem = _menu.add(0, Menu.FIRST, Menu.NONE, p.getName());
+            pluginItem.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+               @Override
+               public boolean onMenuItemClick(MenuItem item) {
+                  mService.sendOpenWindowMessage(p.getWindowId(), null);
+                  return false;
+               }
+            });
          }
-      });
+      }
+
 
    }
 
