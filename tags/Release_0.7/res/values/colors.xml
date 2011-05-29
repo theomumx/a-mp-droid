@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<color name="actionbar_separator">#000000</color>
+	<color name="actionbar_background_start">#747373</color>
+	<color name="actionbar_background_end">#1b1b1b</color>
+	<color name="actionbar_background_item_pressed_start">#FF7F00</color>
+	<color name="actionbar_background_item_pressed_end">#EE7600</color>
+	<color name="listview_background">#00477D</color>
+	<color name="details_view_header_background">#3B3E40</color>
+	<color name="listitem_epg_current">#FFFFFF</color>
+	<color name="listitem_epg_default">#000000</color>
+	<color name="background_sliding_drawer">#aabbbb</color>
+</resources>
